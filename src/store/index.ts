@@ -657,7 +657,7 @@ export const useCourseStore = create<CourseState>((set, get) => ({
                   title: '统计学基础',
                   description: '掌握描述性统计和推断统计的基本概念和方法',
                   content_type: 'video',
-                  content_url: 'https://example.com/video1',
+                  content_url: 'https://www.youtube.com/embed/5DqV3Nx3EF8',
                   duration: 45,
                   order_index: 1,
                   created_at: new Date().toISOString()
@@ -668,7 +668,7 @@ export const useCourseStore = create<CourseState>((set, get) => ({
                   title: '业务理解能力',
                   description: '学习如何深入理解行业业务流程和核心指标',
                   content_type: 'video',
-                  content_url: 'https://example.com/video2',
+                  content_url: 'https://www.youtube.com/embed/3XQz7W9f7dY',
                   duration: 40,
                   order_index: 2,
                   created_at: new Date().toISOString()
@@ -679,7 +679,7 @@ export const useCourseStore = create<CourseState>((set, get) => ({
                   title: '数据与业务的结合',
                   description: '如何将数据分析与业务目标紧密结合',
                   content_type: 'video',
-                  content_url: 'https://example.com/video3',
+                  content_url: 'https://www.youtube.com/embed/7eQmZ7xq4lM',
                   duration: 35,
                   order_index: 3,
                   created_at: new Date().toISOString()
@@ -694,7 +694,7 @@ export const useCourseStore = create<CourseState>((set, get) => ({
                   title: '数据采集技术',
                   description: '学习从内部系统和外部渠道采集数据的方法',
                   content_type: 'video',
-                  content_url: 'https://example.com/video4',
+                  content_url: 'https://www.youtube.com/embed/85xYgAq3BvQ',
                   duration: 50,
                   order_index: 1,
                   created_at: new Date().toISOString()
@@ -705,7 +705,7 @@ export const useCourseStore = create<CourseState>((set, get) => ({
                   title: '数据清洗与转换',
                   description: '掌握数据清洗、转换与整合的技术',
                   content_type: 'video',
-                  content_url: 'https://example.com/video5',
+                  content_url: 'https://www.youtube.com/embed/2G_4O3A3ySs',
                   duration: 55,
                   order_index: 2,
                   created_at: new Date().toISOString()
@@ -716,8 +716,230 @@ export const useCourseStore = create<CourseState>((set, get) => ({
                   title: '数据质量与标准化',
                   description: '确保数据质量和标准化的最佳实践',
                   content_type: 'video',
-                  content_url: 'https://example.com/video6',
+                  content_url: 'https://www.youtube.com/embed/5eV0FdR795U',
                   duration: 35,
+                  order_index: 3,
+                  created_at: new Date().toISOString()
+                }
+              ];
+              break;
+            case 3:
+              defaultLessons = [
+                {
+                  id: 7,
+                  course_id: 3,
+                  title: '分析方法概述',
+                  description: '了解描述性、诊断性、预测性和规范性分析方法',
+                  content_type: 'video',
+                  content_url: 'https://www.youtube.com/embed/3XQz7W9f7dY',
+                  duration: 40,
+                  order_index: 1,
+                  created_at: new Date().toISOString()
+                },
+                {
+                  id: 8,
+                  course_id: 3,
+                  title: '回归分析',
+                  description: '掌握线性回归、逻辑回归等模型',
+                  content_type: 'video',
+                  content_url: 'https://www.youtube.com/embed/5DqV3Nx3EF8',
+                  duration: 50,
+                  order_index: 2,
+                  created_at: new Date().toISOString()
+                },
+                {
+                  id: 9,
+                  course_id: 3,
+                  title: '聚类分析',
+                  description: '学习K-means、层次聚类等算法',
+                  content_type: 'video',
+                  content_url: 'https://www.youtube.com/embed/7eQmZ7xq4lM',
+                  duration: 45,
+                  order_index: 3,
+                  created_at: new Date().toISOString()
+                }
+              ];
+              break;
+            case 4:
+              defaultLessons = [
+                {
+                  id: 10,
+                  course_id: 4,
+                  title: '数据可视化基础',
+                  description: '学习数据可视化的原则和最佳实践',
+                  content_type: 'video',
+                  content_url: 'https://www.youtube.com/embed/85xYgAq3BvQ',
+                  duration: 40,
+                  order_index: 1,
+                  created_at: new Date().toISOString()
+                },
+                {
+                  id: 11,
+                  course_id: 4,
+                  title: '商业智能工具',
+                  description: '掌握Tableau、Power BI等工具的使用',
+                  content_type: 'video',
+                  content_url: 'https://www.youtube.com/embed/2G_4O3A3ySs',
+                  duration: 55,
+                  order_index: 2,
+                  created_at: new Date().toISOString()
+                },
+                {
+                  id: 12,
+                  course_id: 4,
+                  title: '数据故事讲述',
+                  description: '学习如何构建有说服力的数据故事',
+                  content_type: 'video',
+                  content_url: 'https://www.youtube.com/embed/5eV0FdR795U',
+                  duration: 40,
+                  order_index: 3,
+                  created_at: new Date().toISOString()
+                }
+              ];
+              break;
+            case 5:
+              defaultLessons = [
+                {
+                  id: 13,
+                  course_id: 5,
+                  title: '销售数据分析',
+                  description: '学习销售业绩分析方法和销售趋势预测',
+                  content_type: 'video',
+                  content_url: 'https://www.youtube.com/embed/3XQz7W9f7dY',
+                  duration: 45,
+                  order_index: 1,
+                  created_at: new Date().toISOString()
+                },
+                {
+                  id: 14,
+                  course_id: 5,
+                  title: '客户行为分析',
+                  description: '掌握客户分群和客户生命周期价值分析',
+                  content_type: 'video',
+                  content_url: 'https://www.youtube.com/embed/5DqV3Nx3EF8',
+                  duration: 50,
+                  order_index: 2,
+                  created_at: new Date().toISOString()
+                },
+                {
+                  id: 15,
+                  course_id: 5,
+                  title: '财务与风险分析',
+                  description: '学习财务报表分析和风险评估方法',
+                  content_type: 'video',
+                  content_url: 'https://www.youtube.com/embed/7eQmZ7xq4lM',
+                  duration: 45,
+                  order_index: 3,
+                  created_at: new Date().toISOString()
+                }
+              ];
+              break;
+            case 6:
+              defaultLessons = [
+                {
+                  id: 16,
+                  course_id: 6,
+                  title: '数据库基础',
+                  description: '了解数据库概念和关系型数据库原理',
+                  content_type: 'video',
+                  content_url: 'https://www.youtube.com/embed/85xYgAq3BvQ',
+                  duration: 40,
+                  order_index: 1,
+                  created_at: new Date().toISOString()
+                },
+                {
+                  id: 17,
+                  course_id: 6,
+                  title: 'SQL基础查询',
+                  description: '掌握SELECT语句和条件查询',
+                  content_type: 'video',
+                  content_url: 'https://www.youtube.com/embed/2G_4O3A3ySs',
+                  duration: 55,
+                  order_index: 2,
+                  created_at: new Date().toISOString()
+                },
+                {
+                  id: 18,
+                  course_id: 6,
+                  title: 'SQL高级查询',
+                  description: '学习JOIN操作和子查询',
+                  content_type: 'video',
+                  content_url: 'https://www.youtube.com/embed/5eV0FdR795U',
+                  duration: 45,
+                  order_index: 3,
+                  created_at: new Date().toISOString()
+                }
+              ];
+              break;
+            case 7:
+              defaultLessons = [
+                {
+                  id: 19,
+                  course_id: 7,
+                  title: 'Python基础',
+                  description: '学习Python环境搭建和基本语法',
+                  content_type: 'video',
+                  content_url: 'https://www.youtube.com/embed/3XQz7W9f7dY',
+                  duration: 45,
+                  order_index: 1,
+                  created_at: new Date().toISOString()
+                },
+                {
+                  id: 20,
+                  course_id: 7,
+                  title: '数据处理库',
+                  description: '掌握NumPy和Pandas的使用',
+                  content_type: 'video',
+                  content_url: 'https://www.youtube.com/embed/5DqV3Nx3EF8',
+                  duration: 50,
+                  order_index: 2,
+                  created_at: new Date().toISOString()
+                },
+                {
+                  id: 21,
+                  course_id: 7,
+                  title: '数据可视化',
+                  description: '学习Matplotlib和Seaborn的使用',
+                  content_type: 'video',
+                  content_url: 'https://www.youtube.com/embed/7eQmZ7xq4lM',
+                  duration: 45,
+                  order_index: 3,
+                  created_at: new Date().toISOString()
+                }
+              ];
+              break;
+            case 8:
+              defaultLessons = [
+                {
+                  id: 22,
+                  course_id: 8,
+                  title: '大数据概述',
+                  description: '了解大数据的定义、特征和技术生态系统',
+                  content_type: 'video',
+                  content_url: 'https://www.youtube.com/embed/85xYgAq3BvQ',
+                  duration: 40,
+                  order_index: 1,
+                  created_at: new Date().toISOString()
+                },
+                {
+                  id: 23,
+                  course_id: 8,
+                  title: '大数据存储技术',
+                  description: '学习HDFS和NoSQL数据库',
+                  content_type: 'video',
+                  content_url: 'https://www.youtube.com/embed/2G_4O3A3ySs',
+                  duration: 55,
+                  order_index: 2,
+                  created_at: new Date().toISOString()
+                },
+                {
+                  id: 24,
+                  course_id: 8,
+                  title: '大数据处理框架',
+                  description: '掌握MapReduce和Spark',
+                  content_type: 'video',
+                  content_url: 'https://www.youtube.com/embed/5eV0FdR795U',
+                  duration: 45,
                   order_index: 3,
                   created_at: new Date().toISOString()
                 }
@@ -731,7 +953,7 @@ export const useCourseStore = create<CourseState>((set, get) => ({
                   title: '课程介绍',
                   description: '本课程的概述和学习目标',
                   content_type: 'video',
-                  content_url: 'https://example.com/video-default',
+                  content_url: 'https://www.youtube.com/embed/3XQz7W9f7dY',
                   duration: 30,
                   order_index: 1,
                   created_at: new Date().toISOString()
@@ -742,7 +964,7 @@ export const useCourseStore = create<CourseState>((set, get) => ({
                   title: '核心概念',
                   description: '本课程的核心概念和理论基础',
                   content_type: 'video',
-                  content_url: 'https://example.com/video-default2',
+                  content_url: 'https://www.youtube.com/embed/5DqV3Nx3EF8',
                   duration: 45,
                   order_index: 2,
                   created_at: new Date().toISOString()
@@ -753,7 +975,7 @@ export const useCourseStore = create<CourseState>((set, get) => ({
                   title: '实践应用',
                   description: '本课程内容的实际应用案例',
                   content_type: 'video',
-                  content_url: 'https://example.com/video-default3',
+                  content_url: 'https://www.youtube.com/embed/7eQmZ7xq4lM',
                   duration: 40,
                   order_index: 3,
                   created_at: new Date().toISOString()
