@@ -113,30 +113,12 @@ const CourseDetail: React.FC = () => {
                 <p className="text-gray-600">{currentCourse.description}</p>
               </div>
               <div className="flex flex-col space-y-3 w-full md:w-auto">
-                {user ? (
-                  isEnrolled ? (
-                    <Link
-                      to={`/courses/${courseId}/lessons/${lessons[0]?.id || 1}`}
-                      className="px-6 py-3 bg-blue-600 text-white rounded-md font-medium hover:bg-blue-700 transition-colors text-center"
-                    >
-                      开始学习
-                    </Link>
-                  ) : (
-                    <button
-                      onClick={handleEnroll}
-                      className="px-6 py-3 bg-blue-600 text-white rounded-md font-medium hover:bg-blue-700 transition-colors text-center"
-                    >
-                      立即报名
-                    </button>
-                  )
-                ) : (
-                  <Link
-                    to="/login"
-                    className="px-6 py-3 bg-blue-600 text-white rounded-md font-medium hover:bg-blue-700 transition-colors text-center"
-                  >
-                    登录后报名
-                  </Link>
-                )}
+                <Link
+                  to={`/courses/${courseId}/lessons/${lessons[0]?.id || 1}`}
+                  className="px-6 py-3 bg-blue-600 text-white rounded-md font-medium hover:bg-blue-700 transition-colors text-center"
+                >
+                  开始学习
+                </Link>
                 <div className="text-center">
                   <span className="text-2xl font-bold">¥{currentCourse.price === 0 ? '免费' : currentCourse.price}</span>
                 </div>
@@ -174,15 +156,12 @@ const CourseDetail: React.FC = () => {
             {lessons.map((lesson, index) => {
               const lessonProgress = progress.find(p => p.lesson_id === lesson.id);
               const isCompleted = lessonProgress?.completed || false;
-              const isLocked = currentCourse.is_premium && !isEnrolled;
               
               return (
                 <div key={lesson.id} className="border rounded-lg overflow-hidden">
                   <div className="flex items-center p-4 hover:bg-gray-50 transition-colors">
                     <div className="mr-4">
-                      {isLocked ? (
-                        <Lock className="h-5 w-5 text-gray-400" />
-                      ) : isCompleted ? (
+                      {isCompleted ? (
                         <Check className="h-5 w-5 text-green-500" />
                       ) : (
                         <Play className="h-5 w-5 text-blue-600" />
@@ -202,14 +181,12 @@ const CourseDetail: React.FC = () => {
                           {lesson.duration} 分钟
                         </span>
                       )}
-                      {!isLocked && (
-                        <Link
-                          to={`/courses/${courseId}/lessons/${lesson.id}`}
-                          className="px-3 py-1 bg-blue-100 text-blue-700 rounded-md text-sm hover:bg-blue-200 transition-colors"
-                        >
-                          {isCompleted ? '复习' : '学习'}
-                        </Link>
-                      )}
+                      <Link
+                        to={`/courses/${courseId}/lessons/${lesson.id}`}
+                        className="px-3 py-1 bg-blue-100 text-blue-700 rounded-md text-sm hover:bg-blue-200 transition-colors"
+                      >
+                        {isCompleted ? '复习' : '学习'}
+                      </Link>
                     </div>
                   </div>
                 </div>

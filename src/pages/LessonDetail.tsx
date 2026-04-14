@@ -32,6 +32,9 @@ const LessonDetail: React.FC = () => {
     if (user) {
       await updateProgress(currentLessonId, !isCompleted);
       setIsCompleted(!isCompleted);
+    } else {
+      // 未登录用户可以看到完成按钮，但点击时会提示登录
+      alert('请先登录以追踪学习进度');
     }
   };
 
