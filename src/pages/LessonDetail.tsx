@@ -134,14 +134,16 @@ const LessonDetail: React.FC = () => {
                 <div className="mb-8">
                   <div className="aspect-video bg-gray-900 rounded-lg flex items-center justify-center mb-4">
                     {currentLesson.content_url ? (
-                      <iframe
-                        src={currentLesson.content_url}
-                        title={currentLesson.title}
-                        frameBorder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen
-                        className="w-full h-full"
-                      />
+                      <>
+                        <iframe
+                          src={currentLesson.content_url}
+                          title={currentLesson.title}
+                          frameBorder="0"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                          className="w-full h-full"
+                        />
+                      </>
                     ) : (
                       <div className="text-white text-center">
                         <Play className="h-12 w-12 mx-auto mb-2" />
@@ -152,6 +154,9 @@ const LessonDetail: React.FC = () => {
                   <div className="mt-4 bg-blue-50 p-4 rounded-lg">
                     <h3 className="font-medium text-blue-700 mb-2">视频说明</h3>
                     <p className="text-gray-700">本视频由专业教师录制，涵盖了课程大纲中的核心知识点。建议在观看过程中做好笔记，并尝试完成视频中提到的练习。</p>
+                    <div className="mt-2 text-xs text-gray-500">
+                      视频链接: {currentLesson.content_url}
+                    </div>
                   </div>
                 </div>
               )}
