@@ -149,6 +149,24 @@ const CourseDetail: React.FC = () => {
           </div>
         )}
 
+        {/* 课程大纲 */}
+        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+          <h2 className="text-xl font-semibold mb-6">课程大纲</h2>
+          {currentCourse.outline && currentCourse.outline.map((section, sectionIndex) => (
+            <div key={sectionIndex} className="mb-6">
+              <h3 className="text-lg font-medium mb-3">{section.chapter}</h3>
+              <ul className="space-y-2 pl-5">
+                {section.topics.map((topic, topicIndex) => (
+                  <li key={topicIndex} className="text-gray-700 flex items-start">
+                    <span className="text-blue-600 mr-2">•</span>
+                    {topic}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
         {/* 课程章节 */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
           <h2 className="text-xl font-semibold mb-6">课程章节</h2>

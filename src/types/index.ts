@@ -27,6 +27,10 @@ export interface Course {
   enroll_count: number;
   created_at: string;
   updated_at: string;
+  outline?: {
+    chapter: string;
+    topics: string[];
+  }[];
 }
 
 export interface Lesson {

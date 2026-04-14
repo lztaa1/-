@@ -132,7 +132,45 @@ export const useCourseStore = create<CourseState>((set, get) => ({
       rating: 4.8,
       enroll_count: 1200,
       created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
+      updated_at: new Date().toISOString(),
+      outline: [
+        {
+          chapter: '第一章：数据分析概述',
+          topics: [
+            '数据分析的定义和重要性',
+            '数据分析的基本流程',
+            '数据分析师的角色和职责',
+            '数据驱动决策的价值'
+          ]
+        },
+        {
+          chapter: '第二章：统计学基础',
+          topics: [
+            '描述性统计：均值、中位数、众数、标准差等基本概念',
+            '数据分布：正态分布、偏态分布等',
+            '推断统计：假设检验、置信区间',
+            '相关性分析：皮尔逊相关系数'
+          ]
+        },
+        {
+          chapter: '第三章：业务理解能力',
+          topics: [
+            '如何理解业务流程和业务目标',
+            '识别关键业务指标（KPI）',
+            '行业分析方法和工具',
+            '业务问题的转化为数据问题'
+          ]
+        },
+        {
+          chapter: '第四章：数据与业务的结合',
+          topics: [
+            '数据质量评估和提升',
+            '数据采集和预处理',
+            '数据分析结果的业务解释',
+            '数据驱动的业务决策案例'
+          ]
+        }
+      ]
     },
     {
       id: 2,
@@ -147,7 +185,45 @@ export const useCourseStore = create<CourseState>((set, get) => ({
       rating: 4.6,
       enroll_count: 850,
       created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
+      updated_at: new Date().toISOString(),
+      outline: [
+        {
+          chapter: '第一章：数据采集技术',
+          topics: [
+            '内部数据采集：数据库、ERP、CRM等系统',
+            '外部数据采集：API、爬虫、市场调研等',
+            '数据采集的 ethical considerations',
+            '数据采集工具和技术'
+          ]
+        },
+        {
+          chapter: '第二章：数据清洗与转换',
+          topics: [
+            '数据质量问题识别',
+            '缺失值处理方法',
+            '异常值检测和处理',
+            '数据类型转换和标准化'
+          ]
+        },
+        {
+          chapter: '第三章：数据质量与标准化',
+          topics: [
+            '数据质量评估指标',
+            '数据标准化方法',
+            '数据验证和校验',
+            '数据质量管理最佳实践'
+          ]
+        },
+        {
+          chapter: '第四章：数据整合与存储',
+          topics: [
+            '数据集成方法',
+            '数据仓库和数据湖概念',
+            'ETL流程设计',
+            '数据存储方案选择'
+          ]
+        }
+      ]
     },
     {
       id: 3,
@@ -162,7 +238,45 @@ export const useCourseStore = create<CourseState>((set, get) => ({
       rating: 4.9,
       enroll_count: 620,
       created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
+      updated_at: new Date().toISOString(),
+      outline: [
+        {
+          chapter: '第一章：分析方法概述',
+          topics: [
+            '描述性分析：总结现状',
+            '诊断性分析：找出问题原因',
+            '预测性分析：预测未来趋势',
+            '规范性分析：提供优化建议'
+          ]
+        },
+        {
+          chapter: '第二章：回归分析',
+          topics: [
+            '线性回归模型',
+            '逻辑回归模型',
+            '多元回归分析',
+            '回归模型的评估和优化'
+          ]
+        },
+        {
+          chapter: '第三章：聚类分析',
+          topics: [
+            'K-means聚类算法',
+            '层次聚类',
+            'DBSCAN算法',
+            '聚类结果的解释和应用'
+          ]
+        },
+        {
+          chapter: '第四章：分类与预测模型',
+          topics: [
+            '决策树算法',
+            '随机森林',
+            '支持向量机',
+            '模型评估指标和方法'
+          ]
+        }
+      ]
     },
     {
       id: 4,
@@ -177,7 +291,45 @@ export const useCourseStore = create<CourseState>((set, get) => ({
       rating: 4.7,
       enroll_count: 780,
       created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
+      updated_at: new Date().toISOString(),
+      outline: [
+        {
+          chapter: '第一章：数据可视化基础',
+          topics: [
+            '数据可视化的原则和最佳实践',
+            '图表类型的选择和应用',
+            '色彩和布局设计',
+            '数据可视化的常见误区'
+          ]
+        },
+        {
+          chapter: '第二章：商业智能工具',
+          topics: [
+            'Tableau的基本操作和功能',
+            'Power BI的使用方法',
+            'Excel高级图表和数据透视表',
+            '工具选择的考量因素'
+          ]
+        },
+        {
+          chapter: '第三章：数据故事讲述',
+          topics: [
+            '如何构建有说服力的数据故事',
+            '数据叙事的结构和技巧',
+            '面向不同受众的沟通策略',
+            '数据故事的视觉设计'
+          ]
+        },
+        {
+          chapter: '第四章：仪表盘设计',
+          topics: [
+            '仪表盘的设计原则',
+            '关键指标的选择和展示',
+            '交互式仪表盘的构建',
+            '仪表盘的性能优化'
+          ]
+        }
+      ]
     },
     {
       id: 5,
@@ -192,7 +344,45 @@ export const useCourseStore = create<CourseState>((set, get) => ({
       rating: 4.9,
       enroll_count: 450,
       created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
+      updated_at: new Date().toISOString(),
+      outline: [
+        {
+          chapter: '第一章：销售数据分析',
+          topics: [
+            '销售业绩分析方法',
+            '销售趋势和预测',
+            '产品和区域销售分析',
+            '销售漏斗分析'
+          ]
+        },
+        {
+          chapter: '第二章：客户行为分析',
+          topics: [
+            '客户分群方法',
+            '客户生命周期价值分析',
+            '客户流失预测',
+            '客户行为路径分析'
+          ]
+        },
+        {
+          chapter: '第三章：财务与风险分析',
+          topics: [
+            '财务报表分析',
+            '成本分析和控制',
+            '风险评估方法',
+            '财务预测模型'
+          ]
+        },
+        {
+          chapter: '第四章：运营优化分析',
+          topics: [
+            '供应链分析',
+            '库存优化',
+            '运营效率分析',
+            'A/B测试设计和分析'
+          ]
+        }
+      ]
     },
     {
       id: 6,
@@ -207,7 +397,45 @@ export const useCourseStore = create<CourseState>((set, get) => ({
       rating: 4.5,
       enroll_count: 920,
       created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
+      updated_at: new Date().toISOString(),
+      outline: [
+        {
+          chapter: '第一章：数据库基础',
+          topics: [
+            '数据库概念和类型',
+            '关系型数据库原理',
+            '表结构设计原则',
+            '数据完整性约束'
+          ]
+        },
+        {
+          chapter: '第二章：SQL基础查询',
+          topics: [
+            'SELECT语句基础',
+            'WHERE子句和条件查询',
+            'ORDER BY和排序',
+            'LIMIT和分页'
+          ]
+        },
+        {
+          chapter: '第三章：SQL高级查询',
+          topics: [
+            'JOIN操作和表连接',
+            'GROUP BY和聚合函数',
+            'SUBQUERY子查询',
+            '窗口函数的使用'
+          ]
+        },
+        {
+          chapter: '第四章：数据库管理',
+          topics: [
+            '数据库设计和规范化',
+            '索引的创建和优化',
+            '视图和存储过程',
+            '数据库性能优化'
+          ]
+        }
+      ]
     },
     {
       id: 7,
@@ -222,7 +450,45 @@ export const useCourseStore = create<CourseState>((set, get) => ({
       rating: 4.8,
       enroll_count: 750,
       created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
+      updated_at: new Date().toISOString(),
+      outline: [
+        {
+          chapter: '第一章：Python基础',
+          topics: [
+            'Python环境搭建',
+            '基本语法和数据类型',
+            '控制流和函数',
+            '模块和包的使用'
+          ]
+        },
+        {
+          chapter: '第二章：数据处理库',
+          topics: [
+            'NumPy数组操作',
+            'Pandas数据结构',
+            '数据清洗和预处理',
+            '数据聚合和分组'
+          ]
+        },
+        {
+          chapter: '第三章：数据可视化',
+          topics: [
+            'Matplotlib基础',
+            'Seaborn高级图表',
+            '交互式可视化工具',
+            '可视化最佳实践'
+          ]
+        },
+        {
+          chapter: '第四章：数据分析实战',
+          topics: [
+            '数据导入和导出',
+            '探索性数据分析',
+            '统计分析和建模',
+            '案例研究和项目实践'
+          ]
+        }
+      ]
     },
     {
       id: 8,
@@ -237,7 +503,45 @@ export const useCourseStore = create<CourseState>((set, get) => ({
       rating: 4.7,
       enroll_count: 380,
       created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
+      updated_at: new Date().toISOString(),
+      outline: [
+        {
+          chapter: '第一章：大数据概述',
+          topics: [
+            '大数据的定义和特征',
+            '大数据技术生态系统',
+            '大数据应用场景',
+            '大数据处理架构'
+          ]
+        },
+        {
+          chapter: '第二章：大数据存储技术',
+          topics: [
+            'HDFS分布式文件系统',
+            'NoSQL数据库',
+            '数据湖概念和实现',
+            '数据存储方案选择'
+          ]
+        },
+        {
+          chapter: '第三章：大数据处理框架',
+          topics: [
+            'MapReduce原理',
+            'Spark核心概念',
+            'Spark SQL和DataFrame',
+            '流处理技术'
+          ]
+        },
+        {
+          chapter: '第四章：大数据分析应用',
+          topics: [
+            '大规模数据处理',
+            '实时数据分析',
+            '机器学习在大数据中的应用',
+            '大数据分析案例研究'
+          ]
+        }
+      ]
     }
   ],
   currentCourse: null,
