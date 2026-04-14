@@ -657,7 +657,7 @@ export const useCourseStore = create<CourseState>((set, get) => ({
                   title: '统计学基础',
                   description: '掌握描述性统计和推断统计的基本概念和方法',
                   content_type: 'video',
-                  content_url: 'https://www.youtube.com/embed/5DqV3Nx3EF8',
+                  content_url: 'https://www.youtube.com/embed/5YJln2N6xqE',
                   duration: 45,
                   order_index: 1,
                   created_at: new Date().toISOString()
@@ -742,7 +742,7 @@ export const useCourseStore = create<CourseState>((set, get) => ({
                   title: '回归分析',
                   description: '掌握线性回归、逻辑回归等模型',
                   content_type: 'video',
-                  content_url: 'https://www.youtube.com/embed/5DqV3Nx3EF8',
+                  content_url: 'https://www.youtube.com/embed/5YJln2N6xqE',
                   duration: 50,
                   order_index: 2,
                   created_at: new Date().toISOString()
@@ -816,7 +816,7 @@ export const useCourseStore = create<CourseState>((set, get) => ({
                   title: '客户行为分析',
                   description: '掌握客户分群和客户生命周期价值分析',
                   content_type: 'video',
-                  content_url: 'https://www.youtube.com/embed/5DqV3Nx3EF8',
+                  content_url: 'https://www.youtube.com/embed/5YJln2N6xqE',
                   duration: 50,
                   order_index: 2,
                   created_at: new Date().toISOString()
@@ -890,7 +890,7 @@ export const useCourseStore = create<CourseState>((set, get) => ({
                   title: '数据处理库',
                   description: '掌握NumPy和Pandas的使用',
                   content_type: 'video',
-                  content_url: 'https://www.youtube.com/embed/5DqV3Nx3EF8',
+                  content_url: 'https://www.youtube.com/embed/5YJln2N6xqE',
                   duration: 50,
                   order_index: 2,
                   created_at: new Date().toISOString()
@@ -964,7 +964,7 @@ export const useCourseStore = create<CourseState>((set, get) => ({
                   title: '核心概念',
                   description: '本课程的核心概念和理论基础',
                   content_type: 'video',
-                  content_url: 'https://www.youtube.com/embed/5DqV3Nx3EF8',
+                  content_url: 'https://www.youtube.com/embed/5YJln2N6xqE',
                   duration: 45,
                   order_index: 2,
                   created_at: new Date().toISOString()
