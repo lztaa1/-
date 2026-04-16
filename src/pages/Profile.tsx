@@ -1,302 +1,222 @@
-import React, { useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useUserStore, useAchievementStore } from '../store';
-import { User, Award, BookOpen, Settings, BarChart3, FileText, ChevronRight } from 'lucide-react';
-import { Radar } from 'react-chartjs-2';
-import {
-  Chart as ChartJS,
-  RadialLinearScale,
-  PointElement,
-  LineElement,
-  Filler,
-  Tooltip,
-  Legend
-} from 'chart.js';
-
-// 注册 Chart.js 组件
-ChartJS.register(
-  RadialLinearScale,
-  PointElement,
-  LineElement,
-  Filler,
-  Tooltip,
-  Legend
-);
+import React, { useState } from 'react';
+import { Button } from '../components/ui/button';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../components/ui/card';
+import { Input } from '../components/ui/input';
 
 const Profile: React.FC = () => {
-  const { user, loading: userLoading, logout } = useUserStore();
-  const { achievements, certificates, fetchAchievements, fetchCertificates, loading: achievementLoading } = useAchievementStore();
-  const navigate = useNavigate();
+  const [userInfo, setUserInfo] = useState({
+    name: '张三',
+    email: 'zhangsan@example.com',
+    bio: '商务数据分析爱好者，正在学习Python数据分析',
+    avatar: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=professional%20avatar%20portrait&image_size=square'
+  });
+  
+  const [isEditing, setIsEditing] = useState(false);
+  const [editForm, setEditForm] = useState({ ...userInfo });
+  
+  const learningProgress = [
+    { course: 'Python数据分析基础', progress: 75, lastAccessed: '2024-01-15' },
+    { course: '机器学习入门', progress: 45, lastAccessed: '2024-01-14' },
+    { course: '数据可视化实战', progress: 90, lastAccessed: '2024-01-12' }
+  ];
+  
+  const achievements = [
+    { name: '初学者', description: '完成第一个课程', date: '2024-01-01' },
+    { name: '数据分析师', description: '完成5个数据分析课程', date: '2024-01-10' },
+    { name: '连续学习', description: '连续学习7天', date: '2024-01-14' }
+  ];
 
-  useEffect(() => {
-    if (user) {
-      fetchAchievements();
-      fetchCertificates();
-    }
-  }, [user, fetchAchievements, fetchCertificates]);
-
-  const handleLogout = async () => {
-    await logout();
-    navigate('/');
+  const handleEditChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setEditForm(prev => ({ ...prev, [name]: value }));
   };
 
-  // 技能雷达图数据
-  const skillsData = {
-    labels: ['数据分析', 'SQL', 'Python', '数据可视化', '机器学习', '商业智能'],
-    datasets: [
-      {
-        label: '技能水平',
-        data: [85, 70, 65, 80, 50, 75],
-        backgroundColor: 'rgba(49, 130, 206, 0.2)',
-        borderColor: 'rgba(49, 130, 206, 1)',
-        pointBackgroundColor: 'rgba(49, 130, 206, 1)',
-        pointBorderColor: '#fff',
-        pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: 'rgba(49, 130, 206, 1)'
-      }
-    ]
+  const handleSave = () => {
+    setUserInfo(editForm);
+    setIsEditing(false);
   };
-
-  if (userLoading || !user) {
-    return (
-      <div className="min-h-screen py-12">
-        <div className="container mx-auto px-4">
-          <div className="animate-pulse">
-            <div className="h-16 bg-gray-200 rounded-lg mb-6"></div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-              {Array(3).fill(0).map((_, index) => (
-                <div key={index} className="h-24 bg-gray-200 rounded-lg"></div>
-              ))}
-            </div>
-            <div className="h-64 bg-gray-200 rounded-lg mb-6"></div>
-            <div className="h-64 bg-gray-200 rounded-lg"></div>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
-    <div className="min-h-screen py-12">
-      <div className="container mx-auto px-4">
-        {/* 用户信息卡片 */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
-            <div className="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center">
-              <span className="text-3xl font-bold text-blue-600">{user.name.charAt(0)}</span>
+    <div className="min-h-screen bg-gray-50">
+      {/* 顶部导航栏 */}
+      <nav className="bg-white shadow">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16">
+            <div className="flex items-center">
+              <a href="/" className="text-xl font-bold text-indigo-600">数据分析学习平台</a>
             </div>
-            <div className="flex-grow">
-              <h1 className="text-2xl font-bold mb-2">{user.name}</h1>
-              <p className="text-gray-600 mb-4">{user.email}</p>
-              <div className="flex flex-wrap gap-2">
-                <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">
-                  学习时长: 48 小时
-                </span>
-                <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">
-                  完成课程: 3 门
-                </span>
-                <span className="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm">
-                  成就: {achievements.length}
-                </span>
-              </div>
-            </div>
-            <div>
-              <button
-                onClick={handleLogout}
-                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors"
-              >
-                退出登录
-              </button>
+            <div className="flex items-center">
+              <a href="/profile" className="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">个人资料</a>
+              <a href="/courses" className="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">课程</a>
+              <a href="/community" className="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">社区</a>
+              <button className="ml-4 bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-700">退出登录</button>
             </div>
           </div>
         </div>
+      </nav>
 
-        {/* 学习统计卡片 */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <div className="flex items-center mb-4">
-              <BarChart3 className="h-6 w-6 text-blue-600 mr-2" />
-              <h3 className="font-semibold">学习进度</h3>
-            </div>
-            <div className="text-3xl font-bold mb-2">68%</div>
-            <p className="text-gray-600">已完成 17/25 课时</p>
-          </div>
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <div className="flex items-center mb-4">
-              <Award className="h-6 w-6 text-yellow-600 mr-2" />
-              <h3 className="font-semibold">成就等级</h3>
-            </div>
-            <div className="text-3xl font-bold mb-2">Lv. 3</div>
-            <p className="text-gray-600">数据分析师</p>
-          </div>
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <div className="flex items-center mb-4">
-              <FileText className="h-6 w-6 text-green-600 mr-2" />
-              <h3 className="font-semibold">获得证书</h3>
-            </div>
-            <div className="text-3xl font-bold mb-2">{certificates.length}</div>
-            <p className="text-gray-600">专业认证</p>
-          </div>
-        </div>
-
-        {/* 技能图谱 */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <h2 className="text-xl font-semibold mb-6">技能图谱</h2>
-          <div className="h-64">
-            <Radar data={skillsData} />
-          </div>
-        </div>
-
-        {/* 学习档案 */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-semibold">学习档案</h2>
-            <Link to="#" className="text-blue-600 hover:underline flex items-center">
-              查看全部 <ChevronRight className="h-4 w-4 ml-1" />
-            </Link>
-          </div>
-          <div className="space-y-4">
-            {/* 最近学习的课程 */}
-            <div className="border rounded-lg overflow-hidden">
-              <div className="flex items-center p-4 hover:bg-gray-50 transition-colors">
-                <div className="w-16 h-16 bg-blue-100 rounded-md flex items-center justify-center mr-4">
-                  <BookOpen className="h-8 w-8 text-blue-600" />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* 左侧个人信息 */}
+          <div className="lg:w-1/3">
+            <Card>
+              <CardHeader className="flex flex-col items-center">
+                <div className="w-24 h-24 rounded-full overflow-hidden mb-4">
+                  <img src={userInfo.avatar} alt="用户头像" className="w-full h-full object-cover" />
                 </div>
-                <div className="flex-grow">
-                  <h3 className="font-medium">商务数据分析基础</h3>
-                  <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
-                    <div className="bg-blue-600 h-2 rounded-full" style={{ width: '100%' }}></div>
-                  </div>
-                  <p className="text-sm text-gray-500 mt-1">已完成 6/6 章节</p>
-                </div>
-                <Link to="/courses/1" className="px-3 py-1 bg-blue-100 text-blue-700 rounded-md text-sm hover:bg-blue-200 transition-colors">
-                  查看课程
-                </Link>
-              </div>
-            </div>
-            <div className="border rounded-lg overflow-hidden">
-              <div className="flex items-center p-4 hover:bg-gray-50 transition-colors">
-                <div className="w-16 h-16 bg-green-100 rounded-md flex items-center justify-center mr-4">
-                  <BookOpen className="h-8 w-8 text-green-600" />
-                </div>
-                <div className="flex-grow">
-                  <h3 className="font-medium">SQL 数据分析实战</h3>
-                  <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
-                    <div className="bg-blue-600 h-2 rounded-full" style={{ width: '40%' }}></div>
-                  </div>
-                  <p className="text-sm text-gray-500 mt-1">已完成 2/5 章节</p>
-                </div>
-                <Link to="/courses/2" className="px-3 py-1 bg-blue-100 text-blue-700 rounded-md text-sm hover:bg-blue-200 transition-colors">
-                  继续学习
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* 成就系统 */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-semibold">成就系统</h2>
-            <Link to="#" className="text-blue-600 hover:underline flex items-center">
-              查看全部 <ChevronRight className="h-4 w-4 ml-1" />
-            </Link>
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-            {achievements.length > 0 ? (
-              achievements.slice(0, 4).map(achievement => (
-                <div key={achievement.id} className="bg-gray-50 rounded-lg p-4 text-center">
-                  <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-2">
-                    <Award className="h-6 w-6 text-blue-600" />
-                  </div>
-                  <h3 className="font-medium text-sm mb-1">{achievement.name}</h3>
-                  <p className="text-xs text-gray-500">{achievement.unlocked_at.substring(0, 10)}</p>
-                </div>
-              ))
-            ) : (
-              <div className="col-span-full text-center py-8">
-                <Award className="h-12 w-12 text-gray-300 mx-auto mb-2" />
-                <p className="text-gray-500">暂无成就</p>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* 获得的证书 */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-semibold">获得的证书</h2>
-            <Link to="#" className="text-blue-600 hover:underline flex items-center">
-              查看全部 <ChevronRight className="h-4 w-4 ml-1" />
-            </Link>
-          </div>
-          <div className="space-y-4">
-            {certificates.length > 0 ? (
-              certificates.map(certificate => (
-                <div key={certificate.id} className="border rounded-lg overflow-hidden">
-                  <div className="flex items-center p-4 hover:bg-gray-50 transition-colors">
-                    <div className="w-16 h-16 bg-green-100 rounded-md flex items-center justify-center mr-4">
-                      <FileText className="h-8 w-8 text-green-600" />
+                {isEditing ? (
+                  <div className="w-full">
+                    <Input
+                      name="name"
+                      value={editForm.name}
+                      onChange={handleEditChange}
+                      className="mb-2"
+                      placeholder="姓名"
+                    />
+                    <Input
+                      name="email"
+                      value={editForm.email}
+                      onChange={handleEditChange}
+                      className="mb-2"
+                      placeholder="邮箱"
+                    />
+                    <textarea
+                      name="bio"
+                      value={editForm.bio}
+                      onChange={handleEditChange}
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 mb-4"
+                      placeholder="个人简介"
+                      rows={3}
+                    />
+                    <div className="flex gap-2">
+                      <Button onClick={handleSave} className="flex-1">保存</Button>
+                      <Button onClick={() => setIsEditing(false)} className="flex-1">取消</Button>
                     </div>
-                    <div className="flex-grow">
-                      <h3 className="font-medium">{certificate.course?.title || '课程证书'}</h3>
-                      <p className="text-sm text-gray-500 mt-1">颁发日期: {certificate.issued_at.substring(0, 10)}</p>
-                    </div>
-                    <a
-                      href={certificate.certificate_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-3 py-1 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700 transition-colors"
-                    >
-                      查看证书
-                    </a>
+                  </div>
+                ) : (
+                  <>
+                    <CardTitle className="text-2xl font-bold text-center">{userInfo.name}</CardTitle>
+                    <CardDescription className="text-center mb-4">{userInfo.email}</CardDescription>
+                    <p className="text-gray-600 text-center mb-4">{userInfo.bio}</p>
+                    <Button onClick={() => setIsEditing(true)}>编辑资料</Button>
+                  </>
+                )}
+              </CardHeader>
+              <CardContent className="pt-0">
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">已学习课程</span>
+                    <span className="font-medium">12</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">学习时长</span>
+                    <span className="font-medium">48小时</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">获得成就</span>
+                    <span className="font-medium">{achievements.length}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">社区贡献</span>
+                    <span className="font-medium">8</span>
                   </div>
                 </div>
-              ))
-            ) : (
-              <div className="text-center py-8">
-                <FileText className="h-12 w-12 text-gray-300 mx-auto mb-2" />
-                <p className="text-gray-500">暂无证书</p>
-              </div>
-            )}
+              </CardContent>
+            </Card>
           </div>
-        </div>
 
-        {/* 个性化推荐 */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-xl font-semibold mb-6">个性化推荐</h2>
-          <div className="space-y-4">
-            <div className="border rounded-lg overflow-hidden">
-              <div className="flex items-center p-4 hover:bg-gray-50 transition-colors">
-                <div className="w-16 h-16 bg-purple-100 rounded-md flex items-center justify-center mr-4">
-                  <BookOpen className="h-8 w-8 text-purple-600" />
+          {/* 右侧学习进度和成就 */}
+          <div className="lg:w-2/3 space-y-8">
+            {/* 学习进度 */}
+            <Card>
+              <CardHeader>
+                <CardTitle>学习进度</CardTitle>
+                <CardDescription>最近学习的课程</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-6">
+                  {learningProgress.map((item, index) => (
+                    <div key={index}>
+                      <div className="flex justify-between mb-2">
+                        <span className="font-medium">{item.course}</span>
+                        <span className="text-sm text-gray-500">{item.progress}%</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2.5">
+                        <div 
+                          className="bg-indigo-600 h-2.5 rounded-full" 
+                          style={{ width: `${item.progress}%` }}
+                        ></div>
+                      </div>
+                      <div className="text-xs text-gray-500 mt-1">
+                        最后访问: {item.lastAccessed}
+                      </div>
+                    </div>
+                  ))}
                 </div>
-                <div className="flex-grow">
-                  <h3 className="font-medium">Python 数据科学入门</h3>
-                  <p className="text-sm text-gray-500 mt-1">基于您的学习历史推荐</p>
+              </CardContent>
+              <CardFooter>
+                <Button className="w-full">查看全部课程</Button>
+              </CardFooter>
+            </Card>
+
+            {/* 成就 */}
+            <Card>
+              <CardHeader>
+                <CardTitle>我的成就</CardTitle>
+                <CardDescription>获得的徽章和荣誉</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {achievements.map((achievement, index) => (
+                    <div key={index} className="flex items-center p-4 border border-gray-200 rounded-lg">
+                      <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mr-4">
+                        <svg className="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                        </svg>
+                      </div>
+                      <div>
+                        <h4 className="font-medium">{achievement.name}</h4>
+                        <p className="text-sm text-gray-500">{achievement.description}</p>
+                        <p className="text-xs text-gray-400">{achievement.date}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-                <Link to="/courses/3" className="px-3 py-1 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700 transition-colors">
-                  查看课程
-                </Link>
-              </div>
-            </div>
-            <div className="border rounded-lg overflow-hidden">
-              <div className="flex items-center p-4 hover:bg-gray-50 transition-colors">
-                <div className="w-16 h-16 bg-orange-100 rounded-md flex items-center justify-center mr-4">
-                  <BookOpen className="h-8 w-8 text-orange-600" />
+              </CardContent>
+            </Card>
+
+            {/* 学习统计 */}
+            <Card>
+              <CardHeader>
+                <CardTitle>学习统计</CardTitle>
+                <CardDescription>最近30天的学习情况</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="h-64 bg-gray-100 rounded-lg flex items-center justify-center">
+                  <p className="text-gray-500">学习统计图表</p>
                 </div>
-                <div className="flex-grow">
-                  <h3 className="font-medium">商业智能与数据可视化</h3>
-                  <p className="text-sm text-gray-500 mt-1">基于您的技能水平推荐</p>
-                </div>
-                <Link to="/courses/4" className="px-3 py-1 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700 transition-colors">
-                  查看课程
-                </Link>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>
+
+      {/* 页脚 */}
+      <footer className="bg-white border-t mt-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <div className="mb-4 md:mb-0">
+              <p className="text-gray-600">© 2024 数据分析学习平台. 保留所有权利.</p>
+            </div>
+            <div className="flex space-x-6">
+              <a href="#" className="text-gray-600 hover:text-indigo-600">关于我们</a>
+              <a href="#" className="text-gray-600 hover:text-indigo-600">服务条款</a>
+              <a href="#" className="text-gray-600 hover:text-indigo-600">隐私政策</a>
+              <a href="#" className="text-gray-600 hover:text-indigo-600">联系我们</a>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };

@@ -1,101 +1,156 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Mail, ArrowLeft } from 'lucide-react';
+import { Button } from '../components/ui/button';
+import { Input } from '../components/ui/input';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../components/ui/card';
 
 const ForgotPassword: React.FC = () => {
   const [email, setEmail] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [error, setError] = useState('');
   const navigate = useNavigate();
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setEmail(value);
+    
+    // Clear error when user starts typing
+    if (errors.email) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors.email;
+        return newErrors;
+      });
+    }
+  };
+
+  const validateForm = (): boolean => {
+    const newErrors: Record<string, string> = {};
+    
+    if (!email.trim()) {
+      newErrors.email = '请输入邮箱';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      newErrors.email = '请输入有效的邮箱地址';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (email) {
-      setLoading(true);
-      setError('');
-      try {
-        // 这里应该调用密码重置 API
-        // 模拟 API 调用
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        setSuccess(true);
-      } catch (err: any) {
-        setError('发送重置邮件失败，请稍后重试');
-      } finally {
-        setLoading(false);
-      }
+    
+    if (!validateForm()) {
+      return;
+    }
+    
+    setIsLoading(true);
+    
+    try {
+      // 模拟密码重置请求
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // 显示成功消息
+      setSuccess(true);
+      
+      // 3秒后跳转到登录页面
+      setTimeout(() => {
+        navigate('/login');
+      }, 3000);
+    } catch (error) {
+      setErrors({ submit: '发送重置链接失败，请稍后重试' });
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="w-full max-w-md bg-white rounded-lg shadow-md p-8">
-        <div className="mb-6">
-          <Link to="/login" className="flex items-center text-blue-600 hover:underline">
-            <ArrowLeft className="h-4 w-4 mr-1" />
-            返回登录
-          </Link>
-        </div>
-        <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold">忘记密码</h1>
-          <p className="text-gray-600 mt-2">输入您的邮箱地址，我们将发送重置密码的链接</p>
-        </div>
-
-        {error && (
-          <div className="bg-red-100 text-red-700 p-3 rounded-md mb-4">
-            {error}
-          </div>
-        )}
-
-        {success ? (
-          <div className="text-center py-8">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Mail className="h-8 w-8 text-green-600" />
-            </div>
-            <h3 className="text-lg font-medium mb-2">邮件已发送</h3>
-            <p className="text-gray-600 mb-4">
-              我们已向您的邮箱发送了重置密码的链接，请查收并按照邮件中的说明操作。
-            </p>
-            <Link to="/login" className="inline-block px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
-              返回登录
-            </Link>
-          </div>
-        ) : (
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                邮箱
-              </label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <input
-                  type="email"
-                  id="email"
-                  className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
-            </div>
-            <button
-              type="submit"
-              className="w-full flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-              disabled={loading}
-            >
-              {loading ? '发送中...' : '发送重置链接'}
-            </button>
-          </form>
-        )}
-
-        <div className="mt-8 text-center">
-          <p className="text-sm text-gray-600">
-            想起密码了？
-            <Link to="/login" className="ml-1 text-blue-600 hover:underline">
-              立即登录
-            </Link>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8">
+        <div className="text-center">
+          <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
+            重置密码
+          </h2>
+          <p className="mt-2 text-sm text-gray-600">
+            输入您的邮箱地址，我们将发送重置密码的链接
           </p>
         </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>忘记密码</CardTitle>
+            <CardDescription>
+              请输入您注册时使用的邮箱地址
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {success ? (
+              <div className="text-center py-8">
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-medium text-gray-900">重置链接已发送</h3>
+                <p className="mt-2 text-sm text-gray-600">
+                  请检查您的邮箱，我们已发送重置密码的链接。
+                </p>
+                <p className="mt-4 text-sm text-gray-500">
+                  您将在 3 秒后跳转到登录页面...
+                </p>
+              </div>
+            ) : (
+              <form className="space-y-6" onSubmit={handleSubmit}>
+                {errors.submit && (
+                  <div className="text-red-500 text-sm">{errors.submit}</div>
+                )}
+                
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                    邮箱地址
+                  </label>
+                  <div className="mt-1">
+                    <Input
+                      id="email"
+                      name="email"
+                      type="email"
+                      autoComplete="email"
+                      required
+                      value={email}
+                      onChange={handleChange}
+                      className={errors.email ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : ''}
+                    />
+                  </div>
+                  {errors.email && (
+                    <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+                  )}
+                </div>
+
+                <div>
+                  <Button
+                    type="submit"
+                    className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? '发送中...' : '发送重置链接'}
+                  </Button>
+                </div>
+              </form>
+            )}
+          </CardContent>
+          <CardFooter className="flex justify-center">
+            <p className="text-sm text-gray-600">
+              想起密码了？
+              <Link
+                to="/login"
+                className="font-medium text-indigo-600 hover:text-indigo-500 ml-1"
+              >
+                登录
+              </Link>
+            </p>
+          </CardFooter>
+        </Card>
       </div>
     </div>
   );

@@ -1,273 +1,256 @@
-import React, { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import { Link, useParams } from 'react-router-dom';
-import { useCourseStore, useUserStore } from '../store';
-import { Check, Clock, ChevronLeft, ChevronRight, BookOpen, Play } from 'lucide-react';
 
-const LessonDetail: React.FC = () => {
+export default function LessonDetail() {
   const { id, lessonId } = useParams<{ id: string; lessonId: string }>();
-  const courseId = parseInt(id || '0');
-  const currentLessonId = parseInt(lessonId || '0');
-  const { currentCourse, lessons, progress, fetchCourseDetails, fetchLessons, fetchProgress, updateProgress, loading } = useCourseStore();
-  const { user } = useUserStore();
-  const [isCompleted, setIsCompleted] = useState(false);
+  const courseId = parseInt(id || '1');
+  const currentLessonId = parseInt(lessonId || '1');
 
-  useEffect(() => {
-    if (courseId) {
-      fetchCourseDetails(courseId);
-      fetchLessons(courseId);
-      if (user) {
-        fetchProgress(courseId);
-      }
-    }
-  }, [courseId, fetchCourseDetails, fetchLessons, fetchProgress, user]);
-
-  useEffect(() => {
-    if (user) {
-      const lessonProgress = progress.find(p => p.lesson_id === currentLessonId);
-      setIsCompleted(lessonProgress?.completed || false);
-    }
-  }, [progress, currentLessonId, user]);
-
-  const handleComplete = async () => {
-    if (user) {
-      await updateProgress(currentLessonId, !isCompleted);
-      setIsCompleted(!isCompleted);
-    }
+  // 模拟课程和章节数据
+  const course = {
+    id: courseId,
+    title: '商务数据分析基础',
+    lessons: [
+      { id: 1, title: '数据分析简介', description: '了解数据分析的基本概念、流程和应用场景', duration: 45, completed: true, content: '数据分析是指用适当的统计分析方法对收集来的大量数据进行分析，提取有用信息和形成结论而对数据加以详细研究和概括总结的过程。' },
+      { id: 2, title: '数据收集与清洗', description: '学习如何收集和清洗数据，确保数据质量', duration: 60, completed: true, content: '数据收集是数据分析的第一步，包括从各种来源获取数据。数据清洗则是确保数据质量的关键步骤，包括处理缺失值、异常值和重复值等。' },
+      { id: 3, title: '数据可视化基础', description: '使用 Excel 和 Google Sheets 创建基本的数据可视化', duration: 45, completed: false, content: '数据可视化是将数据转化为图形或图像的过程，有助于更直观地理解数据。常用的可视化工具包括 Excel、Google Sheets、Tableau 和 Power BI 等。' },
+      { id: 4, title: '数据分析方法', description: '学习描述性分析、预测性分析和规范性分析方法', duration: 60, completed: false, content: '数据分析方法包括描述性分析（描述数据特征）、预测性分析（预测未来趋势）和规范性分析（提供最优决策建议）。' },
+      { id: 5, title: '案例分析', description: '通过实际商业案例学习如何应用数据分析解决问题', duration: 45, completed: false, content: '通过分析实际商业案例，可以更好地理解如何将数据分析方法应用到实际业务场景中，解决真实问题。' },
+      { id: 6, title: '实战练习', description: '完成一个完整的数据分析项目，从数据收集到结果展示', duration: 60, completed: false, content: '实战练习是巩固所学知识的重要方式，通过完成一个完整的数据分析项目，可以综合运用各种分析方法和工具。' }
+    ]
   };
 
-  const currentLesson = lessons.find(l => l.id === currentLessonId);
-  const currentIndex = lessons.findIndex(l => l.id === currentLessonId);
-  const prevLesson = currentIndex > 0 ? lessons[currentIndex - 1] : null;
-  const nextLesson = currentIndex < lessons.length - 1 ? lessons[currentIndex + 1] : null;
+  const currentLesson = course.lessons.find(lesson => lesson.id === currentLessonId) || course.lessons[0];
+  const nextLesson = course.lessons.find(lesson => lesson.id === currentLessonId + 1);
+  const prevLesson = course.lessons.find(lesson => lesson.id === currentLessonId - 1);
 
-  if (loading || !currentCourse || !currentLesson) {
-    return (
-      <div className="min-h-screen py-12">
-        <div className="container mx-auto px-4">
-          <div className="animate-pulse">
-            <div className="h-10 bg-gray-200 rounded mb-6 w-1/2"></div>
-            <div className="h-80 bg-gray-200 rounded-lg mb-6"></div>
-            <div className="h-6 bg-gray-200 rounded mb-4 w-1/3"></div>
-            <div className="h-4 bg-gray-200 rounded mb-2 w-full"></div>
-            <div className="h-4 bg-gray-200 rounded mb-2 w-3/4"></div>
-            <div className="h-4 bg-gray-200 rounded mb-6 w-1/2"></div>
-            <div className="h-12 bg-gray-200 rounded"></div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const [isCompleted, setIsCompleted] = useState(currentLesson.completed);
+
+  const handleComplete = () => {
+    setIsCompleted(!isCompleted);
+  };
 
   return (
-    <div className="min-h-screen py-12">
-      <div className="container mx-auto px-4">
-        {/* 课程导航 */}
-        <div className="bg-white rounded-lg shadow-md p-4 mb-6">
-          <div className="flex items-center justify-between">
+    <div className="min-h-screen bg-gray-50">
+      {/* 导航栏 */}
+      <nav className="bg-white shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16">
             <div className="flex items-center">
-              <Link to={`/courses/${courseId}`} className="flex items-center text-blue-600 hover:underline mr-4">
-                <ChevronLeft className="h-4 w-4 mr-1" />
-                返回课程
-              </Link>
-              <h2 className="font-medium">{currentCourse.title}</h2>
+              <Link to="/" className="text-2xl font-bold text-blue-800">DataLearn</Link>
             </div>
-            <div className="flex items-center space-x-2">
-              <Clock className="h-4 w-4 text-gray-500" />
-              <span className="text-sm text-gray-600">{currentLesson.duration} 分钟</span>
+            <div className="flex items-center space-x-4">
+              <Link to="/courses" className="text-gray-700 hover:text-blue-600">课程</Link>
+              <Link to="/community" className="text-gray-700 hover:text-blue-600">社区</Link>
+              <Link to="/profile" className="text-gray-700 hover:text-blue-600">个人中心</Link>
+              <Link to="/login" className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">登录</Link>
+              <Link to="/register" className="bg-white border border-blue-600 text-blue-600 px-4 py-2 rounded-md hover:bg-blue-50">注册</Link>
             </div>
           </div>
         </div>
+      </nav>
 
-        {/* 章节内容 */}
-        <div className="flex flex-col lg:flex-row gap-6">
-          {/* 左侧章节列表 */}
-          <div className="lg:w-1/4">
-            <div className="bg-white rounded-lg shadow-md p-4 sticky top-4">
-              <h3 className="font-semibold mb-4">课程章节</h3>
-              <div className="space-y-2">
-                {lessons.map((lesson, index) => {
-                  const lessonProgress = progress.find(p => p.lesson_id === lesson.id);
-                  const lessonIsCompleted = lessonProgress?.completed || false;
-                  const isCurrent = lesson.id === currentLessonId;
+      {/* 章节内容 */}
+      <section className="py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* 面包屑导航 */}
+          <div className="mb-6">
+            <nav className="flex" aria-label="Breadcrumb">
+              <ol className="inline-flex items-center space-x-1 md:space-x-3">
+                <li className="inline-flex items-center">
+                  <Link to="/" className="text-gray-700 hover:text-blue-600 text-sm">首页</Link>
+                </li>
+                <li>
+                  <div className="flex items-center">
+                    <svg className="w-4 h-4 text-gray-400 mx-2" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                    </svg>
+                    <Link to={`/courses`} className="text-gray-700 hover:text-blue-600 text-sm">课程</Link>
+                  </div>
+                </li>
+                <li>
+                  <div className="flex items-center">
+                    <svg className="w-4 h-4 text-gray-400 mx-2" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                    </svg>
+                    <Link to={`/courses/${courseId}`} className="text-gray-700 hover:text-blue-600 text-sm">{course.title}</Link>
+                  </div>
+                </li>
+                <li aria-current="page">
+                  <div className="flex items-center">
+                    <svg className="w-4 h-4 text-gray-400 mx-2" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                    </svg>
+                    <span className="text-gray-500 text-sm">{currentLesson.title}</span>
+                  </div>
+                </li>
+              </ol>
+            </nav>
+          </div>
 
-                  return (
+          {/* 章节内容 */}
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            {/* 左侧章节列表 */}
+            <div className="lg:col-span-1">
+              <Card className="p-4">
+                <h2 className="text-lg font-bold mb-4">课程章节</h2>
+                <div className="space-y-2">
+                  {course.lessons.map((lesson) => (
                     <Link
                       key={lesson.id}
                       to={`/courses/${courseId}/lessons/${lesson.id}`}
-                      className={`flex items-center p-3 rounded-md transition-colors ${isCurrent ? 'bg-blue-50 border-l-4 border-blue-600' : 'hover:bg-gray-50'}`}
+                      className={`flex items-center p-2 rounded-md ${lesson.id === currentLessonId ? 'bg-blue-50 text-blue-600' : 'hover:bg-gray-100'}`}
                     >
-                      <div className="mr-3">
-                        {lessonIsCompleted ? (
-                          <Check className="h-4 w-4 text-green-500" />
-                        ) : (
-                          <Play className="h-4 w-4 text-blue-600" />
-                        )}
-                      </div>
-                      <div className="flex-grow">
-                        <div className="flex items-center">
-                          <span className="text-sm font-medium mr-2">{index + 1}.</span>
-                          <span className={`text-sm ${isCurrent ? 'font-medium text-blue-600' : 'text-gray-700'}`}>
-                            {lesson.title}
-                          </span>
+                      {lesson.completed ? (
+                        <svg className="w-5 h-5 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                      ) : (
+                        <div className="w-5 h-5 rounded-full bg-gray-200 flex items-center justify-center mr-2">
+                          <span className="text-gray-500 text-xs">{lesson.id}</span>
                         </div>
-                        {lesson.duration && (
-                          <span className="text-xs text-gray-500">{lesson.duration} 分钟</span>
-                        )}
-                      </div>
+                      )}
+                      <span className="text-sm">{lesson.title}</span>
+                      <span className="ml-auto text-xs text-gray-500">{lesson.duration} 分钟</span>
                     </Link>
-                  );
-                })}
-              </div>
+                  ))}
+                </div>
+              </Card>
             </div>
-          </div>
 
-          {/* 右侧内容区域 */}
-          <div className="lg:w-3/4">
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h1 className="text-2xl font-bold mb-6">{currentLesson.title}</h1>
-              
-              {/* 内容类型：视频 */}
-              {currentLesson.content_type === 'video' && (
-                <div className="mb-8">
-                  <div className="aspect-video bg-gray-900 rounded-lg flex items-center justify-center mb-4">
-                    {currentLesson.content_url ? (
-                      <video
-                        src={currentLesson.content_url}
-                        controls
-                        className="w-full h-full object-contain"
-                      />
-                    ) : (
-                      <div className="text-white text-center">
-                        <Play className="h-12 w-12 mx-auto mb-2" />
-                        <p>视频内容</p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
+            {/* 右侧内容 */}
+            <div className="lg:col-span-3">
+              <Card className="p-6">
+                <h1 className="text-2xl font-bold mb-4">{currentLesson.title}</h1>
+                <p className="text-gray-500 mb-6">{currentLesson.description}</p>
 
-              {/* 内容类型：文本 */}
-              {currentLesson.content_type === 'text' && (
+                {/* 视频播放器占位 */}
                 <div className="mb-8">
-                  <div className="prose max-w-none">
-                    <p className="text-gray-600 mb-4">
-                      {currentLesson.description}
-                    </p>
-                    <p className="text-gray-600 mb-4">
-                      这是文本类型的学习内容，包含详细的知识点讲解、概念说明和示例分析。
-                    </p>
-                    <p className="text-gray-600 mb-4">
-                      通过阅读这些内容，您将掌握相关的数据分析概念和方法，为实际应用打下基础。
-                    </p>
-                    <h3 className="text-lg font-semibold mt-6 mb-3">关键知识点</h3>
-                    <ul className="list-disc pl-5 space-y-2">
-                      <li>数据分析的基本概念和流程</li>
-                      <li>数据收集和清洗的方法</li>
-                      <li>数据可视化的基本原则</li>
-                      <li>数据分析的常用工具和技术</li>
-                    </ul>
-                  </div>
-                </div>
-              )}
-
-              {/* 内容类型：互动练习 */}
-              {currentLesson.content_type === 'interactive' && (
-                <div className="mb-8">
-                  <div className="bg-gray-50 p-6 rounded-lg">
-                    <h3 className="text-lg font-semibold mb-4">互动练习</h3>
-                    <p className="text-gray-600 mb-4">
-                      {currentLesson.description}
-                    </p>
-                    <div className="space-y-4">
-                      <div className="border p-4 rounded-lg">
-                        <h4 className="font-medium mb-2">问题 1：数据清洗的主要步骤是什么？</h4>
-                        <div className="space-y-2">
-                          <div className="flex items-center">
-                            <input type="radio" id="q1a1" name="q1" className="mr-2" />
-                            <label htmlFor="q1a1">数据收集、数据转换、数据分析</label>
-                          </div>
-                          <div className="flex items-center">
-                            <input type="radio" id="q1a2" name="q1" className="mr-2" />
-                            <label htmlFor="q1a2">数据识别、数据清洗、数据验证</label>
-                          </div>
-                          <div className="flex items-center">
-                            <input type="radio" id="q1a3" name="q1" className="mr-2" />
-                            <label htmlFor="q1a3">数据导入、数据处理、数据导出</label>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="border p-4 rounded-lg">
-                        <h4 className="font-medium mb-2">问题 2：以下哪种图表最适合展示数据的变化趋势？</h4>
-                        <div className="space-y-2">
-                          <div className="flex items-center">
-                            <input type="radio" id="q2a1" name="q2" className="mr-2" />
-                            <label htmlFor="q2a1">饼图</label>
-                          </div>
-                          <div className="flex items-center">
-                            <input type="radio" id="q2a2" name="q2" className="mr-2" />
-                            <label htmlFor="q2a2">折线图</label>
-                          </div>
-                          <div className="flex items-center">
-                            <input type="radio" id="q2a3" name="q2" className="mr-2" />
-                            <label htmlFor="q2a3">柱状图</label>
-                          </div>
-                        </div>
-                      </div>
-                      <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
-                        提交答案
-                      </button>
+                  <div className="w-full aspect-video bg-gray-100 rounded-lg flex items-center justify-center">
+                    <div className="text-center">
+                      <svg className="w-16 h-16 text-gray-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <p className="text-gray-500">视频播放器</p>
                     </div>
                   </div>
                 </div>
-              )}
 
-              {/* 操作按钮 */}
-              <div className="border-t pt-6 flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
-                <div className="flex items-center space-x-4">
-                  <button
-                    onClick={handleComplete}
-                    className={`flex items-center px-4 py-2 rounded-md transition-colors ${isCompleted ? 'bg-gray-200 text-gray-700' : 'bg-blue-600 text-white hover:bg-blue-700'}`}
-                  >
-                    {isCompleted ? (
-                      <>
-                        <Check className="h-4 w-4 mr-2" />
-                        已完成
-                      </>
-                    ) : (
-                      <>
-                        <Check className="h-4 w-4 mr-2" />
-                        标记为完成
-                      </>
+                {/* 章节内容 */}
+                <div className="mb-8">
+                  <h2 className="text-xl font-bold mb-4">章节内容</h2>
+                  <p className="text-gray-700 mb-4">{currentLesson.content}</p>
+                  <p className="text-gray-700 mb-4">数据分析是一个迭代过程，包括以下步骤：</p>
+                  <ul className="list-disc pl-5 text-gray-700 space-y-2 mb-4">
+                    <li>定义问题和目标</li>
+                    <li>收集相关数据</li>
+                    <li>清洗和预处理数据</li>
+                    <li>分析数据</li>
+                    <li>可视化和解释结果</li>
+                    <li>提出建议和实施方案</li>
+                  </ul>
+                </div>
+
+                {/* 互动练习 */}
+                <div className="mb-8">
+                  <h2 className="text-xl font-bold mb-4">互动练习</h2>
+                  <Card className="p-4 border border-gray-200">
+                    <h3 className="font-medium text-gray-900 mb-2">问题：数据分析的主要步骤有哪些？</h3>
+                    <div className="space-y-2 mb-4">
+                      <div className="flex items-center">
+                        <input type="radio" id="option1" name="question1" className="mr-2" />
+                        <label htmlFor="option1">收集数据、分析数据、可视化结果</label>
+                      </div>
+                      <div className="flex items-center">
+                        <input type="radio" id="option2" name="question1" className="mr-2" />
+                        <label htmlFor="option2">定义问题、收集数据、清洗数据、分析数据、可视化结果、提出建议</label>
+                      </div>
+                      <div className="flex items-center">
+                        <input type="radio" id="option3" name="question1" className="mr-2" />
+                        <label htmlFor="option3">收集数据、清洗数据、分析数据</label>
+                      </div>
+                    </div>
+                    <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+                      提交答案
+                    </Button>
+                  </Card>
+                </div>
+
+                {/* 操作按钮 */}
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Button
+                      className={`${isCompleted ? 'bg-green-600 hover:bg-green-700' : 'bg-blue-600 hover:bg-blue-700'} text-white`}
+                      onClick={handleComplete}
+                    >
+                      {isCompleted ? '已完成' : '标记为完成'}
+                    </Button>
+                  </div>
+                  <div className="flex space-x-4">
+                    {prevLesson && (
+                      <Link to={`/courses/${courseId}/lessons/${prevLesson.id}`}>
+                        <Button className="bg-white border border-gray-300 text-gray-700 hover:bg-gray-50">
+                          上一章
+                        </Button>
+                      </Link>
                     )}
-                  </button>
+                    {nextLesson && (
+                      <Link to={`/courses/${courseId}/lessons/${nextLesson.id}`}>
+                        <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+                          下一章
+                        </Button>
+                      </Link>
+                    )}
+                  </div>
                 </div>
-                <div className="flex items-center space-x-2">
-                  {prevLesson && (
-                    <Link
-                      to={`/courses/${courseId}/lessons/${prevLesson.id}`}
-                      className="flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors"
-                    >
-                      <ChevronLeft className="h-4 w-4 mr-1" />
-                      上一章
-                    </Link>
-                  )}
-                  {nextLesson && (
-                    <Link
-                      to={`/courses/${courseId}/lessons/${nextLesson.id}`}
-                      className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-                    >
-                      下一章
-                      <ChevronRight className="h-4 w-4 ml-1" />
-                    </Link>
-                  )}
-                </div>
-              </div>
+              </Card>
             </div>
           </div>
         </div>
-      </div>
+      </section>
+
+      {/* 页脚 */}
+      <footer className="bg-gray-800 text-white py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+              <h3 className="text-lg font-bold mb-4">DataLearn</h3>
+              <p className="text-gray-400">商务数据分析课程自主学习平台，为您提供专业的数据分析技能培训。</p>
+            </div>
+            <div>
+              <h3 className="text-lg font-bold mb-4">课程分类</h3>
+              <ul className="space-y-2">
+                <li><a href="/courses" className="text-gray-400 hover:text-white">数据分析</a></li>
+                <li><a href="/courses" className="text-gray-400 hover:text-white">数据库</a></li>
+                <li><a href="/courses" className="text-gray-400 hover:text-white">编程</a></li>
+                <li><a href="/courses" className="text-gray-400 hover:text-white">数据可视化</a></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-lg font-bold mb-4">快速链接</h3>
+              <ul className="space-y-2">
+                <li><a href="/" className="text-gray-400 hover:text-white">首页</a></li>
+                <li><a href="/courses" className="text-gray-400 hover:text-white">课程</a></li>
+                <li><a href="/community" className="text-gray-400 hover:text-white">社区</a></li>
+                <li><a href="/profile" className="text-gray-400 hover:text-white">个人中心</a></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-lg font-bold mb-4">联系我们</h3>
+              <ul className="space-y-2">
+                <li className="text-gray-400">邮箱: contact@datalearn.com</li>
+                <li className="text-gray-400">电话: 400-123-4567</li>
+              </ul>
+            </div>
+          </div>
+          <div className="mt-8 pt-8 border-t border-gray-700 text-center text-gray-400">
+            <p>© 2026 DataLearn. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
-};
-
-export default LessonDetail;
+}

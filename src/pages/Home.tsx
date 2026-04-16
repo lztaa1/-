@@ -1,75 +1,111 @@
-import React, { useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Search } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useCourseStore, useUserStore } from '../store';
-import { BookOpen, BarChart3, Database, Code, PieChart, TrendingUp, Users } from 'lucide-react';
 
-const Home: React.FC = () => {
-  const { courses, fetchCourses, loading } = useCourseStore();
-  const { user } = useUserStore();
-
-  useEffect(() => {
-    fetchCourses();
-  }, [fetchCourses]);
+export default function Home() {
+  // 模拟课程数据
+  const courses = [
+    {
+      id: 1,
+      title: '商务数据分析基础',
+      level: '初级',
+      category: '数据分析',
+      rating: 4.8,
+      enrollCount: 1200,
+      coverImage: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=business%20data%20analysis%20course%20cover%2C%20professional%20looking%2C%20blue%20theme&image_size=landscape_16_9'
+    },
+    {
+      id: 2,
+      title: 'SQL 数据分析实战',
+      level: '中级',
+      category: '数据库',
+      rating: 4.9,
+      enrollCount: 850,
+      coverImage: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=SQL%20data%20analysis%20course%20cover%2C%20professional%20looking%2C%20blue%20theme&image_size=landscape_16_9'
+    },
+    {
+      id: 3,
+      title: 'Python 数据科学入门',
+      level: '中级',
+      category: '编程',
+      rating: 4.7,
+      enrollCount: 620,
+      coverImage: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Python%20data%20science%20course%20cover%2C%20professional%20looking%2C%20blue%20theme&image_size=landscape_16_9'
+    },
+    {
+      id: 4,
+      title: '商业智能与数据可视化',
+      level: '高级',
+      category: '数据可视化',
+      rating: 4.6,
+      enrollCount: 480,
+      coverImage: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=business%20intelligence%20data%20visualization%20course%20cover%2C%20professional%20looking%2C%20blue%20theme&image_size=landscape_16_9'
+    }
+  ];
 
   // 课程分类
   const categories = [
-    { id: 'all', name: '全部课程', icon: <BookOpen className="h-6 w-6" />, count: courses.length },
-    { id: '数据分析', name: '数据分析', icon: <BarChart3 className="h-6 w-6" />, count: courses.filter(c => c.category === '数据分析').length },
-    { id: '数据库', name: '数据库', icon: <Database className="h-6 w-6" />, count: courses.filter(c => c.category === '数据库').length },
-    { id: '编程', name: '编程', icon: <Code className="h-6 w-6" />, count: courses.filter(c => c.category === '编程').length },
-    { id: '数据可视化', name: '数据可视化', icon: <PieChart className="h-6 w-6" />, count: courses.filter(c => c.category === '数据可视化').length },
-    { id: '大数据', name: '大数据', icon: <TrendingUp className="h-6 w-6" />, count: courses.filter(c => c.category === '大数据').length },
+    { id: 1, name: '数据分析', count: 12 },
+    { id: 2, name: '数据库', count: 8 },
+    { id: 3, name: '编程', count: 15 },
+    { id: 4, name: '数据可视化', count: 6 },
+    { id: 5, name: '大数据', count: 4 }
   ];
 
-  // 推荐课程（前4个）
-  const recommendedCourses = courses.slice(0, 4);
-
   return (
-    <div className="min-h-screen">
-      {/* 英雄区 */}
-      <section className="relative bg-gradient-to-r from-[#1a365d] to-[#2b6cb0] text-white py-20">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">
-              掌握商务数据分析技能，<br />
-              <span className="text-[#ed8936]">开启职业新篇章</span>
-            </h1>
-            <p className="text-xl mb-8 text-gray-200">
-              从基础到高级，系统学习数据分析、SQL、Python等实用技能，
-              成为数据驱动决策的职场精英。
-            </p>
-            <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-              <Link to="/courses" className="px-8 py-3 bg-[#ed8936] rounded-md font-medium hover:bg-orange-600 transition-colors text-center">
-                浏览课程
-              </Link>
-              {!user && (
-                <Link to="/register" className="px-8 py-3 bg-white text-[#1a365d] rounded-md font-medium hover:bg-gray-100 transition-colors text-center">
-                  立即注册
-                </Link>
-              )}
+    <div className="min-h-screen bg-gray-50">
+      {/* 导航栏 */}
+      <nav className="bg-white shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16">
+            <div className="flex items-center">
+              <Link to="/" className="text-2xl font-bold text-blue-800">DataLearn</Link>
+            </div>
+            <div className="flex items-center space-x-4">
+              <Link to="/courses" className="text-gray-700 hover:text-blue-600">课程</Link>
+              <Link to="/community" className="text-gray-700 hover:text-blue-600">社区</Link>
+              <Link to="/profile" className="text-gray-700 hover:text-blue-600">个人中心</Link>
+              <Link to="/login" className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">登录</Link>
+              <Link to="/register" className="bg-white border border-blue-600 text-blue-600 px-4 py-2 rounded-md hover:bg-blue-50">注册</Link>
             </div>
           </div>
         </div>
-        {/* 装饰元素 */}
-        <div className="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-gray-50 to-transparent"></div>
+      </nav>
+
+      {/* 英雄区 */}
+      <section className="bg-gradient-to-r from-blue-800 to-blue-600 text-white py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h1 className="text-4xl font-extrabold mb-4">商务数据分析课程自主学习平台</h1>
+            <p className="text-xl mb-8">掌握数据分析技能，提升职场竞争力</p>
+            <div className="flex justify-center space-x-4">
+              <Link to="/courses">
+                <Button className="bg-white text-blue-800 hover:bg-gray-100 text-lg px-6 py-3">
+                  浏览课程
+                </Button>
+              </Link>
+              <Link to="/register">
+                <Button className="bg-orange-500 text-white hover:bg-orange-600 text-lg px-6 py-3">
+                  立即注册
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* 课程分类导航 */}
-      <section className="py-12 bg-gray-50">
-        <div className="container mx-auto px-4">
+      <section className="py-12 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl font-bold mb-8 text-center">课程分类</h2>
-          <div className="flex overflow-x-auto space-x-4 pb-4">
-            {categories.map(category => (
-              <Link
-                key={category.id}
-                to={`/courses?category=${category.id}`}
-                className="flex-shrink-0 bg-white rounded-lg shadow-md p-4 min-w-[160px] flex flex-col items-center justify-center hover:shadow-lg transition-shadow"
-              >
-                <div className="bg-blue-100 p-3 rounded-full mb-3">
-                  {category.icon}
-                </div>
-                <h3 className="font-medium mb-1">{category.name}</h3>
-                <p className="text-sm text-gray-500">{category.count} 课程</p>
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+            {categories.map((category) => (
+              <Link key={category.id} to="/courses" className="bg-gray-50 border border-gray-200 rounded-lg p-4 text-center hover:bg-blue-50 hover:border-blue-300 transition-colors">
+                <h3 className="font-medium text-gray-900">{category.name}</h3>
+                <p className="text-sm text-gray-500">{category.count} 门课程</p>
               </Link>
             ))}
           </div>
@@ -77,202 +113,129 @@ const Home: React.FC = () => {
       </section>
 
       {/* 推荐课程 */}
-      <section className="py-12">
-        <div className="container mx-auto px-4">
-          <div className="flex justify-between items-center mb-8">
-            <h2 className="text-2xl font-bold">推荐课程</h2>
-            <Link to="/courses" className="text-blue-600 hover:underline flex items-center">
-              查看全部 <span className="ml-1">→</span>
-            </Link>
-          </div>
+      <section className="py-12 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-2xl font-bold mb-8 text-center">推荐课程</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {loading ? (
-              // 加载状态
-              Array(4).fill(0).map((_, index) => (
-                <div key={index} className="bg-white rounded-lg shadow-md overflow-hidden animate-pulse">
-                  <div className="h-48 bg-gray-200"></div>
-                  <div className="p-4">
-                    <div className="h-6 bg-gray-200 rounded mb-2"></div>
-                    <div className="h-4 bg-gray-200 rounded mb-2 w-3/4"></div>
-                    <div className="h-4 bg-gray-200 rounded mb-4 w-1/2"></div>
-                    <div className="flex justify-between items-center">
-                      <div className="h-8 bg-gray-200 rounded w-16"></div>
-                      <div className="h-8 bg-gray-200 rounded w-24"></div>
-                    </div>
-                  </div>
-                </div>
-              ))
-            ) : (
-              recommendedCourses.map(course => (
-                <Link
-                  key={course.id}
-                  to={`/courses/${course.id}`}
-                  className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow group"
-                >
-                  <div className="relative h-48 bg-gray-200">
-                    {course.cover_image_url ? (
-                      <img
-                        src={course.cover_image_url}
-                        alt={course.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-500 to-blue-700">
-                        <BookOpen className="h-12 w-12 text-white" />
-                      </div>
-                    )}
-                    {course.is_premium && (
-                      <div className="absolute top-2 right-2 bg-[#ed8936] text-white text-xs px-2 py-1 rounded">
-                        高级
-                      </div>
-                    )}
+            {courses.map((course) => (
+              <Link key={course.id} to={`/courses/${course.id}`} className="block">
+                <Card className="overflow-hidden hover:shadow-md transition-shadow">
+                  <div className="h-48 overflow-hidden">
+                    <img src={course.coverImage} alt={course.title} className="w-full h-full object-cover" />
                   </div>
                   <div className="p-4">
-                    <h3 className="font-medium mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">
-                      {course.title}
-                    </h3>
-                    <div className="flex items-center text-sm text-gray-500 mb-3">
-                      <span className="bg-blue-100 text-blue-800 px-2 py-0.5 rounded mr-2">
-                        {course.level}
-                      </span>
-                      <span>{course.category}</span>
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-xs font-medium bg-blue-100 text-blue-800 px-2 py-1 rounded">{course.level}</span>
+                      <span className="text-xs text-gray-500">{course.category}</span>
                     </div>
+                    <h3 className="font-medium text-gray-900 mb-2">{course.title}</h3>
                     <div className="flex justify-between items-center">
                       <div className="flex items-center">
-                        <span className="text-yellow-500 font-medium">★</span>
-                        <span className="ml-1 text-sm">{course.rating}</span>
+                        <svg className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                        <span className="ml-1 text-sm font-medium text-gray-900">{course.rating}</span>
                       </div>
-                      <span className="text-sm font-medium text-gray-700">
-                        ¥{course.price === 0 ? '免费' : course.price}
-                      </span>
+                      <span className="text-sm text-gray-500">{course.enrollCount} 人学习</span>
                     </div>
                   </div>
-                </Link>
-              ))
-            )}
+                </Card>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
 
       {/* 学习进度概览 */}
-      {user && (
-        <section className="py-12 bg-gray-50">
-          <div className="container mx-auto px-4">
-            <h2 className="text-2xl font-bold mb-8">学习进度</h2>
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <div className="flex flex-col md:flex-row items-center justify-between mb-6">
-                <div className="mb-4 md:mb-0">
-                  <h3 className="font-medium mb-1">总体学习进度</h3>
-                  <p className="text-sm text-gray-500">已完成 12/48 课时</p>
-                </div>
-                <div className="w-24 h-24 relative">
-                  {/* 环形进度条 */}
-                  <svg className="w-full h-full" viewBox="0 0 100 100">
-                    <circle
-                      cx="50"
-                      cy="50"
-                      r="45"
-                      fill="none"
-                      stroke="#e2e8f0"
-                      strokeWidth="8"
-                    />
-                    <circle
-                      cx="50"
-                      cy="50"
-                      r="45"
-                      fill="none"
-                      stroke="#3182ce"
-                      strokeWidth="8"
-                      strokeLinecap="round"
-                      strokeDasharray="283"
-                      strokeDashoffset="170"
-                      transform="rotate(-90 50 50)"
-                      className="transition-all duration-1000"
-                    />
-                  </svg>
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="text-2xl font-bold">25%</span>
-                  </div>
-                </div>
+      <section className="py-12 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-2xl font-bold mb-8 text-center">学习进度</h2>
+          <div className="bg-gray-50 rounded-lg p-6">
+            <div className="flex flex-col md:flex-row items-center justify-between mb-6">
+              <div className="mb-4 md:mb-0">
+                <h3 className="font-medium text-gray-900">总体学习进度</h3>
+                <p className="text-sm text-gray-500">已完成 30% 的课程内容</p>
               </div>
-              <div className="border-t pt-6">
-                <h4 className="font-medium mb-4">最近学习</h4>
-                <div className="space-y-4">
-                  {/* 最近学习的课程 */}
-                  <div className="flex items-center p-3 bg-gray-50 rounded-md hover:bg-gray-100 transition-colors">
-                    <div className="w-16 h-16 bg-blue-100 rounded-md flex items-center justify-center mr-4">
-                      <BookOpen className="h-8 w-8 text-blue-600" />
-                    </div>
-                    <div className="flex-grow">
-                      <h5 className="font-medium">商务数据分析基础</h5>
-                      <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
-                        <div className="bg-blue-600 h-2 rounded-full" style={{ width: '60%' }}></div>
-                      </div>
-                      <p className="text-sm text-gray-500 mt-1">已完成 3/6 章节</p>
-                    </div>
-                    <Link to="/courses/1/lessons/4" className="px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-sm">
-                      继续学习
-                    </Link>
-                  </div>
-                  <div className="flex items-center p-3 bg-gray-50 rounded-md hover:bg-gray-100 transition-colors">
-                    <div className="w-16 h-16 bg-green-100 rounded-md flex items-center justify-center mr-4">
-                      <Database className="h-8 w-8 text-green-600" />
-                    </div>
-                    <div className="flex-grow">
-                      <h5 className="font-medium">SQL 数据分析实战</h5>
-                      <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
-                        <div className="bg-blue-600 h-2 rounded-full" style={{ width: '20%' }}></div>
-                      </div>
-                      <p className="text-sm text-gray-500 mt-1">已完成 1/5 章节</p>
-                    </div>
-                    <Link to="/courses/2/lessons/2" className="px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-sm">
-                      继续学习
-                    </Link>
-                  </div>
+              <div className="w-full md:w-1/2">
+                <div className="h-4 bg-gray-200 rounded-full overflow-hidden">
+                  <div className="h-full bg-blue-600 rounded-full" style={{ width: '30%' }}></div>
                 </div>
               </div>
             </div>
-          </div>
-        </section>
-      )}
-
-      {/* 平台特色 */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <h2 className="text-2xl font-bold mb-12 text-center">平台特色</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-              <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mb-4">
-                <BookOpen className="h-8 w-8 text-blue-600" />
+            <h4 className="font-medium text-gray-900 mb-3">最近学习的课程</h4>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-md">
+                <div className="flex items-center">
+                  <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=business%20data%20analysis%20course%20cover%2C%20professional%20looking%2C%20blue%20theme&image_size=square" alt="商务数据分析基础" className="w-12 h-12 object-cover rounded" />
+                  <div className="ml-3">
+                    <h5 className="font-medium text-gray-900">商务数据分析基础</h5>
+                    <p className="text-sm text-gray-500">已完成 60% - 第 3 章</p>
+                  </div>
+                </div>
+                <Link to="/courses/1/lessons/3">
+                  <Button className="bg-blue-600 text-white hover:bg-blue-700">
+                    继续学习
+                  </Button>
+                </Link>
               </div>
-              <h3 className="text-xl font-semibold mb-3">分级课程体系</h3>
-              <p className="text-gray-600">
-                从入门到精通，根据不同技能水平提供适合的课程，满足不同学习者的需求。
-              </p>
-            </div>
-            <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-              <div className="bg-orange-100 w-16 h-16 rounded-full flex items-center justify-center mb-4">
-                <BarChart3 className="h-8 w-8 text-orange-600" />
+              <div className="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-md">
+                <div className="flex items-center">
+                  <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=SQL%20data%20analysis%20course%20cover%2C%20professional%20looking%2C%20blue%20theme&image_size=square" alt="SQL 数据分析实战" className="w-12 h-12 object-cover rounded" />
+                  <div className="ml-3">
+                    <h5 className="font-medium text-gray-900">SQL 数据分析实战</h5>
+                    <p className="text-sm text-gray-500">已完成 10% - 第 1 章</p>
+                  </div>
+                </div>
+                <Link to="/courses/2/lessons/1">
+                  <Button className="bg-blue-600 text-white hover:bg-blue-700">
+                    继续学习
+                  </Button>
+                </Link>
               </div>
-              <h3 className="text-xl font-semibold mb-3">互动式学习</h3>
-              <p className="text-gray-600">
-                实时数据操作练习、案例分析任务和 quizzes，提升学习效果和实践能力。
-              </p>
-            </div>
-            <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-              <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mb-4">
-                <Users className="h-8 w-8 text-green-600" />
-              </div>
-              <h3 className="text-xl font-semibold mb-3">社区交流</h3>
-              <p className="text-gray-600">
-                与其他学习者交流心得，向专家提问，分享学习成果，构建学习社区。
-              </p>
             </div>
           </div>
         </div>
       </section>
+
+      {/* 页脚 */}
+      <footer className="bg-gray-800 text-white py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+              <h3 className="text-lg font-bold mb-4">DataLearn</h3>
+              <p className="text-gray-400">商务数据分析课程自主学习平台，为您提供专业的数据分析技能培训。</p>
+            </div>
+            <div>
+              <h3 className="text-lg font-bold mb-4">课程分类</h3>
+              <ul className="space-y-2">
+                <li><a href="/courses" className="text-gray-400 hover:text-white">数据分析</a></li>
+                <li><a href="/courses" className="text-gray-400 hover:text-white">数据库</a></li>
+                <li><a href="/courses" className="text-gray-400 hover:text-white">编程</a></li>
+                <li><a href="/courses" className="text-gray-400 hover:text-white">数据可视化</a></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-lg font-bold mb-4">快速链接</h3>
+              <ul className="space-y-2">
+                <li><a href="/" className="text-gray-400 hover:text-white">首页</a></li>
+                <li><a href="/courses" className="text-gray-400 hover:text-white">课程</a></li>
+                <li><a href="/community" className="text-gray-400 hover:text-white">社区</a></li>
+                <li><a href="/profile" className="text-gray-400 hover:text-white">个人中心</a></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-lg font-bold mb-4">联系我们</h3>
+              <ul className="space-y-2">
+                <li className="text-gray-400">邮箱: contact@datalearn.com</li>
+                <li className="text-gray-400">电话: 400-123-4567</li>
+              </ul>
+            </div>
+          </div>
+          <div className="mt-8 pt-8 border-t border-gray-700 text-center text-gray-400">
+            <p>© 2026 DataLearn. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
-};
-
-export default Home;
+}
