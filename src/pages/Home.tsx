@@ -4,6 +4,8 @@ import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import ProgressTracker from '@/components/ProgressTracker';
+import PersonalizedPath from '@/components/PersonalizedPath';
 
 export default function Home() {
   // 模拟课程数据
@@ -150,50 +152,15 @@ export default function Home() {
       <section className="py-12 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl font-bold mb-8 text-center">学习进度</h2>
-          <div className="bg-gray-50 rounded-lg p-6">
-            <div className="flex flex-col md:flex-row items-center justify-between mb-6">
-              <div className="mb-4 md:mb-0">
-                <h3 className="font-medium text-gray-900">总体学习进度</h3>
-                <p className="text-sm text-gray-500">已完成 30% 的课程内容</p>
-              </div>
-              <div className="w-full md:w-1/2">
-                <div className="h-4 bg-gray-200 rounded-full overflow-hidden">
-                  <div className="h-full bg-blue-600 rounded-full" style={{ width: '30%' }}></div>
-                </div>
-              </div>
-            </div>
-            <h4 className="font-medium text-gray-900 mb-3">最近学习的课程</h4>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-md">
-                <div className="flex items-center">
-                  <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=business%20data%20analysis%20course%20cover%2C%20professional%20looking%2C%20blue%20theme&image_size=square" alt="商务数据分析基础" className="w-12 h-12 object-cover rounded" />
-                  <div className="ml-3">
-                    <h5 className="font-medium text-gray-900">商务数据分析基础</h5>
-                    <p className="text-sm text-gray-500">已完成 60% - 第 3 章</p>
-                  </div>
-                </div>
-                <Link to="/courses/1/lessons/3">
-                  <Button className="bg-blue-600 text-white hover:bg-blue-700">
-                    继续学习
-                  </Button>
-                </Link>
-              </div>
-              <div className="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-md">
-                <div className="flex items-center">
-                  <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=SQL%20data%20analysis%20course%20cover%2C%20professional%20looking%2C%20blue%20theme&image_size=square" alt="SQL 数据分析实战" className="w-12 h-12 object-cover rounded" />
-                  <div className="ml-3">
-                    <h5 className="font-medium text-gray-900">SQL 数据分析实战</h5>
-                    <p className="text-sm text-gray-500">已完成 10% - 第 1 章</p>
-                  </div>
-                </div>
-                <Link to="/courses/2/lessons/1">
-                  <Button className="bg-blue-600 text-white hover:bg-blue-700">
-                    继续学习
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          </div>
+          <ProgressTracker />
+        </div>
+      </section>
+
+      {/* 个性化学习路径 */}
+      <section className="py-12 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-2xl font-bold mb-8 text-center">个性化学习路径</h2>
+          <PersonalizedPath />
         </div>
       </section>
 

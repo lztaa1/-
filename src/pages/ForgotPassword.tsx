@@ -3,12 +3,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../components/ui/card';
+import { useAuth } from '../contexts/AuthContext';
 
 const ForgotPassword: React.FC = () => {
   const [email, setEmail] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const { resetPassword } = useAuth();
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,9 +50,7 @@ const ForgotPassword: React.FC = () => {
     setIsLoading(true);
     
     try {
-      // 模拟密码重置请求
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      await resetPassword(email);
       // 显示成功消息
       setSuccess(true);
       
@@ -60,6 +60,7 @@ const ForgotPassword: React.FC = () => {
       }, 3000);
     } catch (error) {
       setErrors({ submit: '发送重置链接失败，请稍后重试' });
+      console.error('Reset password error:', error);
     } finally {
       setIsLoading(false);
     }

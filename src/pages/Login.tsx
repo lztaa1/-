@@ -2,21 +2,29 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const { signIn } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // 模拟登录验证
-    if (email && password) {
-      // 登录成功，跳转到首页
+    setError('');
+    setIsLoading(true);
+    
+    try {
+      await signIn(email, password);
       navigate('/');
-    } else {
-      setError('请输入邮箱和密码');
+    } catch (error) {
+      setError('登录失败，请检查邮箱和密码');
+      console.error('Login error:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -104,9 +112,10 @@ export default function Login() {
           <div>
             <Button
               type="submit"
+              disabled={isLoading}
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
-              登录
+              {isLoading ? '登录中...' : '登录'}
             </Button>
           </div>
 

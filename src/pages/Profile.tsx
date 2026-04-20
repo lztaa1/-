@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../components/ui/card';
 import { Input } from '../components/ui/input';
+import AchievementDisplay from '../components/AchievementDisplay';
 
 const Profile: React.FC = () => {
   const [userInfo, setUserInfo] = useState({
@@ -195,6 +196,17 @@ const Profile: React.FC = () => {
                 <div className="h-64 bg-gray-100 rounded-lg flex items-center justify-center">
                   <p className="text-gray-500">学习统计图表</p>
                 </div>
+              </CardContent>
+            </Card>
+
+            {/* 成就系统 */}
+            <Card>
+              <CardHeader>
+                <CardTitle>我的成就</CardTitle>
+                <CardDescription>获得的徽章和荣誉</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <AchievementDisplay />
               </CardContent>
             </Card>
           </div>

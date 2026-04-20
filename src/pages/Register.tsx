@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../components/ui/card';
+import { useAuth } from '../contexts/AuthContext';
 
 const Register: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -14,6 +15,7 @@ const Register: React.FC = () => {
   
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
+  const { signUp } = useAuth();
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,13 +69,12 @@ const Register: React.FC = () => {
     setIsLoading(true);
     
     try {
-      // 模拟注册请求
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // 注册成功后跳转到登录页面
-      navigate('/login');
+      await signUp(formData.email, formData.password, formData.name);
+      // 注册成功后跳转到首页
+      navigate('/');
     } catch (error) {
       setErrors({ submit: '注册失败，请稍后重试' });
+      console.error('Registration error:', error);
     } finally {
       setIsLoading(false);
     }
