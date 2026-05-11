@@ -927,6 +927,206 @@
             display: block;
         }
 
+        /* Code Editor */
+        .code-editor-container {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .code-editor-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 20px;
+            background: #161b22;
+            border-bottom: 1px solid #30363d;
+        }
+
+        .code-editor-title {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .code-editor-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .code-editor-btn {
+            padding: 6px 14px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .code-editor-btn:hover {
+            background: var(--primary);
+            color: var(--text-primary);
+            border-color: var(--primary);
+        }
+
+        .code-editor-btn.run {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+
+        .code-editor-btn.run:hover {
+            background: #059669;
+        }
+
+        .code-editor-btn.reset {
+            background: var(--warning);
+            border-color: var(--warning);
+            color: white;
+        }
+
+        .code-editor-btn.reset:hover {
+            background: #d97706;
+        }
+
+        .code-editor-wrapper {
+            position: relative;
+        }
+
+        .code-editor {
+            width: 100%;
+            min-height: 300px;
+            max-height: 500px;
+            padding: 20px;
+            background: #0d1117;
+            border: none;
+            color: #c9d1d9;
+            font-family: "JetBrains Mono", "Fira Code", monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            resize: vertical;
+            outline: none;
+        }
+
+        .code-editor:focus {
+            box-shadow: inset 0 0 0 1px var(--primary);
+        }
+
+        .code-editor::placeholder {
+            color: #484f58;
+        }
+
+        .code-output-container {
+            background: #0d1117;
+            border-top: 1px solid #30363d;
+            max-height: 300px;
+            overflow: auto;
+        }
+
+        .code-output-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px;
+            background: #161b22;
+            border-bottom: 1px solid #30363d;
+        }
+
+        .code-output-title {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .output-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--text-muted);
+        }
+
+        .output-dot.success {
+            background: var(--success);
+        }
+
+        .output-dot.error {
+            background: var(--error);
+        }
+
+        .code-output {
+            padding: 16px 20px;
+            font-family: "JetBrains Mono", "Fira Code", monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--success);
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .code-output.error {
+            color: var(--error);
+        }
+
+        .code-output-placeholder {
+            padding: 20px;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        /* Hint Box */
+        .hint-box {
+            background: rgba(34, 211, 238, 0.1);
+            border: 1px solid rgba(34, 211, 238, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 16px;
+        }
+
+        .hint-box h4 {
+            color: var(--accent);
+            font-size: 1rem;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .hint-box p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.7;
+        }
+
+        /* Practice Stats */
+        .practice-stats {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 20px;
+            padding: 16px;
+            background: var(--bg-elevated);
+            border-radius: 10px;
+        }
+
+        .practice-stat {
+            text-align: center;
+        }
+
+        .practice-stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .practice-stat-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
         /* Footer */
         .footer {
             background: var(--bg-card);
@@ -1832,6 +2032,7 @@ print(df_rfm["用户等级"].value_counts())`
                     <div class="tabs">
                         <button class="tab-btn active" onclick="switchTab(this, 'tab-data')">模拟数据</button>
                         <button class="tab-btn" onclick="switchTab(this, 'tab-code')">示例代码</button>
+                        <button class="tab-btn" onclick="switchTab(this, 'tab-practice')">🖥️ 代码练习</button>
                     </div>
                     <div id="tab-data" class="tab-content active">
                         <table class="data-table">
@@ -1864,6 +2065,55 @@ print(df_rfm["用户等级"].value_counts())`
                             <div class="code-content">
                                 <pre><code class="language-python">${escapeHtml(getProjectCode(project.id))}</code></pre>
                             </div>
+                        </div>
+                    </div>
+                    <div id="tab-practice" class="tab-content">
+                        <div class="practice-stats">
+                            <div class="practice-stat">
+                                <div class="practice-stat-value">${getPracticeExercise(project.id).split('\\n').length}</div>
+                                <div class="practice-stat-label">代码行数</div>
+                            </div>
+                            <div class="practice-stat">
+                                <div class="practice-stat-value">${getPracticeHints(project.id).length}</div>
+                                <div class="practice-stat-label">提示数量</div>
+                            </div>
+                        </div>
+                        <div class="hint-box">
+                            <h4>📝 练习说明</h4>
+                            <p>${getPracticeInstructions(project.id)}</p>
+                        </div>
+                        <div class="code-editor-container">
+                            <div class="code-editor-header">
+                                <span class="code-editor-title">Python · ${project.title}</span>
+                                <div class="code-editor-actions">
+                                    <button class="code-editor-btn reset" onclick="resetCode(this)">重置</button>
+                                    <button class="code-editor-btn run" onclick="runPracticeCode(this)">▶ 运行代码</button>
+                                </div>
+                            </div>
+                            <div class="code-editor-wrapper">
+                                <textarea class="code-editor" 
+                                    id="practice-editor-${project.id}"
+                                    placeholder="# 在这里编写你的代码...
+# 可以参考示例代码来完成练习"
+                                >${escapeHtml(getPracticeExercise(project.id))}</textarea>
+                            </div>
+                            <div class="code-output-container">
+                                <div class="code-output-header">
+                                    <span class="code-output-title">
+                                        <span class="output-dot" id="output-dot-${project.id}"></span>
+                                        <span id="output-status-${project.id}">等待运行...</span>
+                                    </span>
+                                </div>
+                                <div class="code-output" id="practice-output-${project.id}">
+                                    <span class="code-output-placeholder">点击「运行代码」查看输出结果...</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hint-box" style="margin-top: 20px;">
+                            <h4>💡 提示</h4>
+                            ${getPracticeHints(project.id).map((hint, idx) => `
+                                <p style="margin-top: ${idx > 0 ? '12px' : '0'};">${idx + 1}. ${hint}</p>
+                            `).join('')}
                         </div>
                     </div>
                 </div>
@@ -2348,6 +2598,466 @@ print("报告完成")
 print("=" * 60)`
             };
             return codes[projectId] || "# 暂无代码示例";
+        }
+
+        function getPracticeInstructions(projectId) {
+            const instructions = {
+                1: "使用pandas对用户行为数据进行预处理。包括：读取数据、处理缺失值、处理异常值、进行特征分桶和OneHot编码、最后保存处理后的数据。",
+                2: "基于预处理后的数据，进行描述性统计分析和相关性分析。计算营收字段，并分析哪些指标与营收强相关。",
+                3: "使用Apriori算法对购物车数据进行关联规则挖掘。设置合适的支持度和置信度阈值，找出有价值的商品组合规则。",
+                4: "使用KMeans算法对用户进行聚类分析。首先用肘部法则确定最优k值，然后进行聚类并分析各分群特征。",
+                5: "基于RFM模型对用户进行分层。计算R、F、M三个指标的得分，确定用户等级并统计各等级用户数量。",
+                6: "使用多元线性回归分析影响销量的因子。训练模型后解读回归系数，并进行销量预测。",
+                7: "使用随机森林进行销量预测，并与线性回归对比。分析特征重要性，找出影响销量的核心因子。",
+                8: "对时序数据进行趋势分析和预测。使用移动平均分析趋势，并用ARIMA模型预测未来销量。",
+                9: "使用3σ原则和孤立森林算法检测订单异常。合并两种方法的结果并分析异常类型。",
+                10: "整合所有分析方法，完成一个完整的数据分析项目。从数据准备到结论输出，形成闭环。"
+            };
+            return instructions[projectId] || "完成本项目的练习任务";
+        }
+
+        function getPracticeExercise(projectId) {
+            const exercises = {
+                1: `# 练习1：数据预处理
+# 任务：读取user_behavior.csv，处理缺失值和异常值，完成特征处理
+
+import pandas as pd
+from sklearn.preprocessing import StandardScaler
+
+# 1. 读取数据
+df = pd.read_csv("user_behavior.csv")
+print("原始数据前5行:")
+print(df.head())
+
+# 2. 处理缺失值（消费金额用中位数填充）
+# TODO: 补充代码
+
+# 3. 处理异常值（3σ原则，用中位数替换）
+# TODO: 补充代码
+
+# 4. 特征分桶
+# TODO: 补充代码
+
+print("\\n预处理完成!")`,
+                2: `# 练习2：相关性分析
+# 任务：读取processed_data.csv，计算营收，分析相关性
+
+import pandas as pd
+
+# 1. 读取数据
+df = pd.read_csv("processed_data.csv")
+
+# 2. 计算营收字段
+# TODO: 补充代码
+
+# 3. 计算皮尔逊相关系数
+# TODO: 补充代码
+
+# 4. 分析强相关指标（|r| >= 0.7）
+# TODO: 补充代码
+
+print("\\n相关性分析完成!")`,
+                3: `# 练习3：关联规则挖掘
+# 任务：使用Apriori算法挖掘商品关联规则
+
+from mlxtend.frequent_patterns import apriori, association_rules
+import pandas as pd
+
+# 1. 读取购物车数据
+df_cart = pd.read_csv("cart_data.csv")
+
+# 2. One-hot编码
+# TODO: 补充代码
+
+# 3. 挖掘频繁项集（支持度=0.05）
+# TODO: 补充代码
+
+# 4. 生成关联规则（置信度=0.7，提升度>1）
+# TODO: 补充代码
+
+print("\\n关联规则挖掘完成!")`,
+                4: `# 练习4：用户聚类分析
+# 任务：使用KMeans对用户进行聚类
+
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
+import pandas as pd
+
+# 1. 读取数据
+df = pd.read_csv("processed_data.csv")
+features = ["消费金额", "消费频次", "最近消费天数", "浏览时长"]
+X = df[features]
+
+# 2. 数据标准化
+# TODO: 补充代码
+
+# 3. 肘部法则确定k值
+# TODO: 补充代码
+
+# 4. KMeans聚类
+# TODO: 补充代码
+
+# 5. 分析分群特征
+print("\\n聚类分析完成!")`,
+                5: `# 练习5：RFM用户分层
+# 任务：基于RFM模型对用户进行分层
+
+import pandas as pd
+
+# 1. 读取数据
+df = pd.read_csv("user_rfm.csv")
+
+# 2. RFM分箱打分
+# TODO: 补充代码
+
+# 3. 计算RFM总分
+# TODO: 补充代码
+
+# 4. 用户分层（高价值>=13，潜力>=8，其他=流失）
+# TODO: 补充代码
+
+# 5. 统计各层用户数量
+# TODO: 补充代码
+
+print("\\nRFM分层完成!")`,
+                6: `# 练习6：线性回归预测
+# 任务：使用多元线性回归预测销量
+
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import r2_score, mean_absolute_error
+import pandas as pd
+
+# 1. 读取数据
+df = pd.read_csv("sales_data.csv")
+X = df[["广告费", "活动次数", "客单价", "竞品价格"]]
+y = df["销量"]
+
+# 2. 数据拆分
+# TODO: 补充代码
+
+# 3. 训练线性回归模型
+# TODO: 补充代码
+
+# 4. 模型评估
+# TODO: 补充代码
+
+print("\\n回归分析完成!")`,
+                7: `# 练习7：随机森林回归
+# 任务：使用随机森林进行销量预测，分析特征重要性
+
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import r2_score
+import pandas as pd
+
+# 1. 读取数据
+df = pd.read_csv("sales_data.csv")
+X = df[["广告费", "活动次数", "客单价", "竞品价格"]]
+y = df["销量"]
+
+# 2. 数据拆分
+# TODO: 补充代码
+
+# 3. 训练随机森林模型
+# TODO: 补充代码
+
+# 4. 分析特征重要性
+# TODO: 补充代码
+
+print("\\n随机森林分析完成!")`,
+                8: `# 练习8：时间序列分析
+# 任务：分析销量趋势，进行时序预测
+
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# 1. 读取时序数据
+df = pd.read_csv("time_series_sales.csv")
+df["日期"] = pd.to_datetime(df["日期"])
+df.set_index("日期", inplace=True)
+
+# 2. 月度重采样
+# TODO: 补充代码
+
+# 3. 计算移动平均
+# TODO: 补充代码
+
+# 4. 时序预测（ARIMA）
+# TODO: 补充代码
+
+print("\\n时序分析完成!")`,
+                9: `# 练习9：异常检测
+# 任务：检测订单异常，分析异常类型
+
+import pandas as pd
+import numpy as np
+from sklearn.ensemble import IsolationForest
+
+# 1. 读取订单数据
+df = pd.read_csv("order_data.csv")
+
+# 2. 统计异常检测（3σ原则）
+# TODO: 补充代码
+
+# 3. 模型异常检测（孤立森林）
+# TODO: 补充代码
+
+# 4. 异常类型分析
+# TODO: 补充代码
+
+print("\\n异常检测完成!")`,
+                10: `# 练习10：综合分析项目
+# 任务：整合所有分析方法完成综合分析
+
+import pandas as pd
+from sklearn.cluster import KMeans
+from sklearn.ensemble import RandomForestRegressor
+
+print("=" * 50)
+print("电商数据综合分析")
+print("=" * 50)
+
+# 1. 数据准备
+# TODO: 补充代码
+
+# 2. 数据预处理
+# TODO: 补充代码
+
+# 3. 核心分析
+# TODO: 补充代码
+
+# 4. 结论与建议
+# TODO: 补充代码
+
+print("\\n综合分析完成!")`
+            };
+            return exercises[projectId] || "# 在这里编写练习代码...";
+        }
+
+        function getPracticeHints(projectId) {
+            const hints = {
+                1: ["缺失值处理使用 fillna() 方法，数值型用中位数，类别型用 '未知' 字符串填充", "异常值检测公式：lower = mean - 3*std, upper = mean + 3*std", "OneHot编码使用 pd.get_dummies() 方法"],
+                2: ["营收 = 消费金额 × 消费频次", "使用 .corr() 方法计算皮尔逊相关系数", "筛选强相关时注意 |r| >= 0.7 不是 r >= 0.7"],
+                3: ["支持度表示商品组合出现的频率，置信度表示规则成立的概率", "提升度 > 1 表示商品组合有协同效应", "注意先做频繁项集挖掘，再生成关联规则"],
+                4: ["肘部法则通过观察惯性变化曲线找到最优k值", "聚类前必须先进行数据标准化，否则量纲差异会影响结果", "使用 .groupby() 分析各分群特征"],
+                5: ["R指标（最近消费天数）需要反向打分：天数越少分数越高", "使用 pd.qcut() 进行分位数分箱", "总分 = R分 + F分 + M分，可自定义分层阈值"],
+                6: ["train_test_split() 拆分数据时注意设置 random_state 保证可复现", "R² 越接近1表示模型拟合越好", "回归系数为正表示正相关，为负表示负相关"],
+                7: ["n_estimators 表示树的数量，max_depth 表示树的最大深度", "特征重要性通过 .feature_importances_ 属性获取", "随机森林可以捕捉非线性关系，比线性回归更灵活"],
+                8: ["resample('M') 按月重采样，sum() 计算月销量", "移动平均窗口选择3-6个月较为合适", "ARIMA的order参数(p,d,q)可先尝试(1,1,1)"],
+                9: ["3σ原则假设数据服从正态分布，99.7%的数据在3个标准差内", "IsolationForest的contamination参数表示预期的异常比例", "高金额+低频次 和 低金额+高频次 是两种典型的异常模式"],
+                10: ["综合项目需要整合前面所有练习的方法", "分析要围绕「提升营收」这个核心目标", "最终输出要包含可执行的业务策略建议"]
+            };
+            return hints[projectId] || ["请参考示例代码完成练习"];
+        }
+
+        function runPracticeCode(btn) {
+            const taskSection = btn.closest('.task-section');
+            const projectCard = taskSection.querySelector('.project-card, [class*="project"]');
+            const textarea = taskSection.querySelector('textarea.code-editor');
+            const outputDiv = taskSection.querySelector('.code-output');
+            const outputDot = taskSection.querySelector('.output-dot');
+            const statusSpan = taskSection.querySelector('[id^="output-status"]');
+            
+            const projectId = textarea ? textarea.id.replace('practice-editor-', '') : '1';
+            
+            const code = textarea ? textarea.value : '';
+            outputDiv.innerHTML = '正在执行代码...\n\n';
+            outputDot.className = 'output-dot';
+            statusSpan.textContent = '运行中...';
+            
+            setTimeout(() => {
+                const result = simulatePythonExecution(code, projectId);
+                
+                if (result.success) {
+                    outputDiv.innerHTML = result.output;
+                    outputDiv.className = 'code-output';
+                    outputDot.className = 'output-dot success';
+                    statusSpan.textContent = '执行成功 ✓';
+                } else {
+                    outputDiv.innerHTML = result.output;
+                    outputDiv.className = 'code-output error';
+                    outputDot.className = 'output-dot error';
+                    statusSpan.textContent = '执行失败 ✗';
+                }
+            }, 1500);
+        }
+
+        function simulatePythonExecution(code, projectId) {
+            const outputs = [];
+            const errors = [];
+            
+            if (code.includes('print(')) {
+                const printMatches = code.match(/print\(["']([^"']*)["']\)/g);
+                if (printMatches) {
+                    printMatches.forEach(match => {
+                        const content = match.match(/print\(["']([^"']*)["']/)[1];
+                        outputs.push(content);
+                    });
+                }
+                
+                const printVarMatches = code.match(/print\(f?["']([^"']*\{[^}]+\}[^"']*)["']\)/g);
+                if (printVarMatches) {
+                    printVarMatches.forEach(match => {
+                        outputs.push('[变量输出]');
+                    });
+                }
+            }
+            
+            if (code.includes('# TODO:')) {
+                errors.push('注意：还有未完成的TODO部分，请补充代码！');
+            }
+            
+            if (code.includes('pd.read_csv') || code.includes('import pandas')) {
+                outputs.push('[模拟输出] 数据加载成功');
+            }
+            
+            if (code.includes('df.head()')) {
+                outputs.push('     用户ID   消费金额   消费频次  最近消费天数');
+                outputs.push('0    1001    2580.5        12          5');
+                outputs.push('1    1002    1890.0         8         12');
+                outputs.push('2    1003    3200.0        15          3');
+            }
+            
+            if (code.includes('StandardScaler') || code.includes('fit_transform')) {
+                outputs.push('[模拟输出] 数据标准化完成');
+            }
+            
+            if (code.includes('KMeans') || code.includes('cluster')) {
+                outputs.push('[模拟输出] KMeans聚类完成');
+                outputs.push('分群统计:');
+                outputs.push('  分群0: 250人 (高价值)');
+                outputs.push('  分群1: 380人 (潜力)');
+                outputs.push('  分群2: 180人 (一般)');
+                outputs.push('  分群3: 190人 (流失)');
+            }
+            
+            if (code.includes('corr()') || code.includes('corr_matrix')) {
+                outputs.push('[模拟输出] 相关性分析结果:');
+                outputs.push('  消费金额 ↔ 营收: r = 0.85 (强正相关)');
+                outputs.push('  消费频次 ↔ 营收: r = 0.72 (强正相关)');
+                outputs.push('  浏览时长 ↔ 营收: r = 0.35 (弱正相关)');
+            }
+            
+            if (code.includes('LinearRegression') || code.includes('LinearRegression()')) {
+                outputs.push('[模拟输出] 线性回归结果:');
+                outputs.push('  R² 得分: 0.8542');
+                outputs.push('  MAE: 45.23');
+                outputs.push('  广告费系数: 2.35');
+                outputs.push('  活动次数系数: 15.67');
+            }
+            
+            if (code.includes('RandomForest') || code.includes('feature_importances_')) {
+                outputs.push('[模拟输出] 随机森林回归结果:');
+                outputs.push('  R² 得分: 0.9125');
+                outputs.push('  MAE: 32.18');
+                outputs.push('  特征重要性:');
+                outputs.push('    广告费: 0.45 ████████████████████');
+                outputs.push('    活动次数: 0.28 ████████████');
+                outputs.push('    客单价: 0.18 ████████');
+                outputs.push('    竞品价格: 0.09 ████');
+            }
+            
+            if (code.includes('IsolationForest') || code.includes('异常')) {
+                outputs.push('[模拟输出] 异常检测结果:');
+                outputs.push('  统计异常订单: 23个');
+                outputs.push('  模型异常订单: 31个');
+                outputs.push('  合并后异常总数: 42个');
+                outputs.push('  异常类型:');
+                outputs.push('    高金额异常: 18个');
+                outputs.push('    高频小额异常: 24个');
+            }
+            
+            if (code.includes('apriori') || code.includes('关联规则')) {
+                outputs.push('[模拟输出] 关联规则挖掘结果:');
+                outputs.push('  频繁项集数量: 45个');
+                outputs.push('  有效关联规则: 12条');
+                outputs.push('  Top3关联规则:');
+                outputs.push('    手机 → 耳机: 支持度=0.12, 置信度=0.78, 提升度=1.85');
+                outputs.push('    充电器 → 数据线: 支持度=0.15, 置信度=0.82, 提升度=1.62');
+                outputs.push('    保护壳 → 贴膜: 支持度=0.18, 置信度=0.85, 提升度=1.45');
+            }
+            
+            if (code.includes('ARIMA') || code.includes('forecast')) {
+                outputs.push('[模拟输出] 时序预测结果:');
+                outputs.push('  未来3个月销量预测:');
+                outputs.push('    第1月: 12500件');
+                outputs.push('    第2月: 13200件');
+                outputs.push('    第3月: 14100件');
+                outputs.push('  预测误差(MAE): 856');
+            }
+            
+            if (code.includes('RFM') || code.includes('rfm')) {
+                outputs.push('[模拟输出] RFM分层结果:');
+                outputs.push('  用户分层统计:');
+                outputs.push('    高价值用户: 156人 (15.6%)');
+                outputs.push('    潜力用户: 342人 (34.2%)');
+                outputs.push('    一般用户: 298人 (29.8%)');
+                outputs.push('    流失用户: 204人 (20.4%)');
+            }
+            
+            if (code.includes('describe()')) {
+                outputs.push('[模拟输出] 描述性统计:');
+                outputs.push('         营收        消费金额       消费频次');
+                outputs.push('count  1000.00      1000.00        1000.00');
+                outputs.push('mean   2156.50      215.65          10.23');
+                outputs.push('std    1234.80      123.48           5.67');
+                outputs.push('min     120.00       12.00           1.00');
+                outputs.push('50%    1850.00      185.00           8.00');
+                outputs.push('max   12500.00     1250.00          45.00');
+            }
+            
+            if (code.includes('=') && !code.includes('==')) {
+                const assignCount = (code.match(/\w+\s*=/g) || []).length;
+                if (assignCount > 3 && outputs.length === 0) {
+                    outputs.push('[模拟输出] 代码执行完成');
+                }
+            }
+            
+            if (outputs.length === 0 && !errors.length) {
+                outputs.push('[模拟输出] 代码已执行');
+            }
+            
+            if (errors.length > 0 && outputs.length === 0) {
+                return {
+                    success: false,
+                    output: '⚠️ 执行警告:\n' + errors.join('\n') + '\n\n请完成所有TODO部分后再运行。'
+                };
+            }
+            
+            let outputText = outputs.join('\n');
+            if (errors.length > 0) {
+                outputText += '\n\n⚠️ 警告:\n' + errors.join('\n');
+            }
+            
+            outputText += '\n\n' + '='.repeat(40);
+            outputText += '\n✅ 代码执行完成！';
+            outputText += '\n='.repeat(40);
+            outputText += '\n\n💡 提示：在本地Python环境中运行完整代码可获得更准确的结果。';
+            
+            return {
+                success: errors.length === 0,
+                output: outputText
+            };
+        }
+
+        function resetCode(btn) {
+            const taskSection = btn.closest('.task-section');
+            const textarea = taskSection.querySelector('textarea.code-editor');
+            const outputDiv = taskSection.querySelector('.code-output');
+            const outputDot = taskSection.querySelector('.output-dot');
+            const statusSpan = taskSection.querySelector('[id^="output-status"]');
+            
+            if (textarea) {
+                const projectId = textarea.id.replace('practice-editor-', '');
+                textarea.value = getPracticeExercise(parseInt(projectId));
+                textarea.focus();
+            }
+            
+            outputDiv.innerHTML = '<span class="code-output-placeholder">点击「运行代码」查看输出结果...</span>';
+            outputDiv.className = 'code-output';
+            outputDot.className = 'output-dot';
+            statusSpan.textContent = '等待运行...';
         }
 
         function renderDebates() {
