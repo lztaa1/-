@@ -1,0 +1,24 @@
+{
+  "name": "python-data-analysis-learning",
+  "version": "1.0.0",
+  "description": "Python数据分析全栈学习包 - 沉浸式在线教育平台",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lztaa1/-.git"
+  },
+  "keywords": ["python", "data-analysis", "machine-learning", "education"],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/lztaa1/-/issues"
+  },
+  "homepage": "https://github.com/lztaa1/-#readme",
+  "dependencies": {
+    "playwright": "^1.59.1"
+  }
+}

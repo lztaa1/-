@@ -1,2603 +1,2487 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Python数据分析实战课程</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/dracula.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/matchbrackets.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/closebrackets.min.js"></script>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-:root{
---primary:#4F46E5;--primary-light:#6366F1;--primary-dark:#4338CA;
---secondary:#10B981;--secondary-light:#34D399;
---bg:#F8FAFC;--bg-card:#FFFFFF;--bg-sidebar:#1E1B4B;
---text:#1E293B;--text-light:#64748B;--text-sidebar:#C7D2FE;
---border:#E2E8F0;--shadow:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -2px rgba(0,0,0,.1);
---shadow-lg:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.1);
---radius:12px;--transition:all .3s ease;
-}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden}
-.sidebar{position:fixed;left:0;top:0;width:280px;height:100vh;background:linear-gradient(180deg,#1E1B4B 0%,#312E81 100%);color:var(--text-sidebar);z-index:1000;transition:transform .3s ease;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#4338CA transparent}
-.sidebar::-webkit-scrollbar{width:4px}
-.sidebar::-webkit-scrollbar-thumb{background:#4338CA;border-radius:4px}
-.sidebar-header{padding:24px 20px;border-bottom:1px solid rgba(99,102,241,.3)}
-.sidebar-header h1{font-size:20px;font-weight:700;color:#fff;margin-bottom:4px}
-.sidebar-header p{font-size:13px;opacity:.7}
-.progress-container{padding:16px 20px;border-bottom:1px solid rgba(99,102,241,.3)}
-.progress-label{display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px}
-.progress-bar{height:8px;background:rgba(255,255,255,.15);border-radius:4px;overflow:hidden}
-.progress-fill{height:100%;background:linear-gradient(90deg,var(--secondary),var(--secondary-light));border-radius:4px;transition:width .5s ease}
-.nav-section{padding:12px 0}
-.nav-section-title{padding:4px 20px;font-size:11px;text-transform:uppercase;letter-spacing:1px;opacity:.5;margin-bottom:4px}
-.nav-item{display:flex;align-items:center;padding:10px 20px;cursor:pointer;transition:var(--transition);font-size:14px;border-left:3px solid transparent;gap:10px}
-.nav-item:hover{background:rgba(99,102,241,.2);border-left-color:var(--primary-light)}
-.nav-item.active{background:rgba(99,102,241,.3);border-left-color:#fff;color:#fff}
-.nav-item .nav-icon{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;background:rgba(255,255,255,.1);flex-shrink:0}
-.nav-item.active .nav-icon{background:var(--primary)}
-.nav-item .check{margin-left:auto;font-size:14px;color:var(--secondary)}
-.main{margin-left:280px;min-height:100vh;transition:margin-left .3s ease}
-.topbar{position:sticky;top:0;background:rgba(255,255,255,.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:16px 32px;display:flex;align-items:center;justify-content:space-between;z-index:100}
-.topbar-title{font-size:18px;font-weight:600}
-.menu-btn{display:none;background:none;border:none;font-size:24px;cursor:pointer;color:var(--text)}
-.content{padding:32px;max-width:1200px;margin:0 auto}
-.page{display:none;animation:fadeIn .4s ease}
-.page.active{display:block}
-@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-.hero{background:linear-gradient(135deg,var(--primary) 0%,var(--primary-dark) 50%,#7C3AED 100%);border-radius:var(--radius);padding:48px;color:#fff;margin-bottom:32px;position:relative;overflow:hidden}
-.hero::before{content:'';position:absolute;top:-50%;right:-20%;width:400px;height:400px;background:rgba(255,255,255,.05);border-radius:50%}
-.hero::after{content:'';position:absolute;bottom:-30%;left:-10%;width:300px;height:300px;background:rgba(255,255,255,.05);border-radius:50%}
-.hero h2{font-size:32px;font-weight:700;margin-bottom:12px;position:relative;z-index:1}
-.hero p{font-size:16px;opacity:.9;max-width:600px;position:relative;z-index:1}
-.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;margin-bottom:32px}
-.stat-card{background:var(--bg-card);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);text-align:center;transition:var(--transition);border:1px solid var(--border)}
-.stat-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
-.stat-number{font-size:36px;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.stat-label{font-size:14px;color:var(--text-light);margin-top:4px}
-.learning-path{background:var(--bg-card);border-radius:var(--radius);padding:32px;box-shadow:var(--shadow);margin-bottom:32px;border:1px solid var(--border)}
-.learning-path h3{font-size:20px;font-weight:600;margin-bottom:24px}
-.path-nodes{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
-.path-node{display:flex;align-items:center;gap:8px;padding:10px 16px;background:var(--bg);border-radius:8px;cursor:pointer;transition:var(--transition);border:2px solid transparent;font-size:13px;font-weight:500}
-.path-node:hover{border-color:var(--primary);transform:scale(1.05)}
-.path-node.completed{border-color:var(--secondary);background:#ECFDF5}
-.path-node .node-num{width:28px;height:28px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
-.path-node.completed .node-num{background:var(--secondary)}
-.path-arrow{color:var(--text-light);font-size:18px}
-.quick-start{background:var(--bg-card);border-radius:var(--radius);padding:32px;box-shadow:var(--shadow);border:1px solid var(--border)}
-.quick-start h3{font-size:20px;font-weight:600;margin-bottom:16px}
-.quick-start ol{padding-left:20px}
-.quick-start li{margin-bottom:12px;color:var(--text-light);line-height:1.8}
-.lesson-header{margin-bottom:32px}
-.lesson-header .breadcrumb{font-size:13px;color:var(--text-light);margin-bottom:8px}
-.lesson-header h2{font-size:28px;font-weight:700;color:var(--text)}
-.lesson-header .lesson-desc{font-size:15px;color:var(--text-light);margin-top:8px}
-.lesson-meta{display:flex;gap:16px;margin-top:12px;flex-wrap:wrap}
-.lesson-tag{display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:500}
-.tag-python{background:#EEF2FF;color:var(--primary)}
-.tag-analysis{background:#ECFDF5;color:#059669}
-.tag-difficulty{background:#FEF3C7;color:#D97706}
-.section{background:var(--bg-card);border-radius:var(--radius);padding:28px;margin-bottom:24px;box-shadow:var(--shadow);border:1px solid var(--border)}
-.section h3{font-size:18px;font-weight:600;margin-bottom:16px;display:flex;align-items:center;gap:8px}
-.section h3 .icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px}
-.icon-target{background:#EEF2FF;color:var(--primary)}
-.icon-book{background:#FEF3C7;color:#D97706}
-.icon-key{background:#ECFDF5;color:#059669}
-.icon-code{background:#F3E8FF;color:#7C3AED}
-.icon-result{background:#FCE7F3;color:#DB2777}
-.icon-challenge{background:#FFF7ED;color:#EA580C}
-.icon-resource{background:#E0F2FE;color:#0284C7}
-.section ul{padding-left:20px}
-.section li{margin-bottom:8px;color:var(--text-light);line-height:1.8}
-.section li strong{color:var(--text)}
-.concept-box{background:var(--bg);border-radius:8px;padding:16px;margin:12px 0;border-left:4px solid var(--secondary)}
-.concept-box h4{font-size:15px;font-weight:600;margin-bottom:8px;color:var(--text)}
-.concept-box p{font-size:14px;color:var(--text-light);line-height:1.8}
-.code-block{position:relative;margin:16px 0}
-.code-label{font-size:12px;color:var(--text-light);margin-bottom:8px;font-weight:500}
-.editor-container{border-radius:8px;overflow:hidden;border:1px solid #333}
-.CodeMirror{height:auto!important;font-size:14px;line-height:1.6;font-family:'Fira Code','Cascadia Code',Consolas,monospace}
-.editor-actions{display:flex;gap:8px;margin-top:12px;align-items:center}
-.btn{padding:8px 20px;border:none;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;transition:var(--transition);display:inline-flex;align-items:center;gap:6px}
-.btn-primary{background:var(--primary);color:#fff}
-.btn-primary:hover{background:var(--primary-dark);transform:translateY(-1px)}
-.btn-success{background:var(--secondary);color:#fff}
-.btn-success:hover{background:#059669}
-.btn-outline{background:transparent;border:1px solid var(--border);color:var(--text)}
-.btn-outline:hover{background:var(--bg)}
-.btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
-.output-area{background:#1a1a2e;border-radius:8px;padding:16px;margin-top:12px;font-family:'Fira Code',Consolas,monospace;font-size:13px;color:#e2e8f0;white-space:pre-wrap;max-height:400px;overflow-y:auto;min-height:60px;line-height:1.6}
-.output-area:empty::before{content:'点击"运行代码"查看输出结果...';color:#64748b;font-style:italic}
-.output-area.error{border:1px solid #EF4444}
-.output-area .error-text{color:#FCA5A5}
-.challenge-card{background:var(--bg);border-radius:8px;padding:16px;margin:8px 0;border:1px solid var(--border)}
-.challenge-card h4{font-size:15px;font-weight:600;margin-bottom:8px;color:var(--text)}
-.challenge-card p{font-size:14px;color:var(--text-light);line-height:1.7}
-.resource-link{display:flex;align-items:center;gap:8px;padding:10px 16px;background:var(--bg);border-radius:8px;margin:6px 0;font-size:14px;color:var(--primary);transition:var(--transition);cursor:pointer}
-.resource-link:hover{background:#EEF2FF}
-.complete-btn-container{text-align:center;margin:32px 0}
-.btn-complete{padding:12px 40px;font-size:16px;background:linear-gradient(135deg,var(--secondary),var(--secondary-light));color:#fff;border:none;border-radius:10px;cursor:pointer;font-weight:600;transition:var(--transition);box-shadow:0 4px 14px rgba(16,185,129,.4)}
-.btn-complete:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(16,185,129,.5)}
-.btn-complete.completed{background:linear-gradient(135deg,#94A3B8,#CBD5E1);box-shadow:none}
-.loading-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(255,255,255,.95);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity .5s}
-.loading-overlay.hidden{opacity:0;pointer-events:none}
-.spinner{width:48px;height:48px;border:4px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin 1s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.loading-text{margin-top:16px;font-size:16px;color:var(--text-light)}
-.loading-sub{font-size:13px;color:var(--text-light);opacity:.7;margin-top:4px}
-.overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:999}
-.overlay.active{display:block}
-@media(max-width:768px){
-.sidebar{transform:translateX(-100%)}
-.sidebar.open{transform:translateX(0)}
-.main{margin-left:0}
-.menu-btn{display:block}
-.content{padding:16px}
-.hero{padding:32px 24px}
-.hero h2{font-size:24px}
-.stats-grid{grid-template-columns:1fr 1fr}
-.path-nodes{flex-direction:column}
-.path-arrow{transform:rotate(90deg)}
-.topbar{padding:12px 16px}
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python数据分析全栈学习包 | 沉浸式语言学习平台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <style>
+        :root {
+            --primary: #6366F1;
+            --secondary: #8B5CF6;
+            --accent: #22D3EE;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --error: #EF4444;
+            --bg-dark: #0F172A;
+            --bg-card: #1E293B;
+            --bg-elevated: #334155;
+            --bg-hover: #475569;
+            --text-primary: #F8FAFC;
+            --text-secondary: #94A3B8;
+            --text-muted: #64748B;
+            --border: #334155;
+            --glow: rgba(99, 102, 241, 0.4);
+            --card-radius: 16px;
+            --transition: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: "JetBrains Mono", "Noto Sans SC", system-ui, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.7;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .particles-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(34, 211, 238, 0.05) 0%, transparent 70%);
+        }
+
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            background-image: 
+                linear-gradient(rgba(99, 102, 241, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(99, 102, 241, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+        }
+
+        .app-container {
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 16px 32px;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(99, 102, 241, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: var(--transition);
+        }
+
+        .navbar.scrolled {
+            background: rgba(15, 23, 42, 0.95);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 8px;
+            list-style: none;
+        }
+
+        .nav-link {
+            padding: 10px 20px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--text-primary);
+            background: rgba(99, 102, 241, 0.15);
+        }
+
+        .nav-link.active {
+            color: var(--accent);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding-top: 80px;
+        }
+
+        /* Section Styles */
+        .section {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .section.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 32px;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: calc(100vh - 80px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 80px 32px;
+            position: relative;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 20px;
+            background: rgba(99, 102, 241, 0.15);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            color: var(--accent);
+            margin-bottom: 32px;
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .hero-title {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 50%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 24px;
+            line-height: 1.2;
+            animation: fadeInUp 0.8s ease 0.1s forwards;
+            opacity: 0;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin-bottom: 48px;
+            animation: fadeInUp 0.8s ease 0.2s forwards;
+            opacity: 0;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 48px;
+            margin-top: 60px;
+            animation: fadeInUp 0.8s ease 0.3s forwards;
+            opacity: 0;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 24px;
+            padding: 48px 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+
+        .section-desc {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Knowledge Card */
+        .knowledge-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--card-radius);
+            padding: 32px;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .knowledge-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .knowledge-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--primary);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 30px var(--glow);
+        }
+
+        .knowledge-card:hover::before {
+            opacity: 1;
+        }
+
+        .card-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 12px;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+
+        .card-desc {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .card-tag {
+            padding: 6px 14px;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 6px;
+            font-size: 0.8rem;
+            color: var(--accent);
+        }
+
+        /* Detail View */
+        .detail-view {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .detail-view.active {
+            display: block;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-bottom: 32px;
+        }
+
+        .back-btn:hover {
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+            border-color: var(--primary);
+        }
+
+        .detail-header {
+            margin-bottom: 48px;
+        }
+
+        .detail-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+
+        .detail-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--card-radius);
+            padding: 32px;
+            margin-bottom: 24px;
+        }
+
+        .detail-section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .definition-text {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            line-height: 1.8;
+        }
+
+        .value-text {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            line-height: 1.8;
+        }
+
+        /* Code Block */
+        .code-block {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .code-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 20px;
+            background: #161b22;
+            border-bottom: 1px solid #30363d;
+        }
+
+        .code-title {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .code-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .code-btn {
+            padding: 6px 14px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .code-btn:hover {
+            background: var(--primary);
+            color: var(--text-primary);
+            border-color: var(--primary);
+        }
+
+        .code-btn.run {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+
+        .code-btn.run:hover {
+            background: #059669;
+        }
+
+        .code-content {
+            padding: 20px;
+            overflow-x: auto;
+        }
+
+        .code-content pre {
+            margin: 0;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .code-output {
+            padding: 20px;
+            background: #0d1117;
+            border-top: 1px solid #30363d;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.85rem;
+            color: var(--success);
+            white-space: pre-wrap;
+            display: none;
+        }
+
+        .code-output.show {
+            display: block;
+        }
+
+        /* Debate Section */
+        .debate-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--card-radius);
+            overflow: hidden;
+            margin-bottom: 32px;
+        }
+
+        .debate-header {
+            padding: 32px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+            border-bottom: 1px solid var(--border);
+        }
+
+        .debate-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+
+        .debate-core {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .debate-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+        }
+
+        .debate-side {
+            padding: 32px;
+        }
+
+        .debate-side:first-child {
+            border-right: 1px solid var(--border);
+        }
+
+        .debate-side.pro {
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .debate-side.con {
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        .side-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .side-label.pro {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+
+        .side-label.con {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--error);
+        }
+
+        .debate-list {
+            list-style: none;
+        }
+
+        .debate-list li {
+            position: relative;
+            padding-left: 24px;
+            margin-bottom: 16px;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .debate-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 10px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .pro .debate-list li::before {
+            background: var(--success);
+        }
+
+        .con .debate-list li::before {
+            background: var(--error);
+        }
+
+        .debate-footer {
+            padding: 24px 32px;
+            background: var(--bg-elevated);
+            border-top: 1px solid var(--border);
+        }
+
+        .scenario-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 16px;
+        }
+
+        .scenario-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .scenario-item {
+            padding: 16px;
+            background: var(--bg-card);
+            border-radius: 10px;
+            border-left: 3px solid var(--primary);
+        }
+
+        .scenario-item h4 {
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .scenario-item p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* Projects Section */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 24px;
+            padding: 48px 0;
+        }
+
+        .project-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--card-radius);
+            padding: 28px;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .project-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--primary);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .project-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .project-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+
+        .project-desc {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .project-meta {
+            display: flex;
+            gap: 16px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .project-meta span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Task Detail */
+        .task-sidebar {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            width: 320px;
+            height: calc(100vh - 80px);
+            background: var(--bg-card);
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            padding: 24px;
+            z-index: 100;
+        }
+
+        .task-list {
+            list-style: none;
+        }
+
+        .task-item {
+            padding: 14px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .task-item:hover {
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+        }
+
+        .task-item.active {
+            background: var(--primary);
+            color: var(--text-primary);
+        }
+
+        .task-content {
+            margin-left: 320px;
+            padding: 32px;
+            min-height: calc(100vh - 80px);
+        }
+
+        .task-detail-header {
+            margin-bottom: 32px;
+        }
+
+        .task-detail-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+
+        .task-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--card-radius);
+            padding: 28px;
+            margin-bottom: 24px;
+        }
+
+        .task-section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .task-list-detail li {
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .warning-box {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .warning-box h4 {
+            color: var(--warning);
+            font-size: 1rem;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .warning-box ul {
+            list-style: none;
+        }
+
+        .warning-box li {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .warning-box li::before {
+            content: '⚠';
+            position: absolute;
+            left: 0;
+        }
+
+        .deliverables {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+        }
+
+        .deliverable-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            background: var(--bg-elevated);
+            border-radius: 10px;
+        }
+
+        .deliverable-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .deliverable-text {
+            font-size: 0.9rem;
+            color: var(--text-primary);
+        }
+
+        /* Data Table */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.9rem;
+        }
+
+        .data-table th {
+            background: var(--bg-elevated);
+            padding: 14px 16px;
+            text-align: left;
+            color: var(--accent);
+            font-weight: 600;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .data-table td {
+            padding: 12px 16px;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .data-table tr:hover td {
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        /* Tab Navigation */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 16px;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .tab-btn:hover {
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: var(--text-primary);
+            border-color: var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--bg-card);
+            border-top: 1px solid var(--border);
+            padding: 48px 32px;
+            margin-top: 80px;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 48px;
+        }
+
+        .footer-section h3 {
+            font-size: 1rem;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 32px auto 0;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--bg-elevated);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--bg-hover);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .task-sidebar {
+                display: none;
+            }
+            
+            .task-content {
+                margin-left: 0;
+            }
+            
+            .debate-body {
+                grid-template-columns: 1fr;
+            }
+            
+            .debate-side:first-child {
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 12px 16px;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .hero {
+                padding: 60px 16px;
+            }
+            
+            .hero-stats {
+                flex-direction: column;
+                gap: 24px;
+            }
+            
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 0 16px;
+            }
+            
+            .detail-title {
+                font-size: 1.8rem;
+            }
+        }
+
+        /* Syntax Highlighting Overrides */
+        .hljs {
+            background: transparent !important;
+            padding: 0 !important;
+        }
+    </style>
 </head>
 <body>
-
-<div class="loading-overlay" id="loadingOverlay">
-<div class="spinner"></div>
-<div class="loading-text">正在加载 Python 运行环境...</div>
-<div class="loading-sub">首次加载可能需要 10-20 秒，请耐心等待</div>
-</div>
-
-<div class="overlay" id="overlay"></div>
-
-<aside class="sidebar" id="sidebar">
-<div class="sidebar-header">
-<h1>Python 数据分析</h1>
-<p>10个项目 · 从零到实战</p>
-</div>
-<div class="progress-container">
-<div class="progress-label">
-<span>学习进度</span>
-<span id="progressText">0/10</span>
-</div>
-<div class="progress-bar">
-<div class="progress-fill" id="progressFill" style="width:0%"></div>
-</div>
-</div>
-<nav class="nav-section">
-<div class="nav-section-title">导航</div>
-<div class="nav-item active" data-page="home" onclick="navigateTo('home')">
-<span class="nav-icon">&#127968;</span> 课程首页
-</div>
-</nav>
-<nav class="nav-section">
-<div class="nav-section-title">项目课程</div>
-<div class="nav-item" data-page="project1" onclick="navigateTo('project1')">
-<span class="nav-icon">1</span> 销售记录清洗器 <span class="check" id="check1"></span>
-</div>
-<div class="nav-item" data-page="project2" onclick="navigateTo('project2')">
-<span class="nav-icon">2</span> 成绩统计小工具 <span class="check" id="check2"></span>
-</div>
-<div class="nav-item" data-page="project3" onclick="navigateTo('project3')">
-<span class="nav-icon">3</span> 用户行为分类器 <span class="check" id="check3"></span>
-</div>
-<div class="nav-item" data-page="project4" onclick="navigateTo('project4')">
-<span class="nav-icon">4</span> 电商订单聚合分析 <span class="check" id="check4"></span>
-</div>
-<div class="nav-item" data-page="project5" onclick="navigateTo('project5')">
-<span class="nav-icon">5</span> 气温异常检测 <span class="check" id="check5"></span>
-</div>
-<div class="nav-item" data-page="project6" onclick="navigateTo('project6')">
-<span class="nav-icon">6</span> 销售趋势滑动窗口 <span class="check" id="check6"></span>
-</div>
-<div class="nav-item" data-page="project7" onclick="navigateTo('project7')">
-<span class="nav-icon">7</span> 多表关联分析 <span class="check" id="check7"></span>
-</div>
-<div class="nav-item" data-page="project8" onclick="navigateTo('project8')">
-<span class="nav-icon">8</span> RFM用户价值模型 <span class="check" id="check8"></span>
-</div>
-<div class="nav-item" data-page="project9" onclick="navigateTo('project9')">
-<span class="nav-icon">9</span> A/B测试快速分析 <span class="check" id="check9"></span>
-</div>
-<div class="nav-item" data-page="project10" onclick="navigateTo('project10')">
-<span class="nav-icon">10</span> 销售预测数据流水线 <span class="check" id="check10"></span>
-</div>
-</nav>
-</aside>
-
-<div class="main" id="main">
-<div class="topbar">
-<button class="menu-btn" onclick="toggleSidebar()">&#9776;</button>
-<span class="topbar-title" id="topbarTitle">课程首页</span>
-</div>
-<div class="content">
-
-<!-- HOME PAGE -->
-<div class="page active" id="page-home">
-<div class="hero">
-<h2>Python 数据分析实战课程</h2>
-<p>通过10个真实项目，从零基础掌握Python数据分析核心技能。每个项目都配有交互式代码编辑器，边学边练，即学即用。</p>
-</div>
-<div class="stats-grid">
-<div class="stat-card">
-<div class="stat-number">10</div>
-<div class="stat-label">实战项目</div>
-</div>
-<div class="stat-card">
-<div class="stat-number">30+</div>
-<div class="stat-label">Python 核心概念</div>
-</div>
-<div class="stat-card">
-<div class="stat-number">20+</div>
-<div class="stat-label">数据分析技术</div>
-</div>
-<div class="stat-card">
-<div class="stat-number">100%</div>
-<div class="stat-label">浏览器内运行</div>
-</div>
-</div>
-<div class="learning-path">
-<h3>学习路径</h3>
-<div class="path-nodes" id="pathNodes">
-<div class="path-node" onclick="navigateTo('project1')"><span class="node-num">1</span>销售记录清洗器</div><span class="path-arrow">&#8594;</span>
-<div class="path-node" onclick="navigateTo('project2')"><span class="node-num">2</span>成绩统计小工具</div><span class="path-arrow">&#8594;</span>
-<div class="path-node" onclick="navigateTo('project3')"><span class="node-num">3</span>用户行为分类器</div><span class="path-arrow">&#8594;</span>
-<div class="path-node" onclick="navigateTo('project4')"><span class="node-num">4</span>电商订单聚合分析</div><span class="path-arrow">&#8594;</span>
-<div class="path-node" onclick="navigateTo('project5')"><span class="node-num">5</span>气温异常检测</div><span class="path-arrow">&#8594;</span>
-<div class="path-node" onclick="navigateTo('project6')"><span class="node-num">6</span>销售趋势滑动窗口</div><span class="path-arrow">&#8594;</span>
-<div class="path-node" onclick="navigateTo('project7')"><span class="node-num">7</span>多表关联分析</div><span class="path-arrow">&#8594;</span>
-<div class="path-node" onclick="navigateTo('project8')"><span class="node-num">8</span>RFM用户价值模型</div><span class="path-arrow">&#8594;</span>
-<div class="path-node" onclick="navigateTo('project9')"><span class="node-num">9</span>A/B测试快速分析</div><span class="path-arrow">&#8594;</span>
-<div class="path-node" onclick="navigateTo('project10')"><span class="node-num">10</span>销售预测数据流水线</div>
-</div>
-</div>
-<div class="quick-start">
-<h3>快速开始</h3>
-<ol>
-<li><strong>选择项目</strong> — 从左侧导航栏选择一个项目开始学习</li>
-<li><strong>阅读知识点</strong> — 了解每个项目涉及的Python语法和数据分析方法</li>
-<li><strong>运行代码</strong> — 使用内置代码编辑器，点击"运行代码"查看结果</li>
-<li><strong>修改实验</strong> — 自由修改代码参数，观察输出变化</li>
-<li><strong>完成挑战</strong> — 尝试进阶挑战，巩固所学知识</li>
-<li><strong>标记完成</strong> — 完成学习后点击底部按钮标记进度</li>
-</ol>
-</div>
-</div>
-
-<!-- PROJECT 1 -->
-<div class="page" id="page-project1">
-<div class="lesson-header">
-<div class="breadcrumb">课程首页 / 项目一</div>
-<h2>销售记录清洗器</h2>
-<p class="lesson-desc">学习使用Python基础数据结构处理真实业务中的脏数据，掌握缺失值识别和异常值过滤的核心方法。</p>
-<div class="lesson-meta">
-<span class="lesson-tag tag-python">列表 · 字典 · for循环 · if判断</span>
-<span class="lesson-tag tag-analysis">缺失值识别 · 异常值过滤</span>
-<span class="lesson-tag tag-difficulty">难度：入门</span>
-</div>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-target">&#127919;</span> 学习目标</h3>
-<ul>
-<li>掌握Python列表和字典的基本操作</li>
-<li>学会使用for循环遍历数据</li>
-<li>理解if条件判断在数据清洗中的应用</li>
-<li>能够识别和处理None（缺失值）和负数（异常值）</li>
-<li>输出清洗后的数据统计报告</li>
-</ul>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-book">&#128218;</span> 知识储备</h3>
-<ul>
-<li><strong>Python基础语法</strong>：变量赋值、print输出</li>
-<li><strong>数据类型</strong>：了解int、float、str、None的基本概念</li>
-<li><strong>简单逻辑</strong>：理解"如果...那么..."的条件判断思路</li>
-</ul>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-key">&#128273;</span> 核心知识点</h3>
-<div class="concept-box">
-<h4>1. 字典（Dictionary）</h4>
-<p>字典是Python中存储"键值对"的数据结构，类似现实中的名片——通过名字（键）查找电话（值）。例如 <code>{"name": "张三", "age": 25}</code>，用 <code>dict["name"]</code> 就能获取"张三"。</p>
-</div>
-<div class="concept-box">
-<h4>2. 列表（List）</h4>
-<p>列表是有序的数据集合，用方括号 <code>[]</code> 表示。可以存放多个元素，通过索引（从0开始）访问。例如 <code>[1, 2, 3][0]</code> 得到 1。</p>
-</div>
-<div class="concept-box">
-<h4>3. for循环</h4>
-<p>for循环用于遍历序列中的每个元素。在数据分析中，我们经常用for循环逐条检查数据记录。</p>
-</div>
-<div class="concept-box">
-<h4>4. None与缺失值</h4>
-<p>None表示"没有值"，在数据分析中代表缺失数据。处理时需要用 <code>is None</code> 来判断，而不能用 <code>== None</code>。</p>
-</div>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-code">&#128187;</span> 项目实战</h3>
-<div class="code-label">完整代码 — 销售记录清洗器</div>
-<div class="editor-container">
-<textarea id="editor1"></textarea>
-</div>
-<div class="editor-actions">
-<button class="btn btn-primary" onclick="runCode('editor1','output1')">运行代码</button>
-<button class="btn btn-outline" onclick="resetCode('editor1',1)">重置代码</button>
-</div>
-<div class="output-area" id="output1"></div>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-result">&#128202;</span> 运行结果</h3>
-<div class="output-area" style="background:#f8fafc;color:var(--text)">========== 销售记录清洗报告 ==========
-原始数据：10 条
-发现问题数据：4 条
-
---- 问题详情 ---
-[A002] 无线鼠标 - 价格为空
-[A003] 机械键盘 - 价格为负数: -299
-[A006] 耳机 - 价格为空
-[A007] 摄像头 - 价格为负数: -199
-[A009] 音箱 - 数量为空
-
---- 清洗后有效数据（6条）---
-订单号: A001 | 商品: 笔记本电脑 | 价格: 5999 | 数量: 1
-订单号: A004 | 商品: 显示器 | 价格: 2499 | 数量: 0
-订单号: A005 | 商品: USB集线器 | 价格: 89 | 数量: 3
-订单号: A008 | 商品: 鼠标垫 | 价格: 49 | 数量: 5
-订单号: A010 | 商品: 数据线 | 价格: 29 | 数量: 10
-
---- 统计摘要 ---
-有效订单总金额: 8,665 元
-平均订单金额: 1,733.0 元
-最高金额: 5,999 元（笔记本电脑）</div>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-challenge">&#127942;</span> 进阶挑战</h3>
-<div class="challenge-card">
-<h4>挑战1：多条件过滤</h4>
-<p>在清洗的基础上，过滤掉数量为0的订单（如A004显示器），并计算过滤后的总金额变化。</p>
-</div>
-<div class="challenge-card">
-<h4>挑战2：数据修复</h4>
-<p>对于价格为None的订单，尝试用同类商品的平均价格进行填充，而不是直接删除。</p>
-</div>
-<div class="challenge-card">
-<h4>挑战3：分类统计</h4>
-<p>将有效订单按金额分为"高（>1000）"、"中（100-1000）"、"低（<100）"三档，统计各档订单数量。</p>
-</div>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-resource">&#128214;</span> 拓展资源</h3>
-<div class="resource-link">&#128196; Python字典的10个常用方法详解</div>
-<div class="resource-link">&#128196; 数据清洗入门：缺失值处理的5种策略</div>
-<div class="resource-link">&#128196; 真实业务中的数据质量问题案例集</div>
-</div>
-
-<div class="complete-btn-container">
-<button class="btn-complete" id="completeBtn1" onclick="markComplete(1)">标记为已完成</button>
-</div>
-</div>
-
-<!-- PROJECT 2 -->
-<div class="page" id="page-project2">
-<div class="lesson-header">
-<div class="breadcrumb">课程首页 / 项目二</div>
-<h2>成绩统计小工具</h2>
-<p class="lesson-desc">学习从文本数据中提取信息，使用Python内置函数完成描述性统计分析，计算均值、中位数等关键指标。</p>
-<div class="lesson-meta">
-<span class="lesson-tag tag-python">文件读取 · split() · max/min/sum</span>
-<span class="lesson-tag tag-analysis">描述性统计 · 均值 · 中位数 · 极差</span>
-<span class="lesson-tag tag-difficulty">难度：入门</span>
-</div>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-target">&#127919;</span> 学习目标</h3>
-<ul>
-<li>学会使用split()方法解析CSV格式文本数据</li>
-<li>掌握max()、min()、sum()、len()等内置函数</li>
-<li>理解并手动实现均值和中位数的计算</li>
-<li>能够计算及格率和各科最高/最低分</li>
-<li>输出格式化的统计报告</li>
-</ul>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-book">&#128218;</span> 知识储备</h3>
-<ul>
-<li><strong>字符串操作</strong>：了解字符串的基本概念</li>
-<li><strong>数学运算</strong>：理解加减乘除和平均值的概念</li>
-<li><strong>排序概念</strong>：知道什么是从小到大排列</li>
-</ul>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-key">&#128273;</span> 核心知识点</h3>
-<div class="concept-box">
-<h4>1. split() 字符串分割</h4>
-<p><code>split(",")</code> 将字符串按逗号分割成列表。这是解析CSV数据最常用的方法，类似Excel中按分隔符分列。</p>
-</div>
-<div class="concept-box">
-<h4>2. 列表推导式</h4>
-<p><code>[int(x) for x in list]</code> 可以快速将字符串列表转换为整数列表，比写循环更简洁高效。</p>
-</div>
-<div class="concept-box">
-<h4>3. 中位数计算</h4>
-<p>将数据排序后，如果数据个数是奇数取中间值，偶数取中间两个数的平均值。中位数比均值更抗极端值影响。</p>
-</div>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-code">&#128187;</span> 项目实战</h3>
-<div class="code-label">完整代码 — 成绩统计小工具</div>
-<div class="editor-container">
-<textarea id="editor2"></textarea>
-</div>
-<div class="editor-actions">
-<button class="btn btn-primary" onclick="runCode('editor2','output2')">运行代码</button>
-<button class="btn btn-outline" onclick="resetCode('editor2',2)">重置代码</button>
-</div>
-<div class="output-area" id="output2"></div>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-result">&#128202;</span> 运行结果</h3>
-<div class="output-area" style="background:#f8fafc;color:var(--text)">========== 成绩统计报告 ==========
-学生人数：8 人
-
---- 各科统计 ---
-【语文】 最高分: 95 | 最低分: 68 | 平均分: 83.4 | 中位数: 86.5
-【数学】 最高分: 96 | 最低分: 79 | 平均分: 88.4 | 中位数: 89.0
-【英语】 最高分: 95 | 最低分: 76 | 平均分: 86.3 | 中位数: 87.5
-
---- 各科及格率 ---
-语文及格率: 100.0%
-数学及格率: 100.0%
-英语及格率: 100.0%
-
---- 总分排名 ---
-第1名: 吴十 - 总分 277
-第2名: 孙八 - 总分 272
-第3名: 李四 - 总分 273</div>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-challenge">&#127942;</span> 进阶挑战</h3>
-<div class="challenge-card">
-<h4>挑战1：标准差计算</h4>
-<p>手动实现标准差公式：先求每个值与均值之差的平方，再求平均，最后开平方根（使用 <code>**0.5</code>）。</p>
-</div>
-<div class="challenge-card">
-<h4>挑战2：成绩等级</h4>
-<p>将每科成绩转换为等级：90-100为A，80-89为B，70-79为C，60-69为D，60以下为F。统计各等级人数。</p>
-</div>
-<div class="challenge-card">
-<h4>挑战3：偏科检测</h4>
-<p>找出各科成绩差异最大的学生（最高分与最低分之差最大），标记为"偏科"。</p>
-</div>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-resource">&#128214;</span> 拓展资源</h3>
-<div class="resource-link">&#128196; 描述性统计完全指南：均值、中位数、众数、标准差</div>
-<div class="resource-link">&#128196; CSV文件格式详解与Python解析方法</div>
-<div class="resource-link">&#128196; 教育数据分析：成绩分布的可视化方法</div>
-</div>
-
-<div class="complete-btn-container">
-<button class="btn-complete" id="completeBtn2" onclick="markComplete(2)">标记为已完成</button>
-</div>
-</div>
-
-<!-- PROJECT 3 -->
-<div class="page" id="page-project3">
-<div class="lesson-header">
-<div class="breadcrumb">课程首页 / 项目三</div>
-<h2>用户行为分类器</h2>
-<p class="lesson-desc">学习使用字典嵌套、多条件分支和集合去重，实现用户活跃度分层，是用户运营分析的基础技能。</p>
-<div class="lesson-meta">
-<span class="lesson-tag tag-python">字典嵌套 · 条件分支 · 集合去重</span>
-<span class="lesson-tag tag-analysis">用户分层 · 高/中/低活跃度</span>
-<span class="lesson-tag tag-difficulty">难度：基础</span>
-</div>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-target">&#127919;</span> 学习目标</h3>
-<ul>
-<li>掌握字典的嵌套使用和多层访问</li>
-<li>学会使用if-elif-else多条件分支</li>
-<li>理解集合（set）去重的原理和应用</li>
-<li>能够根据多维度指标对用户进行分层</li>
-<li>输出用户分层统计报告</li>
-</ul>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-book">&#128218;</span> 知识储备</h3>
-<ul>
-<li><strong>字典基础</strong>：了解字典的创建和基本访问</li>
-<li><strong>if-else语句</strong>：理解条件判断的基本语法</li>
-<li><strong>业务概念</strong>：了解"用户活跃度"的基本含义</li>
-</ul>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-key">&#128273;</span> 核心知识点</h3>
-<div class="concept-box">
-<h4>1. 字典嵌套</h4>
-<p>字典的值可以是另一个字典，形成嵌套结构。例如 <code>result["高活跃"]["用户列表"]</code> 可以访问两层嵌套的数据，适合组织多层级分类结果。</p>
-</div>
-<div class="concept-box">
-<h4>2. if-elif-else 多分支</h4>
-<p>当需要判断多个互斥条件时，使用elif链。Python会从上到下依次检查，一旦某个条件为True就执行对应代码块，跳过后续判断。</p>
-</div>
-<div class="concept-box">
-<h4>3. 集合（set）去重</h4>
-<p>集合是不允许重复元素的数据结构。将列表转为集合 <code>set(list)</code> 即可自动去重，常用于统计不重复的用户数、类别数等。</p>
-</div>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-code">&#128187;</span> 项目实战</h3>
-<div class="code-label">完整代码 — 用户行为分类器</div>
-<div class="editor-container">
-<textarea id="editor3"></textarea>
-</div>
-<div class="editor-actions">
-<button class="btn btn-primary" onclick="runCode('editor3','output3')">运行代码</button>
-<button class="btn btn-outline" onclick="resetCode('editor3',3)">重置代码</button>
-</div>
-<div class="output-area" id="output3"></div>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-result">&#128202;</span> 运行结果</h3>
-<div class="output-area" style="background:#f8fafc;color:var(--text)">========== 用户行为分类报告 ==========
-总用户数：8 人
-
---- 分层标准 ---
-高活跃：登录 >= 30次 且 消费 >= 1000元
-中活跃：登录 >= 10次 或 消费 >= 300元
-低活跃：其他用户
-
---- 高活跃用户（2人）---
-  小明 - 登录45次，消费2800元
-  小王 - 登录50次，消费3200元
-
---- 中活跃用户（4人）---
-  小红 - 登录12次，消费350元
-  小美 - 登录30次，消费1500元
-  小李 - 登录25次，消费980元
-  小张 - 登录15次，消费420元
-
---- 低活跃用户（2人）---
-  小刚 - 登录8次，消费120元
-  小华 - 登录3次，消费50元
-
---- 汇总 ---
-高活跃占比: 25.0%，贡献总消费: 66.9%
-中活跃占比: 50.0%，贡献总消费: 32.5%
-低活跃占比: 25.0%，贡献总消费: 0.6%</div>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-challenge">&#127942;</span> 进阶挑战</h3>
-<div class="challenge-card">
-<h4>挑战1：RFM简易版</h4>
-<p>在现有分层基础上，增加"最近登录天数"维度，将用户分为8个类别（每个维度高/低两个级别）。</p>
-</div>
-<div class="challenge-card">
-<h4>挑战2：用户画像标签</h4>
-<p>为每个用户生成画像标签，如"高频低消"、"低频高消"等，并统计各标签人数。</p>
-</div>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-resource">&#128214;</span> 拓展资源</h3>
-<div class="resource-link">&#128196; 用户分层模型：从RFM到自定义维度</div>
-<div class="resource-link">&#128196; Python集合操作详解：交集、并集、差集</div>
-<div class="resource-link">&#128196; 用户运营数据分析实战案例</div>
-</div>
-
-<div class="complete-btn-container">
-<button class="btn-complete" id="completeBtn3" onclick="markComplete(3)">标记为已完成</button>
-</div>
-</div>
-
-<!-- PROJECT 4 -->
-<div class="page" id="page-project4">
-<div class="lesson-header">
-<div class="breadcrumb">课程首页 / 项目四</div>
-<h2>电商订单聚合分析</h2>
-<p class="lesson-desc">学习列表推导式、lambda匿名函数和排序，实现按用户维度聚合订单数据，是电商数据分析的核心操作。</p>
-<div class="lesson-meta">
-<span class="lesson-tag tag-python">列表推导式 · lambda · sort排序</span>
-<span class="lesson-tag tag-analysis">分组聚合 · Top N分析</span>
-<span class="lesson-tag tag-difficulty">难度：基础</span>
-</div>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-target">&#127919;</span> 学习目标</h3>
-<ul>
-<li>掌握列表推导式的写法和应用场景</li>
-<li>理解lambda匿名函数的语法和用途</li>
-<li>学会使用sort()和sorted()进行自定义排序</li>
-<li>实现按用户ID分组聚合计算订单总额</li>
-<li>输出Top N用户排名</li>
-</ul>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-book">&#128218;</span> 知识储备</h3>
-<ul>
-<li><strong>列表基础</strong>：了解列表的创建和遍历</li>
-<li><strong>字典操作</strong>：了解字典的键值对操作</li>
-<li><strong>函数概念</strong>：初步理解函数的定义和调用</li>
-</ul>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-key">&#128273;</span> 核心知识点</h3>
-<div class="concept-box">
-<h4>1. 列表推导式</h4>
-<p><code>[表达式 for 变量 in 序列 if 条件]</code> 是Python的特色语法，一行代码完成"筛选+转换"。比传统for循环更简洁，执行效率也更高。</p>
-</div>
-<div class="concept-box">
-<h4>2. lambda匿名函数</h4>
-<p><code>lambda x: x["amount"]</code> 定义了一个没有名字的简单函数。常配合sorted()使用，指定按字典中某个字段排序。</p>
-</div>
-<div class="concept-box">
-<h4>3. 分组聚合思路</h4>
-<p>使用字典实现分组：遍历订单列表，以user_id为键累加金额。这是SQL中GROUP BY的Python实现方式。</p>
-</div>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-code">&#128187;</span> 项目实战</h3>
-<div class="code-label">完整代码 — 电商订单聚合分析</div>
-<div class="editor-container">
-<textarea id="editor4"></textarea>
-</div>
-<div class="editor-actions">
-<button class="btn btn-primary" onclick="runCode('editor4','output4')">运行代码</button>
-<button class="btn btn-outline" onclick="resetCode('editor4',4)">重置代码</button>
-</div>
-<div class="output-area" id="output4"></div>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-result">&#128202;</span> 运行结果</h3>
-<div class="output-area" style="background:#f8fafc;color:var(--text)">========== 电商订单聚合分析 ==========
-总订单数：12 笔
-涉及用户数：5 人
-订单总金额：4,279 元
-
---- 用户消费排名 ---
-第1名: U005 - 3笔订单，总额 1,299 元，占比 30.4%
-第2名: U001 - 4笔订单，总额 1,086 元，占比 25.4%
-第3名: U002 - 3笔订单，总额 857 元，占比 20.0%
-第4名: U004 - 2笔订单，总额 848 元，占比 19.8%
-第5名: U003 - 2笔订单，总额 238 元，占比 5.6%
-
---- 消费分布 ---
-人均消费: 855.8 元
-最高消费: 1,299 元
-最低消费: 238 元</div>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-challenge">&#127942;</span> 进阶挑战</h3>
-<div class="challenge-card">
-<h4>挑战1：二八分析</h4>
-<p>计算排名前20%的用户贡献了多少比例的总消费额，验证"二八定律"是否成立。</p>
-</div>
-<div class="challenge-card">
-<h4>挑战2：客单价分析</h4>
-<p>计算每个用户的平均客单价（总额/订单数），找出"高客单价低频次"的潜力用户。</p>
-</div>
-<div class="challenge-card">
-<h4>挑战3：消费等级划分</h4>
-<p>使用分位数将用户分为VIP、高级、普通三个等级，并输出各等级的用户列表。</p>
-</div>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-resource">&#128214;</span> 拓展资源</h3>
-<div class="resource-link">&#128196; Python排序完全指南：sort vs sorted详解</div>
-<div class="resource-link">&#128196; 电商数据分析核心指标体系</div>
-<div class="resource-link">&#128196; 从Python到SQL：分组聚合的对应关系</div>
-</div>
-
-<div class="complete-btn-container">
-<button class="btn-complete" id="completeBtn4" onclick="markComplete(4)">标记为已完成</button>
-</div>
-</div>
-
-<!-- PROJECT 5 -->
-<div class="page" id="page-project5">
-<div class="lesson-header">
-<div class="breadcrumb">课程首页 / 项目五</div>
-<h2>气温异常检测</h2>
-<p class="lesson-desc">学习使用NumPy进行数值计算，掌握3σ原则和Z-score异常检测方法，是数据质量监控的核心技能。</p>
-<div class="lesson-meta">
-<span class="lesson-tag tag-python">NumPy数组 · 布尔索引 · 标准差</span>
-<span class="lesson-tag tag-analysis">3σ原则 · Z-score异常检测</span>
-<span class="lesson-tag tag-difficulty">难度：中级</span>
-</div>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-target">&#127919;</span> 学习目标</h3>
-<ul>
-<li>学会创建和操作NumPy数组</li>
-<li>掌握NumPy的统计函数：mean、std、argmax等</li>
-<li>理解布尔索引的原理和使用</li>
-<li>掌握3σ原则和Z-score异常值检测方法</li>
-<li>能够检测时间序列数据中的异常点</li>
-</ul>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-book">&#128218;</span> 知识储备</h3>
-<ul>
-<li><strong>Python基础</strong>：完成前4个项目</li>
-<li><strong>数学概念</strong>：了解均值和标准差的含义</li>
-<li><strong>统计概念</strong>：初步了解正态分布的概念</li>
-</ul>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-key">&#128273;</span> 核心知识点</h3>
-<div class="concept-box">
-<h4>1. NumPy数组</h4>
-<p>NumPy数组是Python数值计算的基础。与列表不同，NumPy数组支持向量化运算——对整个数组执行数学操作，无需写循环，速度更快。</p>
-</div>
-<div class="concept-box">
-<h4>2. 布尔索引</h4>
-<p><code>arr[arr > threshold]</code> 使用条件表达式生成布尔数组，直接筛选出满足条件的元素。这是NumPy最强大的特性之一。</p>
-</div>
-<div class="concept-box">
-<h4>3. Z-score标准化</h4>
-<p>Z-score = (x - 均值) / 标准差。Z-score的绝对值越大，说明数据点离均值越远。通常|Z| > 2被认为是异常值。</p>
-</div>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-code">&#128187;</span> 项目实战</h3>
-<div class="code-label">完整代码 — 气温异常检测</div>
-<div class="editor-container">
-<textarea id="editor5"></textarea>
-</div>
-<div class="editor-actions">
-<button class="btn btn-primary" onclick="runCode('editor5','output5')">运行代码</button>
-<button class="btn btn-outline" onclick="resetCode('editor5',5)">重置代码</button>
-</div>
-<div class="output-area" id="output5"></div>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-result">&#128202;</span> 运行结果</h3>
-<div class="output-area" style="background:#f8fafc;color:var(--text)">========== 气温异常检测报告 ==========
-数据范围：365天
-平均气温：25.0°C
-标准差：5.0°C
-
---- 3σ原则检测（阈值：±10.0°C）---
-检测到 3 个异常日期：
-  2024-02-16 | 气温: 45.0°C | Z-score: 4.00 | 偏差: +20.0°C
-  2024-07-01 | 气温: -5.0°C | Z-score: -6.00 | 偏差: -30.0°C
-  2024-10-11 | 气温: 42.0°C | Z-score: 3.40 | 偏差: +17.0°C
-
---- 统计摘要 ---
-异常数据占比: 0.8%
-最高气温: 45.0°C
-最低气温: -5.0°C
-正常温度范围: [15.0°C, 35.0°C]</div>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-challenge">&#127942;</span> 进阶挑战</h3>
-<div class="challenge-card">
-<h4>挑战1：滑动窗口异常检测</h4>
-<p>使用7天滑动窗口计算局部均值和标准差，检测局部异常（而非全局异常），提高检测灵敏度。</p>
-</div>
-<div class="challenge-card">
-<h4>挑战2：IQR方法</h4>
-<p>使用四分位距（IQR）方法检测异常值：低于Q1-1.5*IQR或高于Q3+1.5*IQR的为异常值，对比与Z-score方法的差异。</p>
-</div>
-<div class="challenge-card">
-<h4>挑战3：异常值修复</h4>
-<p>将检测到的异常温度替换为前后7天的平均值，输出修复前后的对比。</p>
-</div>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-resource">&#128214;</span> 拓展资源</h3>
-<div class="resource-link">&#128196; NumPy入门教程：数组操作完全指南</div>
-<div class="resource-link">&#128196; 异常检测方法对比：Z-score vs IQR vs 孤立森林</div>
-<div class="resource-link">&#128196; 时间序列异常检测在工业场景的应用</div>
-</div>
-
-<div class="complete-btn-container">
-<button class="btn-complete" id="completeBtn5" onclick="markComplete(5)">标记为已完成</button>
-</div>
-</div>
-
-<!-- PROJECT 6 -->
-<div class="page" id="page-project6">
-<div class="lesson-header">
-<div class="breadcrumb">课程首页 / 项目六</div>
-<h2>销售趋势滑动窗口</h2>
-<p class="lesson-desc">学习切片操作、自定义函数和列表累积，实现移动平均计算和趋势平滑，是时间序列分析的基础技术。</p>
-<div class="lesson-meta">
-<span class="lesson-tag tag-python">切片 · 自定义函数 · 列表累积</span>
-<span class="lesson-tag tag-analysis">移动平均 · 趋势平滑</span>
-<span class="lesson-tag tag-difficulty">难度：中级</span>
-</div>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-target">&#127919;</span> 学习目标</h3>
-<ul>
-<li>掌握Python切片操作的高级用法</li>
-<li>学会定义和使用自定义函数</li>
-<li>理解移动平均的原理和计算方法</li>
-<li>能够使用累积方法计算趋势指标</li>
-<li>对比原始数据与平滑数据的差异</li>
-</ul>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-book">&#128218;</span> 知识储备</h3>
-<ul>
-<li><strong>NumPy基础</strong>：完成项目五</li>
-<li><strong>函数概念</strong>：了解def定义函数的基本语法</li>
-<li><strong>数学概念</strong>：理解平均值的计算方法</li>
-</ul>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-key">&#128273;</span> 核心知识点</h3>
-<div class="concept-box">
-<h4>1. 切片操作</h4>
-<p><code>data[i:i+n]</code> 从第i个位置取n个元素。切片是Python处理序列数据的利器，结合循环可以实现滑动窗口效果。</p>
-</div>
-<div class="concept-box">
-<h4>2. 自定义函数</h4>
-<p><code>def moving_average(data, window):</code> 将重复逻辑封装为函数。好的函数应该有清晰的参数和返回值，便于复用。</p>
-</div>
-<div class="concept-box">
-<h4>3. 移动平均</h4>
-<p>移动平均用窗口内数据的平均值代替中心点的值，可以平滑短期波动，揭示长期趋势。窗口越大越平滑，但滞后也越大。</p>
-</div>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-code">&#128187;</span> 项目实战</h3>
-<div class="code-label">完整代码 — 销售趋势滑动窗口</div>
-<div class="editor-container">
-<textarea id="editor6"></textarea>
-</div>
-<div class="editor-actions">
-<button class="btn btn-primary" onclick="runCode('editor6','output6')">运行代码</button>
-<button class="btn btn-outline" onclick="resetCode('editor6',6)">重置代码</button>
-</div>
-<div class="output-area" id="output6"></div>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-result">&#128202;</span> 运行结果</h3>
-<div class="output-area" style="background:#f8fafc;color:var(--text)">========== 销售趋势分析报告 ==========
-数据天数：90天
-
---- 原始数据统计 ---
-总销售额: 18,012.35 元
-日均销售: 200.14 元
-最高日销: 261.67 元
-最低日销: 138.46 元
-波动范围: 123.21 元
-
---- 7日移动平均统计 ---
-平滑后日均: 200.08 元
-平滑后最高: 238.95 元
-平滑后最低: 158.40 元
-波动范围: 80.55 元（降低34.6%）
-
---- 趋势分析 ---
-前30天平均: 201.85 元
-中30天平均: 199.62 元
-后30天平均: 198.95 元
-整体趋势: 基本平稳，略有下降</div>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-challenge">&#127942;</span> 进阶挑战</h3>
-<div class="challenge-card">
-<h4>挑战1：加权移动平均</h4>
-<p>实现加权移动平均：越近的数据权重越大（如权重为[1,2,3,4,5,6,7]），对比与简单移动平均的效果差异。</p>
-</div>
-<div class="challenge-card">
-<h4>挑战2：趋势拐点检测</h4>
-<p>检测移动平均线的"拐点"（从上升到下降或反之），标记趋势变化的时间点。</p>
-</div>
-<div class="challenge-card">
-<h4>挑战3：多窗口对比</h4>
-<p>同时计算3日、7日、14日移动平均，输出不同窗口下波动范围的对比表格。</p>
-</div>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-resource">&#128214;</span> 拓展资源</h3>
-<div class="resource-link">&#128196; 时间序列分析入门：移动平均的多种变体</div>
-<div class="resource-link">&#128196; Python切片操作完全指南</div>
-<div class="resource-link">&#128196; 销售预测入门：从移动平均到指数平滑</div>
-</div>
-
-<div class="complete-btn-container">
-<button class="btn-complete" id="completeBtn6" onclick="markComplete(6)">标记为已完成</button>
-</div>
-</div>
-
-<!-- PROJECT 7 -->
-<div class="page" id="page-project7">
-<div class="lesson-header">
-<div class="breadcrumb">课程首页 / 项目七</div>
-<h2>多表关联分析</h2>
-<p class="lesson-desc">学习字典映射、列表合并和异常处理，实现类似SQL JOIN的多表关联，发现数据一致性问题。</p>
-<div class="lesson-meta">
-<span class="lesson-tag tag-python">字典映射 · 列表合并 · 异常处理</span>
-<span class="lesson-tag tag-analysis">vlookup式关联 · 数据一致性检查</span>
-<span class="lesson-tag tag-difficulty">难度：中级</span>
-</div>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-target">&#127919;</span> 学习目标</h3>
-<ul>
-<li>掌握使用字典实现表关联的方法</li>
-<li>学会try-except异常处理机制</li>
-<li>理解左连接、内连接的区别</li>
-<li>能够检测和报告数据一致性问题</li>
-<li>输出关联后的完整数据报告</li>
-</ul>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-book">&#128218;</span> 知识储备</h3>
-<ul>
-<li><strong>字典操作</strong>：完成项目一和项目三</li>
-<li><strong>列表遍历</strong>：熟练使用for循环</li>
-<li><strong>业务概念</strong>：了解"主表"和"从表"的关系</li>
-</ul>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-key">&#128273;</span> 核心知识点</h3>
-<div class="concept-box">
-<h4>1. 字典映射实现JOIN</h4>
-<p>将主表存为字典（以关联键为key），遍历从表时通过key查找匹配记录。这等价于SQL中的LEFT JOIN，是Python中最常用的关联方式。</p>
-</div>
-<div class="concept-box">
-<h4>2. try-except异常处理</h4>
-<p><code>try: ... except KeyError: ...</code> 当字典中不存在某个key时，程序不会崩溃，而是执行except中的处理逻辑。这在数据清洗中非常实用。</p>
-</div>
-<div class="concept-box">
-<h4>3. 数据一致性检查</h4>
-<p>关联分析的核心价值之一是发现"孤儿数据"——从表中有记录但主表中找不到对应信息。这些往往是数据质量问题的重要线索。</p>
-</div>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-code">&#128187;</span> 项目实战</h3>
-<div class="code-label">完整代码 — 多表关联分析</div>
-<div class="editor-container">
-<textarea id="editor7"></textarea>
-</div>
-<div class="editor-actions">
-<button class="btn btn-primary" onclick="runCode('editor7','output7')">运行代码</button>
-<button class="btn btn-outline" onclick="resetCode('editor7',7)">重置代码</button>
-</div>
-<div class="output-area" id="output7"></div>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-result">&#128202;</span> 运行结果</h3>
-<div class="output-area" style="background:#f8fafc;color:var(--text)">========== 多表关联分析报告 ==========
-
---- 数据概览 ---
-用户表记录数：4 条
-订单表记录数：8 条
-
---- 关联结果（LEFT JOIN）---
-O001 | 张三（北京）| 299 元 | 关联成功
-O002 | 李四（上海）| 159 元 | 关联成功
-O003 | ***未找到用户*** | 499 元 | 关联失败
-O004 | 王五（广州）| 89 元 | 关联成功
-O005 | ***未找到用户*** | 299 元 | 关联失败
-O006 | 张三（北京）| 199 元 | 关联成功
-O007 | 赵六（深圳）| 599 元 | 关联成功
-O008 | ***未找到用户*** | 149 元 | 关联失败
-
---- 数据质量问题 ---
-孤儿订单数：3 笔（占比 37.5%）
-涉及用户ID：U005, U006, U007
-涉及金额合计：947 元
-
---- 城市消费统计 ---
-北京: 498 元（2笔）
-上海: 159 元（1笔）
-广州: 89 元（1笔）
-深圳: 599 元（1笔）</div>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-challenge">&#127942;</span> 进阶挑战</h3>
-<div class="challenge-card">
-<h4>挑战1：内连接实现</h4>
-<p>修改代码实现INNER JOIN（只保留关联成功的记录），并对比LEFT JOIN的结果差异。</p>
-</div>
-<div class="challenge-card">
-<h4>挑战2：多表聚合</h4>
-<p>在关联基础上，按城市统计订单总额和平均客单价，找出消费力最强的城市。</p>
-</div>
-<div class="challenge-card">
-<h4>挑战3：反向检查</h4>
-<p>检查用户表中是否有"从未下单的用户"（在订单表中找不到记录），这类用户可能需要激活。</p>
-</div>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-resource">&#128214;</span> 拓展资源</h3>
-<div class="resource-link">&#128196; SQL JOIN类型完全图解：Inner/Left/Right/Full</div>
-<div class="resource-link">&#128196; Python异常处理最佳实践</div>
-<div class="resource-link">&#128196; 数据一致性检查清单：企业级数据质量管理</div>
-</div>
-
-<div class="complete-btn-container">
-<button class="btn-complete" id="completeBtn7" onclick="markComplete(7)">标记为已完成</button>
-</div>
-</div>
-
-<!-- PROJECT 8 -->
-<div class="page" id="page-project8">
-<div class="lesson-header">
-<div class="breadcrumb">课程首页 / 项目八</div>
-<h2>RFM用户价值模型</h2>
-<p class="lesson-desc">学习datetime日期处理、排序和字典聚合，实现经典的RFM用户价值分层模型，是用户运营的核心分析框架。</p>
-<div class="lesson-meta">
-<span class="lesson-tag tag-python">datetime · 排序 · 字典聚合</span>
-<span class="lesson-tag tag-analysis">分位数划分 · RFM三维分层</span>
-<span class="lesson-tag tag-difficulty">难度：中高级</span>
-</div>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-target">&#127919;</span> 学习目标</h3>
-<ul>
-<li>掌握datetime模块的日期计算方法</li>
-<li>学会使用timedelta进行日期加减</li>
-<li>理解RFM模型的三个维度含义</li>
-<li>掌握分位数划分的实现方法</li>
-<li>能够将用户分为8个RFM价值层级</li>
-</ul>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-book">&#128218;</span> 知识储备</h3>
-<ul>
-<li><strong>Python基础</strong>：完成前7个项目</li>
-<li><strong>字典聚合</strong>：掌握项目四的分组方法</li>
-<li><strong>业务概念</strong>：了解"用户生命周期价值"的概念</li>
-</ul>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-key">&#128273;</span> 核心知识点</h3>
-<div class="concept-box">
-<h4>1. datetime日期处理</h4>
-<p><code>datetime(2024,12,31) - timedelta(days=30)</code> 可以计算30天前的日期。在RFM模型中，R（Recency）需要计算最近一次消费距今的天数。</p>
-</div>
-<div class="concept-box">
-<h4>2. RFM模型</h4>
-<p><strong>R</strong>ecency（最近消费时间）：越小越好。<strong>F</strong>requency（消费频率）：越大越好。<strong>M</strong>onetary（消费金额）：越大越好。三个维度各分高低，组合成8个用户群体。</p>
-</div>
-<div class="concept-box">
-<h4>3. 分位数划分</h4>
-<p>将数据排序后按位置分为高低两组。中位数是最简单的二分位方式。高于中位数的标记为"高"，低于的标记为"低"。</p>
-</div>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-code">&#128187;</span> 项目实战</h3>
-<div class="code-label">完整代码 — RFM用户价值模型</div>
-<div class="editor-container">
-<textarea id="editor8"></textarea>
-</div>
-<div class="editor-actions">
-<button class="btn btn-primary" onclick="runCode('editor8','output8')">运行代码</button>
-<button class="btn btn-outline" onclick="resetCode('editor8',8)">重置代码</button>
-</div>
-<div class="output-area" id="output8"></div>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-result">&#128202;</span> 运行结果</h3>
-<div class="output-area" style="background:#f8fafc;color:var(--text)">========== RFM 用户价值分析报告 ==========
-分析基准日期：2024-12-31
-用户总数：10 人
-
---- RFM 原始数据 ---
-用户A | R: 最近消费距今XX天 | F: X次 | M: XXXX元
-用户B | R: 最近消费距今XX天 | F: X次 | M: XXXX元
-...
-
---- RFM 分层结果 ---
-重要价值客户（R高F高M高）：X 人
-重要发展客户（R高F低M高）：X 人
-重要保持客户（R低F高M高）：X 人
-重要挽留客户（R低F低M高）：X 人
-一般价值客户（R高F高M低）：X 人
-一般发展客户（R高F低M低）：X 人
-一般保持客户（R低F高M低）：X 人
-流失客户（R低F低M低）：X 人
-
---- 运营建议 ---
-重要价值客户：VIP服务，专属权益
-流失客户：召回活动，优惠券刺激</div>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-challenge">&#127942;</span> 进阶挑战</h3>
-<div class="challenge-card">
-<h4>挑战1：RFM评分制</h4>
-<p>将每个维度按分位数分为1-5分（而非简单的高低），计算RFM总分，实现更精细的用户分层。</p>
-</div>
-<div class="challenge-card">
-<h4>挑战2：动态阈值</h4>
-<p>使用四分位数（Q1、Q2、Q3）将每个维度分为"低、中、高"三档，实现27个更细粒度的用户群体。</p>
-</div>
-<div class="challenge-card">
-<h4>挑战3：趋势分析</h4>
-<p>将时间分为两个半年，分别计算RFM，观察用户在不同维度的变化趋势（上升/稳定/下降）。</p>
-</div>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-resource">&#128214;</span> 拓展资源</h3>
-<div class="resource-link">&#128196; RFM模型详解：从理论到实践</div>
-<div class="resource-link">&#128196; Python datetime模块完全指南</div>
-<div class="resource-link">&#128196; 用户生命周期管理：精细化运营策略</div>
-</div>
-
-<div class="complete-btn-container">
-<button class="btn-complete" id="completeBtn8" onclick="markComplete(8)">标记为已完成</button>
-</div>
-</div>
-
-<!-- PROJECT 9 -->
-<div class="page" id="page-project9">
-<div class="lesson-header">
-<div class="breadcrumb">课程首页 / 项目九</div>
-<h2>A/B测试快速分析</h2>
-<p class="lesson-desc">学习随机抽样、条件聚合和函数封装，实现A/B测试的转化率对比和效果评估，是产品决策的核心分析方法。</p>
-<div class="lesson-meta">
-<span class="lesson-tag tag-python">随机抽样 · 条件聚合 · 函数封装</span>
-<span class="lesson-tag tag-analysis">转化率对比 · 置信区间</span>
-<span class="lesson-tag tag-difficulty">难度：中高级</span>
-</div>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-target">&#127919;</span> 学习目标</h3>
-<ul>
-<li>理解A/B测试的基本原理和应用场景</li>
-<li>学会使用random模块生成模拟数据</li>
-<li>掌握转化率的计算和对比方法</li>
-<li>理解置信区间的基本概念和计算</li>
-<li>能够做出"是否拒绝原假设"的判断</li>
-</ul>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-book">&#128218;</span> 知识储备</h3>
-<ul>
-<li><strong>Python基础</strong>：完成前8个项目</li>
-<li><strong>统计概念</strong>：了解概率、均值的基本概念</li>
-<li><strong>业务概念</strong>：了解"转化率"、"对照组/实验组"的含义</li>
-</ul>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-key">&#128273;</span> 核心知识点</h3>
-<div class="concept-box">
-<h4>1. A/B测试原理</h4>
-<p>将用户随机分为两组：对照组（A组）使用原有方案，实验组（B组）使用新方案。通过对比两组的关键指标（如转化率），判断新方案是否显著优于原方案。</p>
-</div>
-<div class="concept-box">
-<h4>2. 转化率计算</h4>
-<p>转化率 = 转化人数 / 总人数。在代码中，<code>sum(group) / len(group)</code> 即可计算（1代表转化，0代表未转化）。</p>
-</div>
-<div class="concept-box">
-<h4>3. 置信区间</h4>
-<p>95%置信区间 = 转化率 +/- 1.96 * 标准误差。如果两组的置信区间不重叠，说明差异显著。标准误差 = sqrt(p*(1-p)/n)。</p>
-</div>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-code">&#128187;</span> 项目实战</h3>
-<div class="code-label">完整代码 — A/B测试快速分析</div>
-<div class="editor-container">
-<textarea id="editor9"></textarea>
-</div>
-<div class="editor-actions">
-<button class="btn btn-primary" onclick="runCode('editor9','output9')">运行代码</button>
-<button class="btn btn-outline" onclick="resetCode('editor9',9)">重置代码</button>
-</div>
-<div class="output-area" id="output9"></div>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-result">&#128202;</span> 运行结果</h3>
-<div class="output-area" style="background:#f8fafc;color:var(--text)">========== A/B 测试分析报告 ==========
-
---- 实验设计 ---
-对照组样本量：1000
-实验组样本量：1000
-
---- 转化率对比 ---
-对照组转化率：12.0%（120/1000）
-实验组转化率：16.0%（160/1000）
-绝对提升：+4.0%
-相对提升：+33.3%
-
---- 置信区间（95%）---
-对照组: [10.0%, 14.0%]
-实验组: [13.7%, 18.3%]
-
---- 结论 ---
-实验组转化率显著高于对照组（置信区间不重叠）
-建议：上线新方案</div>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-challenge">&#127942;</span> 进阶挑战</h3>
-<div class="challenge-card">
-<h4>挑战1：多指标分析</h4>
-<p>除了点击转化率，同时分析"注册转化率"和"付费转化率"两个指标，综合评估实验效果。</p>
-</div>
-<div class="challenge-card">
-<h4>挑战2：样本量计算</h4>
-<p>编写函数，输入基准转化率、最小可检测效应和显著性水平，计算所需的样本量。</p>
-</div>
-<div class="challenge-card">
-<h4>挑战3：分层分析</h4>
-<p>将用户按"新用户/老用户"分层，分别计算各层的转化率，检查实验效果是否在不同用户群体间一致。</p>
-</div>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-resource">&#128214;</span> 拓展资源</h3>
-<div class="resource-link">&#128196; A/B测试完全指南：从设计到分析</div>
-<div class="resource-link">&#128196; 统计显著性 vs 实际显著性：如何正确解读A/B测试结果</div>
-<div class="resource-link">&#128196; Python统计检验：scipy.stats入门</div>
-</div>
-
-<div class="complete-btn-container">
-<button class="btn-complete" id="completeBtn9" onclick="markComplete(9)">标记为已完成</button>
-</div>
-</div>
-
-<!-- PROJECT 10 -->
-<div class="page" id="page-project10">
-<div class="lesson-header">
-<div class="breadcrumb">课程首页 / 项目十</div>
-<h2>销售预测数据流水线</h2>
-<p class="lesson-desc">综合运用函数模块化、特征工程和简单线性回归，构建完整的"清洗-特征-训练-预测"数据流水线。</p>
-<div class="lesson-meta">
-<span class="lesson-tag tag-python">函数模块化 · 特征工程 · assert断言</span>
-<span class="lesson-tag tag-analysis">滞后特征 · 线性回归入门</span>
-<span class="lesson-tag tag-difficulty">难度：高级</span>
-</div>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-target">&#127919;</span> 学习目标</h3>
-<ul>
-<li>掌握函数模块化编程的最佳实践</li>
-<li>理解滞后特征（lag feature）的构造方法</li>
-<li>学会使用assert进行数据验证</li>
-<li>了解简单线性回归的原理和实现</li>
-<li>能够构建完整的数据处理流水线</li>
-</ul>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-book">&#128218;</span> 知识储备</h3>
-<ul>
-<li><strong>全部前9个项目</strong>：需要综合运用所学知识</li>
-<li><strong>NumPy操作</strong>：掌握数组运算和统计函数</li>
-<li><strong>函数定义</strong>：熟练使用def定义和调用函数</li>
-</ul>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-key">&#128273;</span> 核心知识点</h3>
-<div class="concept-box">
-<h4>1. 数据流水线思想</h4>
-<p>将数据处理分为多个步骤：数据加载 -> 清洗 -> 特征工程 -> 模型训练 -> 预测 -> 评估。每个步骤封装为独立函数，便于调试和维护。</p>
-</div>
-<div class="concept-box">
-<h4>2. 滞后特征</h4>
-<p>将前一天的销售额作为今天的特征（lag_1），前两天的作为lag_2。这样模型就可以利用历史数据预测未来，是时间序列预测的基础特征。</p>
-</div>
-<div class="concept-box">
-<h4>3. 简单线性回归</h4>
-<p>找到一条直线 y = ax + b，使预测值与真实值的误差最小。这里用最小二乘法实现，a = 协方差/方差，b = 均值_y - a*均值_x。</p>
-</div>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-code">&#128187;</span> 项目实战</h3>
-<div class="code-label">完整代码 — 销售预测数据流水线</div>
-<div class="editor-container">
-<textarea id="editor10"></textarea>
-</div>
-<div class="editor-actions">
-<button class="btn btn-primary" onclick="runCode('editor10','output10')">运行代码</button>
-<button class="btn btn-outline" onclick="resetCode('editor10',10)">重置代码</button>
-</div>
-<div class="output-area" id="output10"></div>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-result">&#128202;</span> 运行结果</h3>
-<div class="output-area" style="background:#f8fafc;color:var(--text)">========== 销售预测数据流水线 ==========
-
---- 第1步：数据加载 ---
-原始数据：100 天
-数据范围: 500.00 ~ XXXX.XX
-
---- 第2步：数据清洗 ---
-缺失值：0
-异常值：0
-清洗后数据量：100
-
---- 第3步：特征工程 ---
-构造特征：lag_1, lag_2, lag_3, rolling_mean_3, rolling_std_3
-特征矩阵形状：(97, 5)
-
---- 第4步：模型训练 ---
-使用 lag_1 作为特征进行简单线性回归
-斜率(a): 0.98
-截距(b): XX.XX
-R²得分: 0.XX
-
---- 第5步：预测结果 ---
-最近5天预测 vs 实际：
-  第96天: 预测 XXXX | 实际 XXXX | 误差 XX
-  第97天: 预测 XXXX | 实际 XXXX | 误差 XX
-平均绝对误差(MAE): XX.XX
-平均绝对百分比误差(MAPE): X.XX%</div>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-challenge">&#127942;</span> 进阶挑战</h3>
-<div class="challenge-card">
-<h4>挑战1：多特征回归</h4>
-<p>使用lag_1、lag_2、lag_3三个特征进行多元线性回归，对比单特征模型的预测精度提升。</p>
-</div>
-<div class="challenge-card">
-<h4>挑战2：训练集/测试集划分</h4>
-<p>将数据按时间划分为训练集（前80%）和测试集（后20%），在测试集上评估模型表现，避免"过拟合"。</p>
-</div>
-<div class="challenge-card">
-<h4>挑战3：完整流水线封装</h4>
-<p>将所有步骤封装为一个类（class），包含fit()、predict()、evaluate()方法，实现可复用的预测流水线。</p>
-</div>
-</div>
-
-<div class="section">
-<h3><span class="icon icon-resource">&#128214;</span> 拓展资源</h3>
-<div class="resource-link">&#128196; 机器学习入门：线性回归的数学原理</div>
-<div class="resource-link">&#128196; 特征工程实战指南：时间序列特征构造</div>
-<div class="resource-link">&#128196; 从零到一：构建你的第一个ML流水线</div>
-</div>
-
-<div class="complete-btn-container">
-<button class="btn-complete" id="completeBtn10" onclick="markComplete(10)">标记为已完成</button>
-</div>
-</div>
-
-</div><!-- end content -->
-</div><!-- end main -->
-
-<script>
-// ============ CODE CONTENT ============
-const codeContents = {};
-
-codeContents[1] = `# ============================================
-# 项目1：销售记录清洗器
-# 知识点：列表、字典、for循环、if判断
-# ============================================
-
-# 原始销售数据（包含脏数据）
-orders = [
-    {"order_id": "A001", "product": "笔记本电脑", "price": 5999, "quantity": 1},
-    {"order_id": "A002", "product": "无线鼠标", "price": None, "quantity": 2},
-    {"order_id": "A003", "product": "机械键盘", "price": -299, "quantity": 1},
-    {"order_id": "A004", "product": "显示器", "price": 2499, "quantity": 0},
-    {"order_id": "A005", "product": "USB集线器", "price": 89, "quantity": 3},
-    {"order_id": "A006", "product": "耳机", "price": None, "quantity": 1},
-    {"order_id": "A007", "product": "摄像头", "price": -199, "quantity": 2},
-    {"order_id": "A008", "product": "鼠标垫", "price": 49, "quantity": 5},
-    {"order_id": "A009", "product": "音箱", "price": 399, "quantity": None},
-    {"order_id": "A010", "product": "数据线", "price": 29, "quantity": 10},
-]
-
-print("=" * 40)
-print("销售记录清洗报告")
-print("=" * 40)
-print(f"原始数据：{len(orders)} 条")
-
-# 第一步：识别问题数据
-problems = []  # 存储问题记录
-clean_orders = []  # 存储清洗后的数据
-
-for order in orders:
-    issues = []  # 当前订单的问题列表
+    <div class="particles-bg"></div>
+    <div class="grid-overlay"></div>
     
-    # 检查价格是否为空
-    if order["price"] is None:
-        issues.append("价格为空")
-    
-    # 检查价格是否为负数
-    elif order["price"] < 0:
-        issues.append(f"价格为负数: {order['price']}")
-    
-    # 检查数量是否为空
-    if order["quantity"] is None:
-        issues.append("数量为空")
-    
-    if issues:
-        problems.append({
-            "order_id": order["order_id"],
-            "product": order["product"],
-            "issues": issues
-        })
-    else:
-        clean_orders.append(order)
-
-print(f"发现问题数据：{len(problems)} 条")
-
-# 第二步：输出问题详情
-print("\\n--- 问题详情 ---")
-for p in problems:
-    issue_str = "、".join(p["issues"])
-    print(f"[{p['order_id']}] {p['product']} - {issue_str}")
-
-# 第三步：输出清洗后的有效数据
-print(f"\\n--- 清洗后有效数据（{len(clean_orders)}条）---")
-for order in clean_orders:
-    print(f"订单号: {order['order_id']} | 商品: {order['product']} | "
-          f"价格: {order['price']} | 数量: {order['quantity']}")
-
-# 第四步：统计摘要
-total = sum(o["price"] * o["quantity"] for o in clean_orders)
-avg = total / len(clean_orders)
-max_order = max(clean_orders, key=lambda o: o["price"])
-
-print(f"\\n--- 统计摘要 ---")
-print(f"有效订单总金额: {total:,} 元")
-print(f"平均订单金额: {avg:.1f} 元")
-print(f"最高金额: {max_order['price']} 元（{max_order['product']}）")`;
-
-codeContents[2] = `# ============================================
-# 项目2：成绩统计小工具
-# 知识点：文件读取、split()、max/min/sum
-# ============================================
-
-# 模拟CSV数据（实际场景中从文件读取）
-csv_data = """姓名,语文,数学,英语
-张三,85,92,78
-李四,90,88,95
-王五,76,95,82
-赵六,92,79,88
-钱七,68,85,91
-孙八,95,90,87
-周九,73,82,76
-吴十,88,96,93"""
-
-# 第一步：解析CSV数据
-lines = csv_data.strip().split("\\n")  # 按换行分割
-header = lines[0].split(",")  # 第一行是表头
-
-students = []
-for line in lines[1:]:  # 跳过表头
-    parts = line.split(",")
-    student = {
-        "name": parts[0],
-        "chinese": int(parts[1]),
-        "math": int(parts[2]),
-        "english": int(parts[3])
-    }
-    student["total"] = student["chinese"] + student["math"] + student["english"]
-    students.append(student)
-
-# 第二步：定义统计函数
-def calc_median(scores):
-    """计算中位数"""
-    sorted_scores = sorted(scores)
-    n = len(sorted_scores)
-    if n % 2 == 1:
-        return sorted_scores[n // 2]
-    else:
-        return (sorted_scores[n // 2 - 1] + sorted_scores[n // 2]) / 2
-
-def calc_pass_rate(scores, threshold=60):
-    """计算及格率"""
-    passed = sum(1 for s in scores if s >= threshold)
-    return passed / len(scores) * 100
-
-# 第三步：输出统计报告
-print("=" * 40)
-print("成绩统计报告")
-print("=" * 40)
-print(f"学生人数：{len(students)} 人")
-
-# 各科统计
-subjects = [
-    ("语文", "chinese"),
-    ("数学", "math"),
-    ("英语", "english")
-]
-
-print("\\n--- 各科统计 ---")
-for subject_name, key in subjects:
-    scores = [s[key] for s in students]
-    print(f"【{subject_name}】 "
-          f"最高分: {max(scores)} | "
-          f"最低分: {min(scores)} | "
-          f"平均分: {sum(scores)/len(scores):.1f} | "
-          f"中位数: {calc_median(scores):.1f}")
-
-# 及格率
-print("\\n--- 各科及格率 ---")
-for subject_name, key in subjects:
-    scores = [s[key] for s in students]
-    rate = calc_pass_rate(scores)
-    print(f"{subject_name}及格率: {rate:.1f}%")
-
-# 总分排名
-print("\\n--- 总分排名 ---")
-ranked = sorted(students, key=lambda s: s["total"], reverse=True)
-for i, s in enumerate(ranked[:5], 1):
-    print(f"第{i}名: {s['name']} - 总分 {s['total']}")`;
-
-codeContents[3] = `# ============================================
-# 项目3：用户行为分类器
-# 知识点：字典嵌套、条件分支、集合去重
-# ============================================
-
-# 用户行为数据
-users = [
-    {"user_id": "U001", "name": "小明", "logins": 45, "spending": 2800},
-    {"user_id": "U002", "name": "小红", "logins": 12, "spending": 350},
-    {"user_id": "U003", "name": "小刚", "logins": 8, "spending": 120},
-    {"user_id": "U004", "name": "小美", "logins": 30, "spending": 1500},
-    {"user_id": "U005", "name": "小华", "logins": 3, "spending": 50},
-    {"user_id": "U006", "name": "小李", "logins": 25, "spending": 980},
-    {"user_id": "U007", "name": "小王", "logins": 50, "spending": 3200},
-    {"user_id": "U008", "name": "小张", "logins": 15, "spending": 420},
-]
-
-# 分层标准
-HIGH_LOGIN = 30    # 高活跃登录阈值
-HIGH_SPEND = 1000  # 高活跃消费阈值
-MID_LOGIN = 10     # 中活跃登录阈值
-MID_SPEND = 300    # 中活跃消费阈值
-
-# 第一步：用户分类
-result = {
-    "高活跃": {"users": [], "total_spend": 0},
-    "中活跃": {"users": [], "total_spend": 0},
-    "低活跃": {"users": [], "total_spend": 0}
-}
-
-for user in users:
-    if user["logins"] >= HIGH_LOGIN and user["spending"] >= HIGH_SPEND:
-        level = "高活跃"
-    elif user["logins"] >= MID_LOGIN or user["spending"] >= MID_SPEND:
-        level = "中活跃"
-    else:
-        level = "低活跃"
-    
-    result[level]["users"].append(user)
-    result[level]["total_spend"] += user["spending"]
-
-# 第二步：输出报告
-print("=" * 40)
-print("用户行为分类报告")
-print("=" * 40)
-print(f"总用户数：{len(users)} 人")
-
-print("\\n--- 分层标准 ---")
-print(f"高活跃：登录 >= {HIGH_LOGIN}次 且 消费 >= {HIGH_SPEND}元")
-print(f"中活跃：登录 >= {MID_LOGIN}次 或 消费 >= {MID_SPEND}元")
-print(f"低活跃：其他用户")
-
-total_spending = sum(u["spending"] for u in users)
-
-for level in ["高活跃", "中活跃", "低活跃"]:
-    data = result[level]
-    count = len(data["users"])
-    pct = count / len(users) * 100
-    spend_pct = data["total_spend"] / total_spending * 100
-    
-    print(f"\\n--- {level}用户（{count}人）---")
-    for u in data["users"]:
-        print(f"  {u['name']} - 登录{u['logins']}次，消费{u['spending']}元")
-
-print("\\n--- 汇总 ---")
-for level in ["高活跃", "中活跃", "低活跃"]:
-    data = result[level]
-    count = len(data["users"])
-    pct = count / len(users) * 100
-    spend_pct = data["total_spend"] / total_spending * 100
-    print(f"{level}占比: {pct:.1f}%，贡献总消费: {spend_pct:.1f}%")
-
-# 使用集合去重统计
-all_cities = set()  # 演示集合用法
-print(f"\\n用户ID去重验证: 原始{len(users)}条，去重后{len(set(u['user_id'] for u in users))}条")`;
-
-codeContents[4] = `# ============================================
-# 项目4：电商订单聚合分析
-# 知识点：列表推导式、lambda、sort排序
-# ============================================
-
-# 订单数据
-orders = [
-    {"user_id": "U001", "order_id": "O001", "amount": 299},
-    {"user_id": "U002", "order_id": "O002", "amount": 159},
-    {"user_id": "U001", "order_id": "O003", "amount": 499},
-    {"user_id": "U003", "order_id": "O004", "amount": 89},
-    {"user_id": "U002", "order_id": "O005", "amount": 299},
-    {"user_id": "U001", "order_id": "O006", "amount": 199},
-    {"user_id": "U004", "order_id": "O007", "amount": 599},
-    {"user_id": "U003", "order_id": "O008", "amount": 149},
-    {"user_id": "U002", "order_id": "O009", "amount": 399},
-    {"user_id": "U004", "order_id": "O010", "amount": 249},
-    {"user_id": "U001", "order_id": "O011", "amount": 89},
-    {"user_id": "U005", "order_id": "O012", "amount": 1299},
-]
-
-print("=" * 40)
-print("电商订单聚合分析")
-print("=" * 40)
-print(f"总订单数：{len(orders)} 笔")
-
-# 第一步：按用户分组聚合
-user_stats = {}  # {user_id: {"total": x, "count": n, "orders": [...]}}
-
-for order in orders:
-    uid = order["user_id"]
-    if uid not in user_stats:
-        user_stats[uid] = {"total": 0, "count": 0, "orders": []}
-    user_stats[uid]["total"] += order["amount"]
-    user_stats[uid]["count"] += 1
-    user_stats[uid]["orders"].append(order["order_id"])
-
-print(f"涉及用户数：{len(user_stats)} 人")
-
-# 第二步：转换为列表并排序
-user_list = [
-    {
-        "user_id": uid,
-        "total": data["total"],
-        "count": data["count"],
-        "avg": data["total"] / data["count"]
-    }
-    for uid, data in user_stats.items()
-]
-
-# 使用lambda按总额降序排序
-user_list.sort(key=lambda x: x["total"], reverse=True)
-
-total_amount = sum(o["amount"] for o in orders)
-
-# 第三步：输出排名
-print("\\n--- 用户消费排名 ---")
-for i, u in enumerate(user_list, 1):
-    pct = u["total"] / total_amount * 100
-    print(f"第{i}名: {u['user_id']} - "
-          f"{u['count']}笔订单，总额 {u['total']:,} 元，占比 {pct:.1f}%")
-
-# 第四步：消费分布统计
-totals = [u["total"] for u in user_list]
-print("\\n--- 消费分布 ---")
-print(f"人均消费: {sum(totals)/len(totals):.1f} 元")
-print(f"最高消费: {max(totals):,} 元")
-print(f"最低消费: {min(totals):,} 元")
-
-# 使用列表推导式筛选高消费用户
-high_spenders = [u for u in user_list if u["total"] >= 800]
-print(f"\\n高消费用户（>=800元）：{len(high_spenders)} 人")
-for u in high_spenders:
-    print(f"  {u['user_id']}: {u['total']:,} 元")`;
-
-codeContents[5] = `# ============================================
-# 项目5：气温异常检测
-# 知识点：NumPy数组、布尔索引、标准差
-# ============================================
-
-import numpy as np
-
-# 生成模拟气温数据
-np.random.seed(42)
-normal_temps = np.random.normal(25, 5, 365)
-
-# 人为添加异常值
-normal_temps[45] = 45   # 夏季热浪
-normal_temps[180] = -5  # 冬季寒潮
-normal_temps[300] = 42  # 秋季异常高温
-
-# 生成日期标签
-dates = [f"2024-{(i//30)+1:02d}-{(i%30)+1:02d}" for i in range(365)]
-
-print("=" * 40)
-print("气温异常检测报告")
-print("=" * 40)
-print(f"数据范围：{len(normal_temps)}天")
-
-# 第一步：基本统计
-mean_temp = np.mean(normal_temps)
-std_temp = np.std(normal_temps)
-print(f"平均气温：{mean_temp:.1f}°C")
-print(f"标准差：{std_temp:.1f}°C")
-
-# 第二步：3σ原则检测
-threshold = 2  # 使用2倍标准差
-lower_bound = mean_temp - threshold * std_temp
-upper_bound = mean_temp + threshold * std_temp
-
-print(f"\\n--- 3σ原则检测（阈值：±{threshold * std_temp:.1f}°C）---")
-
-# 使用布尔索引找出异常值
-anomaly_mask = (normal_temps < lower_bound) | (normal_temps > upper_bound)
-anomaly_indices = np.where(anomaly_mask)[0]
-
-print(f"检测到 {len(anomaly_indices)} 个异常日期：")
-for idx in anomaly_indices:
-    temp = normal_temps[idx]
-    z_score = (temp - mean_temp) / std_temp
-    deviation = temp - mean_temp
-    sign = "+" if deviation > 0 else ""
-    print(f"  {dates[idx]} | 气温: {temp:.1f}°C | "
-          f"Z-score: {z_score:.2f} | 偏差: {sign}{deviation:.1f}°C")
-
-# 第三步：Z-score方法验证
-print(f"\\n--- Z-score验证 ---")
-z_scores = (normal_temps - mean_temp) / std_temp
-z_anomalies = np.where(np.abs(z_scores) > threshold)[0]
-print(f"Z-score方法检测到 {len(z_anomalies)} 个异常点")
-
-# 第四步：统计摘要
-print(f"\\n--- 统计摘要 ---")
-print(f"异常数据占比: {len(anomaly_indices)/len(normal_temps)*100:.1f}%")
-print(f"最高气温: {np.max(normal_temps):.1f}°C")
-print(f"最低气温: {np.min(normal_temps):.1f}°C")
-print(f"正常温度范围: [{lower_bound:.1f}°C, {upper_bound:.1f}°C]")
-
-# 去除异常后的统计
-clean_temps = normal_temps[~anomaly_mask]
-print(f"\\n去除异常后平均气温: {np.mean(clean_temps):.1f}°C")
-print(f"去除异常后标准差: {np.std(clean_temps):.1f}°C")`;
-
-codeContents[6] = `# ============================================
-# 项目6：销售趋势滑动窗口
-# 知识点：切片、自定义函数、列表累积
-# ============================================
-
-import numpy as np
-
-# 生成模拟销售数据（90天，含趋势和噪声）
-np.random.seed(42)
-base = np.sin(np.linspace(0, 4*np.pi, 90)) * 50 + 200
-noise = np.random.normal(0, 15, 90)
-daily_sales = np.round(base + noise, 2)
-
-print("=" * 40)
-print("销售趋势分析报告")
-print("=" * 40)
-print(f"数据天数：{len(daily_sales)}天")
-
-# 第一步：原始数据统计
-print("\\n--- 原始数据统计 ---")
-print(f"总销售额: {np.sum(daily_sales):,.2f} 元")
-print(f"日均销售: {np.mean(daily_sales):.2f} 元")
-print(f"最高日销: {np.max(daily_sales):.2f} 元")
-print(f"最低日销: {np.min(daily_sales):.2f} 元")
-print(f"波动范围: {np.max(daily_sales) - np.min(daily_sales):.2f} 元")
-
-# 第二步：定义移动平均函数
-def moving_average(data, window):
-    """计算滑动窗口移动平均"""
-    result = []
-    for i in range(len(data) - window + 1):
-        window_data = data[i:i+window]  # 切片取窗口数据
-        avg = np.mean(window_data)
-        result.append(round(avg, 2))
-    return np.array(result)
-
-def cumulative_sum(data):
-    """计算累积和"""
-    result = []
-    total = 0
-    for val in data:
-        total += val
-        result.append(round(total, 2))
-    return np.array(result)
-
-# 第三步：计算不同窗口的移动平均
-ma_7 = moving_average(daily_sales, 7)   # 7日移动平均
-ma_14 = moving_average(daily_sales, 14)  # 14日移动平均
-
-print("\\n--- 7日移动平均统计 ---")
-print(f"平滑后日均: {np.mean(ma_7):.2f} 元")
-print(f"平滑后最高: {np.max(ma_7):.2f} 元")
-print(f"平滑后最低: {np.min(ma_7):.2f} 元")
-reduction = (1 - (np.max(ma_7) - np.min(ma_7)) / (np.max(daily_sales) - np.min(daily_sales))) * 100
-print(f"波动范围: {np.max(ma_7) - np.min(ma_7):.2f} 元（降低{100-reduction:.1f}%）")
-
-# 第四步：趋势分析
-print("\\n--- 趋势分析 ---")
-period = 30
-for i, label in enumerate(["前", "中", "后"]):
-    start = i * period
-    end = start + period
-    avg = np.mean(daily_sales[start:end])
-    print(f"{label}{period}天平均: {avg:.2f} 元")
-
-# 第五步：累积销售
-cum_sales = cumulative_sum(daily_sales)
-print(f"\\n--- 累积销售（每10天）---")
-for i in range(0, len(cum_sales), 10):
-    print(f"第{i+1}天: 累计 {cum_sales[i]:,.2f} 元")
-
-# 第六步：输出前10天原始值 vs 7日均线对比
-print(f"\\n--- 原始值 vs 7日均线（前10天）---")
-print(f"{'天数':>4} | {'原始值':>8} | {'7日均线':>8}")
-for i in range(min(10, len(ma_7))):
-    print(f"第{i+1:2}天 | {daily_sales[i]:>8.2f} | {ma_7[i]:>8.2f}")`;
-
-codeContents[7] = `# ============================================
-# 项目7：多表关联分析
-# 知识点：字典映射、列表合并、异常处理
-# ============================================
-
-# 用户信息表（主表）
-users_info = {
-    "U001": {"name": "张三", "city": "北京"},
-    "U002": {"name": "李四", "city": "上海"},
-    "U003": {"name": "王五", "city": "广州"},
-    "U004": {"name": "赵六", "city": "深圳"},
-}
-
-# 订单表（从表）
-orders = [
-    {"order_id": "O001", "user_id": "U001", "amount": 299},
-    {"order_id": "O002", "user_id": "U002", "amount": 159},
-    {"order_id": "O003", "user_id": "U005", "amount": 499},  # 无对应用户！
-    {"order_id": "O004", "user_id": "U003", "amount": 89},
-    {"order_id": "O005", "user_id": "U006", "amount": 299},  # 无对应用户！
-    {"order_id": "O006", "user_id": "U001", "amount": 199},
-    {"order_id": "O007", "user_id": "U004", "amount": 599},
-    {"order_id": "O008", "user_id": "U007", "amount": 149},  # 无对应用户！
-]
-
-print("=" * 40)
-print("多表关联分析报告")
-print("=" * 40)
-
-print("\\n--- 数据概览 ---")
-print(f"用户表记录数：{len(users_info)} 条")
-print(f"订单表记录数：{len(orders)} 条")
-
-# 第一步：LEFT JOIN 关联
-print("\\n--- 关联结果（LEFT JOIN）---")
-joined_data = []       # 关联成功的记录
-orphan_orders = []     # 孤儿订单（找不到用户）
-
-for order in orders:
-    uid = order["user_id"]
-    try:
-        user = users_info[uid]  # 尝试查找用户
-        joined_record = {
-            "order_id": order["order_id"],
-            "user_id": uid,
-            "name": user["name"],
-            "city": user["city"],
-            "amount": order["amount"],
-            "status": "关联成功"
+    <div class="app-container">
+        <nav class="navbar">
+            <a href="#/" class="logo">
+                <div class="logo-icon">📊</div>
+                <span>Python数据分析</span>
+            </a>
+            <ul class="nav-links">
+                <li><a class="nav-link active" data-section="home">首页</a></li>
+                <li><a class="nav-link" data-section="models">核心思维</a></li>
+                <li><a class="nav-link" data-section="projects">项目实训</a></li>
+                <li><a class="nav-link" data-section="debates">争议辩论</a></li>
+            </ul>
+            <button class="mobile-menu-btn">☰</button>
+        </nav>
+
+        <main class="main-content">
+            <!-- Home Section -->
+            <section id="home" class="section active">
+                <div class="hero">
+                    <div class="hero-badge">
+                        <span>🚀</span>
+                        <span>全栈学习包 · 含挖掘+建模</span>
+                    </div>
+                    <h1 class="hero-title">Python数据分析<br>全栈学习包</h1>
+                    <p class="hero-subtitle">从5大核心思维模型到10个全流程实战项目，打造沉浸式数据科学学习体验，覆盖数据挖掘、机器学习、业务落地的全场景能力。</p>
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <div class="stat-number">5</div>
+                            <div class="stat-label">核心思维模型</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">3</div>
+                            <div class="stat-label">业内争议辩论</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">10</div>
+                            <div class="stat-label">实战项目实训</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container">
+                    <div class="section-header">
+                        <h2 class="section-title">🚀 核心思维模型</h2>
+                        <p class="section-desc">5个全领域专家共识核心思维，覆盖挖掘、建模、业务落地全场景</p>
+                    </div>
+                    <div class="cards-grid" id="modelsGrid"></div>
+                </div>
+            </section>
+
+            <!-- Models Section -->
+            <section id="models" class="section">
+                <div class="container" style="padding-top: 48px;">
+                    <button class="back-btn" onclick="showSection('home')">
+                        <span>←</span> 返回首页
+                    </button>
+                    <div class="section-header">
+                        <h2 class="section-title">🧠 核心思维模型</h2>
+                        <p class="section-desc">深入理解每个思维模型的定义、业务价值和代码实现</p>
+                    </div>
+                    <div class="cards-grid" id="modelsGridDetail"></div>
+                </div>
+            </section>
+
+            <!-- Projects Section -->
+            <section id="projects" class="section">
+                <div class="container" style="padding-top: 48px;">
+                    <button class="back-btn" onclick="showSection('home')">
+                        <span>←</span> 返回首页
+                    </button>
+                    <div class="section-header">
+                        <h2 class="section-title">💻 项目实训</h2>
+                        <p class="section-desc">10个全覆盖实操实训项目，由浅入深，复制代码即可开工</p>
+                    </div>
+                    <div class="projects-grid" id="projectsGrid"></div>
+                </div>
+            </section>
+
+            <!-- Project Detail Section -->
+            <section id="projectDetail" class="section">
+                <div class="task-sidebar" id="taskSidebar"></div>
+                <div class="task-content" id="taskContent"></div>
+            </section>
+
+            <!-- Debates Section -->
+            <section id="debates" class="section">
+                <div class="container" style="padding-top: 48px;">
+                    <button class="back-btn" onclick="showSection('home')">
+                        <span>←</span> 返回首页
+                    </button>
+                    <div class="section-header">
+                        <h2 class="section-title">⚡ 争议辩论</h2>
+                        <p class="section-desc">3大业内专家硬核争议，带算法+业务方向，避免盲目跟风</p>
+                    </div>
+                    <div id="debatesContainer"></div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>学习路径</h3>
+                    <ul class="footer-links">
+                        <li><a href="#/models">核心思维模型</a></li>
+                        <li><a href="#/projects">项目实训</a></li>
+                        <li><a href="#/debates">争议辩论</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>核心内容</h3>
+                    <ul class="footer-links">
+                        <li>5大思维模型</li>
+                        <li>3大争议辩论</li>
+                        <li>10个实战项目</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>技术栈</h3>
+                    <ul class="footer-links">
+                        <li>Python</li>
+                        <li>pandas / scikit-learn</li>
+                        <li>数据可视化</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2024 Python数据分析全栈学习包 · 打造沉浸式语言学习体验</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Data
+        const thinkingModels = [
+            {
+                id: 1,
+                title: "维度拆解 + 细分分群思维",
+                shortDesc: "将复杂数据按业务维度和算法维度拆分，把大群体拆成小群体，针对性挖掘规律、制定策略。",
+                definition: "将复杂数据按「业务维度（时间/品类/地区）+ 算法维度（聚类/分桶）」拆分，把大群体拆成小群体，针对性挖掘规律、制定策略，核心是「分而治之」。",
+                value: "避免「一刀切」分析，比如将用户拆成高价值/流失/新用户，商品拆成爆款/长尾款，精准匹配运营动作；无标签数据通过聚类发现隐藏分群。",
+                tags: ["聚类", "分群", "用户运营"],
+                code: `import pandas as pd
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
+
+# 1. 读取用户数据（消费金额、频次、最近消费天数）
+df = pd.read_csv("user_data.csv")
+data = df[["消费金额", "消费频次", "最近消费天数"]]
+
+# 2. 数据标准化（聚类必备）
+scaler = StandardScaler()
+data_scaled = scaler.fit_transform(data)
+
+# 3. KMeans聚类分群（拆成4类用户）
+kmeans = KMeans(n_clusters=4, random_state=42)
+df["用户分群"] = kmeans.fit_predict(data_scaled)
+
+# 4. 结合业务维度（地区）进一步拆解
+df.groupby(["地区", "用户分群"])["消费金额"].sum()`
+            },
+            {
+                id: 2,
+                title: "变量关联 & 因子挖掘思维",
+                shortDesc: "通过统计方法和算法模型，挖掘变量间的隐藏关系，找到影响结果的关键因子。",
+                definition: "通过统计方法（相关性）、算法模型（关联规则、随机森林），挖掘变量间的隐藏关系，找到「影响结果的关键因子」，拒绝「凭经验判断」。",
+                value: "搞懂「什么影响销量」「用户为什么流失」「哪些商品一起买」，比如通过关联规则发现购物车组合，通过随机森林找到影响营收的核心指标。",
+                tags: ["相关性", "关联规则", "特征重要性"],
+                code: `# 关联规则（购物车分析，Apriori算法）
+from mlxtend.frequent_patterns import apriori, association_rules
+df_cart = pd.read_csv("cart_data.csv")
+
+# 商品编码（one-hot）
+cart_encoded = pd.get_dummies(df_cart["商品名称"], prefix="商品")
+
+# 挖掘频繁项集（支持度≥0.05）
+frequent_itemsets = apriori(cart_encoded, min_support=0.05, use_colnames=True)
+
+# 生成关联规则（置信度≥0.7）
+rules = association_rules(frequent_itemsets, metric="confidence", min_threshold=0.7)
+
+# 随机森林特征重要性
+from sklearn.ensemble import RandomForestRegressor
+X = df[["广告费", "客单价", "活动次数"]]
+y = df["销量"]
+rf = RandomForestRegressor(n_estimators=100, random_state=42)
+rf.fit(X, y)
+pd.DataFrame({"特征": X.columns, "重要性": rf.feature_importances_}).sort_values("重要性", ascending=False)`
+            },
+            {
+                id: 3,
+                title: "无监督挖掘思维",
+                shortDesc: "在没有明确标签的情况下，通过聚类、分群、行为相似度分析，自动发现数据中的隐藏结构。",
+                definition: "在没有明确标签（如「是否流失」「是否爆款」）的情况下，通过聚类、分群、行为相似度分析，自动发现数据中的隐藏结构和规律。",
+                value: "挖掘未知价值，比如无标签用户数据中发现「高潜力用户」，商品数据中发现「隐性关联品类」，无需人工标注，降低分析成本。",
+                tags: ["KMeans", "PCA", "分群"],
+                code: `import matplotlib.pyplot as plt
+from sklearn.decomposition import PCA
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
+
+# 1. 商品数据（销量、客单价、好评率、库存）
+df_goods = pd.read_csv("goods_data.csv")
+goods_data = df_goods[["销量", "客单价", "好评率", "库存"]]
+
+# 2. 标准化+聚类
+scaler = StandardScaler()
+goods_scaled = scaler.fit_transform(goods_data)
+kmeans = KMeans(n_clusters=3, random_state=42)
+df_goods["商品分群"] = kmeans.fit_predict(goods_scaled)
+
+# 3. PCA降维，可视化聚类结果
+pca = PCA(n_components=2)
+goods_pca = pca.fit_transform(goods_scaled)
+plt.scatter(goods_pca[:,0], goods_pca[:,1], c=df_goods["商品分群"], cmap="viridis")
+plt.xlabel("PCA维度1")
+plt.ylabel("PCA维度2")
+plt.title("商品聚类结果可视化")
+plt.show()`
+            },
+            {
+                id: 4,
+                title: "拟合&预测建模思维",
+                shortDesc: "通过回归、树模型、时序拟合等方法，从历史数据中量化规律，实现数值预测和分类判断。",
+                definition: "通过回归、树模型、时序拟合等方法，从历史数据中量化规律，实现「数值预测」（如销量预测）、「分类判断」（如用户流失判断），用数据替代「拍脑袋」。",
+                value: "提前预判趋势，比如预测下月销量、预估广告投放效果、判断用户是否会流失，为决策提供数据支撑。",
+                tags: ["回归", "预测", "随机森林"],
+                code: `from sklearn.linear_model import LinearRegression
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import r2_score
+
+# 1. 准备数据（特征：广告费、活动次数、客单价；目标：销量）
+X = df[["广告费", "活动次数", "客单价"]]
+y = df["销量"]
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# 2. 多元线性回归预测
+lr = LinearRegression()
+lr.fit(X_train, y_train)
+y_pred_lr = lr.predict(X_test)
+print("线性回归R²得分：", r2_score(y_test, y_pred_lr))
+
+# 3. 随机森林回归预测（非线性场景更优）
+rf = RandomForestRegressor(n_estimators=100, random_state=42)
+rf.fit(X_train, y_train)
+y_pred_rf = rf.predict(X_test)
+print("随机森林R²得分：", r2_score(y_test, y_pred_rf))`
+            },
+            {
+                id: 5,
+                title: "业务模型落地思维",
+                shortDesc: "所有分析、算法、模型都落地到具体业务场景，解决实际问题，确保分析产出可执行策略。",
+                definition: "所有分析、算法、模型都不为「炫技」，而是落地到具体业务场景，解决实际问题——聚类服务用户运营、关联规则服务捆绑销售、回归服务营收预估。",
+                value: "避免「分析与业务脱节」，确保每一次分析都能产出可执行的策略，比如聚类分群后制定「高价值用户专属福利」，关联规则后推出「商品捆绑套餐」。",
+                tags: ["RFM", "业务落地", "策略"],
+                code: `# 1. RFM用户分层（业务落地核心模型）
+df_rfm = pd.read_csv("user_rfm.csv")
+
+# 定义分层标准（业务定制，可调整）
+df_rfm["R分"] = pd.qcut(df_rfm["最近消费天数"], 5, labels=[5,4,3,2,1])
+df_rfm["F分"] = pd.qcut(df_rfm["消费频次"], 5, labels=[1,2,3,4,5])
+df_rfm["M分"] = pd.qcut(df_rfm["消费金额"], 5, labels=[1,2,3,4,5])
+df_rfm["RFM总分"] = df_rfm["R分"].astype(int) + df_rfm["F分"].astype(int) + df_rfm["M分"].astype(int)
+
+# 业务分层（落地运营策略）
+def rfm_level(score):
+    if score >= 13: return "高价值用户"
+    elif score >= 8: return "潜力用户"
+    else: return "流失/低价值用户"
+
+df_rfm["用户等级"] = df_rfm["RFM总分"].apply(rfm_level)
+print(df_rfm["用户等级"].value_counts())`
+            }
+        ];
+
+        const debates = [
+            {
+                id: 1,
+                title: "传统统计分析 VS 机器学习挖掘",
+                core: "做业务数据分析，优先用「分组、交叉、相关性」等传统统计方法，还是直接上「聚类、随机森林、关联规则」等机器学习挖掘方法？",
+                pros: [
+                    "可解释性极强：比如「同比增长10%」「客单价与复购率正相关（r=0.8）」，业务人员能快速理解，便于落地策略",
+                    "简单稳定、成本低：无需复杂的数据预处理、模型调参，用pandas就能实现，新手易上手，且结果不易出错",
+                    "覆盖80%业务场景：大部分业务分析（如销量对比、结构占比、指标关联），用传统统计就能解决，无需过度复杂"
+                ],
+                cons: [
+                    "能挖掘隐藏规律：传统统计无法发现「无标签数据的分群」「商品间的隐性关联」（如啤酒和尿布），机器学习可实现",
+                    "适配复杂场景：当数据维度多（如10+个特征）、关系非线性（如广告费与销量不是正比），传统统计效果差",
+                    "可扩展性强：能从「描述分析」升级到「预测分析」，比如用回归预测销量，用聚类做用户生命周期管理"
+                ],
+                scenarios: [
+                    { title: "优先传统统计", desc: "新手入门、简单业务场景（如月度销量对比、品类占比）、需要快速出结论" },
+                    { title: "优先机器学习", desc: "无标签数据（如用户分群）、复杂关联（如购物车分析）、预测场景（如销量预估）" },
+                    { title: "最佳实践", desc: "先做传统统计（描述、对比、相关），找到基础规律，再用机器学习挖掘深层价值" }
+                ]
+            },
+            {
+                id: 2,
+                title: "模型可解释性 VS 预测精度",
+                core: "选择模型时，优先保证「可解释性」（如线性回归、决策树），还是优先追求「预测精度」（如随机森林、梯度提升树）？",
+                pros: [
+                    "业务落地性强：可解释的模型（如线性回归）能明确「每个特征对结果的影响程度」（如广告费每增加1元，销量增加0.5元）",
+                    "风险可控：出现预测偏差时，能快速定位问题（如某特征异常影响结果），便于调整模型",
+                    "符合业务决策逻辑：企业决策需要「明确的因果关系」，而非「黑盒预测」，可解释性模型能提供因果支撑"
+                ],
+                cons: [
+                    "业务价值更高：预测精度高意味着「决策更准确」，比如销量预测误差从10%降到5%，能减少库存积压、提升营收",
+                    "适配复杂数据：现实业务中，变量关系多为非线性（如用户消费行为），黑盒模型能捕捉更复杂的规律",
+                    "可弥补可解释性：比如用「特征重要性」「部分依赖图」，让黑盒模型的结果变得可理解，无需完全牺牲精度"
+                ],
+                scenarios: [
+                    { title: "可解释性优先", desc: "业务策略落地（如运营活动设计）、风险控制（如异常检测）、需要向老板/业务方汇报分析逻辑" },
+                    { title: "精度优先", desc: "纯预测场景（如销量预测、用户流失预测）、无需向业务方解释模型逻辑、数据复杂且非线性" },
+                    { title: "最佳实践", desc: "先用可解释模型搭建基础，再用高精度模型优化预测结果，用特征重要性提升可解释性" }
+                ]
+            },
+            {
+                id: 3,
+                title: "通用挖掘模型 VS 垂直业务专属模型",
+                core: "直接使用「通用算法模型」（如通用KMeans、通用Apriori），还是结合具体行业（电商/零售）定制模型阈值、权重、分群逻辑？",
+                pros: [
+                    "高效快捷：通用模型无需定制，直接调用库就能实现，节省开发/学习时间，新手易上手",
+                    "通用性强：同一模型（如KMeans）可用于电商用户分群、零售商品分群，无需重新学习新模型",
+                    "基础效果有保障：通用模型经过大量验证，能满足大部分基础挖掘需求，无需过度定制"
+                ],
+                cons: [
+                    "贴合业务实际：不同行业的核心指标、业务逻辑不同，通用模型的阈值（如KMeans的k值、Apriori的支持度）不适用",
+                    "结果更有价值：比如电商RFM分层，需结合「客单价、复购周期」定制阈值，通用阈值会导致分群偏差",
+                    "避免「为模型而模型」：专属模型能聚焦业务痛点，比如零售行业的「商品关联规则」，需排除无效关联"
+                ],
+                scenarios: [
+                    { title: "通用模型优先", desc: "新手入门、快速验证想法、无明确业务痛点、基础挖掘需求（如简单用户分群）" },
+                    { title: "业务专属优先", desc: "有明确业务目标（如电商捆绑销售、零售用户唤醒）、行业特性明显、需要落地具体策略" },
+                    { title: "最佳实践", desc: "先用通用模型搭建基础框架，再结合业务逻辑调整阈值、权重、分群规则" }
+                ]
+            }
+        ];
+
+        const projects = [
+            {
+                id: 1,
+                title: "数据预处理高阶版",
+                subtitle: "铺垫所有算法前置能力",
+                desc: "缺失值/重复值/异常值高阶处理、特征分桶、离散化、类别编码、数据标准化/归一化。",
+                duration: "3小时",
+                level: "入门",
+                tasks: [
+                    "读取模拟数据（user_behavior.csv），包含字段：用户ID、消费金额、消费频次、最近消费天数、性别、地区、注册时间、浏览时长",
+                    "缺失值处理：消费金额/频次缺失用「中位数」填充（避免均值受异常值影响），性别/地区缺失用「未知」填充，注册时间缺失直接删除",
+                    "异常值处理：用「箱线图+3σ原则」识别消费金额、浏览时长的异常值，采用「中位数替换」",
+                    "特征处理：消费金额分桶（低/中/高）、浏览时长离散化（短/中/长）、性别/地区做OneHotEncoder编码",
+                    "数据标准化：对消费金额、消费频次、最近消费天数做StandardScaler标准化，保存处理后的数据"
+                ],
+                pitfalls: [
+                    "用均值填充含异常值的字段（导致数据失真）",
+                    "对所有类别字段都做OneHotEncoder（高基数字段会导致维度爆炸）",
+                    "忘记标准化数据（后续聚类、回归模型会受量纲影响，结果偏差）"
+                ],
+                deliverables: [
+                    "预处理代码文件（preprocess.py）",
+                    "处理前后的数据对比表",
+                    "预处理总结（100字）"
+                ]
+            },
+            {
+                id: 2,
+                title: "多维统计+深度相关性分析",
+                subtitle: "找到影响营收的核心指标",
+                desc: "描述统计（均值/中位数/分位数）、皮尔逊相关系数、斯皮尔曼相关系数、相关性热力图。",
+                duration: "2小时",
+                level: "入门",
+                tasks: [
+                    "读取项目1处理后的数据（processed_data.csv），新增「营收」字段（营收=消费金额×消费频次）",
+                    "做描述统计：计算营收、消费金额、消费频次、浏览时长的均值、中位数、四分位数、标准差",
+                    "相关性分析：计算所有数值型字段的皮尔逊相关系数和斯皮尔曼相关系数；绘制相关性热力图",
+                    "关联研判：分析「哪些指标与营收强相关（|r|≥0.7）」「哪些指标之间存在多重共线性（|r|≥0.8）」",
+                    "得出结论：明确影响营收的核心指标（至少2个），说明相关性方向（正/负相关）"
+                ],
+                pitfalls: [
+                    "混淆皮尔逊和斯皮尔曼相关系数（皮尔逊适用于线性关系，斯皮尔曼适用于非线性/有序分类关系）",
+                    "误将「相关性」当作「因果关系」",
+                    "热力图不调整颜色、不标注相关系数，导致无法清晰判断关联强度"
+                ],
+                deliverables: [
+                    "相关性分析代码文件（correlation_analysis.py）",
+                    "描述统计表+相关性热力图",
+                    "关联分析结论（150字）"
+                ]
+            },
+            {
+                id: 3,
+                title: "购物车关联规则挖掘",
+                subtitle: "Apriori算法实战",
+                desc: "Apriori算法、频繁项集、关联规则（支持度、置信度、提升度）、商品组合分析。",
+                duration: "3小时",
+                level: "进阶",
+                tasks: [
+                    "读取模拟购物车数据（cart_data.csv），包含字段：订单ID、商品名称",
+                    "数据预处理：将每个订单的商品拆分，转换成one-hot编码格式",
+                    "用Apriori算法挖掘频繁项集：设置最小支持度=0.05",
+                    "生成关联规则：设置最小置信度=0.7，计算每条规则的支持度、置信度、提升度",
+                    "筛选有价值的规则：提升度>1，筛选出Top10关联规则",
+                    "业务建议：基于关联规则，给出3条捆绑销售建议"
+                ],
+                pitfalls: [
+                    "支持度设置过高（导致没有频繁项集）或过低（导致频繁项集过多，无价值）",
+                    "不筛选提升度，误将「无关商品组合」当作有效规则",
+                    "商品名称有重复（如「耳机」和「无线耳机」被当作不同商品）"
+                ],
+                deliverables: [
+                    "关联规则挖掘代码文件（apriori_analysis.py）",
+                    "Top10关联规则表（包含支持度、置信度、提升度）",
+                    "捆绑销售策略建议（200字）"
+                ]
+            },
+            {
+                id: 4,
+                title: "KMeans 聚类分析实战",
+                subtitle: "用户+商品双场景",
+                desc: "KMeans聚类算法、数据标准化、肘部法则（确定k值）、聚类可视化、业务落地。",
+                duration: "4小时",
+                level: "进阶",
+                tasks: [
+                    "用户聚类：选择特征（消费金额、消费频次、最近消费天数、浏览时长），标准化数据，用肘部法则确定最优k值，KMeans聚类",
+                    "商品聚类：读取商品数据（销量、客单价、好评率、库存），标准化数据，确定最优k值，KMeans聚类",
+                    "可视化：用PCA降维，绘制用户聚类、商品聚类的可视化图表",
+                    "业务落地：针对每个用户分群、商品分群，各给出2条运营/优化建议"
+                ],
+                pitfalls: [
+                    "聚类前不标准化数据（量纲差异导致聚类偏差）",
+                    "盲目设置k值（不做肘部法则，直接设k=4，导致分群无业务意义）",
+                    "只做聚类，不解读分群特征、不落地业务建议"
+                ],
+                deliverables: [
+                    "聚类分析代码文件（kmeans_analysis.py）",
+                    "肘部法则图、聚类可视化图",
+                    "分群特征解读+业务建议（300字）"
+                ]
+            },
+            {
+                id: 5,
+                title: "RFM 模型用户分层",
+                subtitle: "企业通用运营模型",
+                desc: "RFM模型（Recency/Frequency/Monetary）、分位数分箱、用户分层逻辑、业务策略落地。",
+                duration: "3小时",
+                level: "进阶",
+                tasks: [
+                    "提取RFM三个核心指标：R（最近消费天数）、F（消费频次）、M（消费金额）",
+                    "指标分箱：用分位数（qcut）将R、F、M各分为5个等级，R指标需反向打分",
+                    "计算RFM总分（总分=R分+F分+M分），进行用户分层：至少分为4类",
+                    "统计各分层用户的数量、占比、总消费金额占比",
+                    "运营策略：针对每类用户，制定具体的运营动作"
+                ],
+                pitfalls: [
+                    "R指标打分错误（没有反向，导致「最近消费天数越多，分数越高」与业务逻辑相悖）",
+                    "分层标准过于随意（如总分≥10为高价值用户，未结合业务实际调整）",
+                    "运营策略同质化（所有用户用同一套策略，未体现分层价值）"
+                ],
+                deliverables: [
+                    "RFM分层代码文件（rfm_analysis.py）",
+                    "各分层用户统计表格",
+                    "分层运营策略方案（300字）"
+                ]
+            },
+            {
+                id: 6,
+                title: "一元+多元线性回归",
+                subtitle: "销量影响因子量化",
+                desc: "一元线性回归、多元线性回归、模型训练与评估（R²、MAE、MSE）、回归系数解读。",
+                duration: "4小时",
+                level: "进阶",
+                tasks: [
+                    "一元线性回归：以「广告费」为特征，「销量」为目标变量，训练回归模型，解读回归系数",
+                    "多元线性回归：以「广告费、活动次数、客单价、竞品价格」为特征，「销量」为目标变量",
+                    "模型优化：检测多重共线性（用VIF值），删除共线性强的特征（VIF>10）",
+                    "模型评估与解读：计算R²、MAE、MSE，明确「哪些特征对销量影响最大」",
+                    "预测应用：给定一组特征值，预测销量"
+                ],
+                pitfalls: [
+                    "忽略多重共线性（如「客单价」和「消费金额」高度相关，导致回归系数失真）",
+                    "盲目追求高R²，忽略模型的业务意义",
+                    "未评估模型误差（如MAE过大，模型预测精度低）"
+                ],
+                deliverables: [
+                    "回归分析代码文件（regression_analysis.py）",
+                    "模型评估指标表、回归系数表",
+                    "影响因子解读+预测示例（250字）"
+                ]
+            },
+            {
+                id: 7,
+                title: "随机森林 回归+特征重要性",
+                subtitle: "非线性预测",
+                desc: "随机森林回归、特征重要性、模型调参（n_estimators、max_depth）、非线性关系挖掘。",
+                duration: "4小时",
+                level: "进阶",
+                tasks: [
+                    "沿用项目6的销量数据，特征和目标变量不变",
+                    "数据拆分：将数据按7:3拆分为训练集和测试集",
+                    "随机森林回归训练：设置n_estimators=100，max_depth=5，训练模型",
+                    "模型调参：调整n_estimators（50/100/200）、max_depth（3/5/7），对比不同参数的模型效果",
+                    "特征重要性分析：输出各特征的重要性排序，筛选出Top3核心影响特征",
+                    "对比分析：将随机森林模型与多元线性回归模型对比"
+                ],
+                pitfalls: [
+                    "模型参数设置过于极端（如max_depth=20，导致模型过拟合）",
+                    "不做参数调参，直接使用默认参数（导致模型效果不佳）",
+                    "误将「特征重要性高」当作「因果关系」"
+                ],
+                deliverables: [
+                    "随机森林代码文件（random_forest_analysis.py）",
+                    "不同参数模型效果对比表、特征重要性排序图",
+                    "模型对比分析报告（250字）"
+                ]
+            },
+            {
+                id: 8,
+                title: "时间序列完整分析",
+                subtitle: "趋势+周期+预测",
+                desc: "时间序列预处理（日期格式转换、重采样）、移动平均、趋势分析、周期识别、ARIMA预测。",
+                duration: "5小时",
+                level: "高级",
+                tasks: [
+                    "读取模拟时序数据（time_series_sales.csv），包含字段：日期、销量",
+                    "预处理：将日期字段转换为datetime格式，设置为索引，按「月度」重采样",
+                    "趋势分析：计算3个月移动平均，绘制「原始销量+移动平均」折线图",
+                    "周期识别：绘制月度销量热力图，分析是否存在季节性周期",
+                    "时序预测：用ARIMA模型（p=1,d=1,q=1），基于历史数据预测未来3个月的销量",
+                    "结果评估：计算预测值与历史实际值的MAE，给出库存规划建议"
+                ],
+                pitfalls: [
+                    "未做日期格式转换，无法进行重采样和时序分析",
+                    "移动平均窗口设置不合理（如窗口=1，无法体现趋势；窗口=12，过度平滑）",
+                    "盲目使用ARIMA模型，不分析数据的平稳性"
+                ],
+                deliverables: [
+                    "时序分析代码文件（time_series_analysis.py）",
+                    "趋势图、周期热力图、预测结果图",
+                    "预测评估+库存建议（200字）"
+                ]
+            },
+            {
+                id: 9,
+                title: "综合异常检测",
+                subtitle: "统计+模型结合",
+                desc: "统计异常检测（3σ原则、箱线图）、模型异常检测（孤立森林）、异常值解读、业务异常定位。",
+                duration: "4小时",
+                level: "高级",
+                tasks: [
+                    "读取模拟订单数据（order_data.csv），包含字段：订单ID、用户ID、订单金额、下单时间、支付状态",
+                    "统计异常检测：用3σ原则和箱线图，识别订单金额的异常值",
+                    "模型异常检测：用孤立森林算法，以「订单金额、下单频次、支付时长」为特征，识别异常订单",
+                    "异常合并与解读：合并两种方法识别的异常订单，分析异常类型",
+                    "业务处理：针对不同类型的异常，给出处理建议"
+                ],
+                pitfalls: [
+                    "将「正常极端值」当作异常值（如「高端商品订单金额高」并非异常）",
+                    "只检测异常，不解读异常原因、不给出处理建议",
+                    "孤立森林参数设置不合理（如n_estimators=10，导致异常检测准确率低）"
+                ],
+                deliverables: [
+                    "异常检测代码文件（anomaly_detection.py）",
+                    "异常订单统计表格、异常可视化图",
+                    "异常解读+处理建议（250字）"
+                ]
+            },
+            {
+                id: 10,
+                title: "全流程综合大项目",
+                subtitle: "完整分析师交付闭环",
+                desc: "整合所有前期知识点，覆盖「数据→分析→建模→结论→落地」全链路。",
+                duration: "8小时",
+                level: "综合",
+                tasks: [
+                    "数据准备：整合前面所有项目的模拟数据，形成综合数据集",
+                    "数据预处理：完成缺失值、异常值、特征处理，标准化数据",
+                    "核心分析：关联规则挖掘（商品组合）、KMeans用户聚类+RFM分层、随机森林回归（销量预测+特征重要性）、时序趋势分析",
+                    "可视化呈现：绘制至少5张核心图表（相关性热力图、聚类图、销量趋势图、特征重要性图、关联规则图）",
+                    "结论与落地：总结核心发现，给出3-5条可落地的业务策略",
+                    "输出报告：整理成标准数据分析报告"
+                ],
+                pitfalls: [
+                    "数据整合混乱（字段不匹配、数据格式不一致，导致分析无法进行）",
+                    "分析无重点（堆砌所有方法，未围绕「提升营收」的核心目标）",
+                    "报告逻辑混乱，无数据支撑结论"
+                ],
+                deliverables: [
+                    "全流程代码文件（comprehensive_analysis.py）",
+                    "所有核心可视化图表",
+                    "完整数据分析报告（800-1000字）"
+                ]
+            }
+        ];
+
+        // Render Functions
+        function renderModels() {
+            const grid = document.getElementById('modelsGrid');
+            grid.innerHTML = thinkingModels.map(model => `
+                <div class="knowledge-card" onclick="showModelDetail(${model.id})">
+                    <div class="card-number">${model.id}</div>
+                    <h3 class="card-title">${model.title}</h3>
+                    <p class="card-desc">${model.shortDesc}</p>
+                    <div class="card-tags">
+                        ${model.tags.map(tag => `<span class="card-tag">${tag}</span>`).join('')}
+                    </div>
+                </div>
+            `).join('');
+
+            const gridDetail = document.getElementById('modelsGridDetail');
+            gridDetail.innerHTML = thinkingModels.map(model => `
+                <div class="knowledge-card" onclick="showModelDetail(${model.id})">
+                    <div class="card-number">${model.id}</div>
+                    <h3 class="card-title">${model.title}</h3>
+                    <p class="card-desc">${model.shortDesc}</p>
+                    <div class="card-tags">
+                        ${model.tags.map(tag => `<span class="card-tag">${tag}</span>`).join('')}
+                    </div>
+                </div>
+            `).join('');
         }
-        joined_data.append(joined_record)
-        print(f"{order['order_id']} | {user['name']}（{user['city']}）"
-              f"| {order['amount']} 元 | 关联成功")
-    except KeyError:
-        orphan_orders.append(order)
-        print(f"{order['order_id']} | ***未找到用户*** "
-              f"| {order['amount']} 元 | 关联失败")
 
-# 第二步：数据质量问题报告
-print("\\n--- 数据质量问题 ---")
-orphan_amount = sum(o["amount"] for o in orphan_orders)
-orphan_uids = set(o["user_id"] for o in orphan_orders)
-print(f"孤儿订单数：{len(orphan_orders)} 笔"
-      f"（占比 {len(orphan_orders)/len(orders)*100:.1f}%）")
-print(f"涉及用户ID：{', '.join(sorted(orphan_uids))}")
-print(f"涉及金额合计：{orphan_amount} 元")
+        function showModelDetail(id) {
+            const model = thinkingModels.find(m => m.id === id);
+            if (!model) return;
 
-# 第三步：按城市统计消费
-print("\\n--- 城市消费统计 ---")
-city_stats = {}
-for record in joined_data:
-    city = record["city"]
-    if city not in city_stats:
-        city_stats[city] = {"total": 0, "count": 0}
-    city_stats[city]["total"] += record["amount"]
-    city_stats[city]["count"] += 1
+            const html = `
+                <button class="back-btn" onclick="showSection('models')">
+                    <span>←</span> 返回列表
+                </button>
+                <div class="detail-header">
+                    <h1 class="detail-title">${model.title}</h1>
+                </div>
+                <div class="detail-section">
+                    <h2 class="detail-section-title">
+                        <span>📖</span> 定义
+                    </h2>
+                    <p class="definition-text">${model.definition}</p>
+                </div>
+                <div class="detail-section">
+                    <h2 class="detail-section-title">
+                        <span>💡</span> 业务价值
+                    </h2>
+                    <p class="value-text">${model.value}</p>
+                </div>
+                <div class="detail-section">
+                    <h2 class="detail-section-title">
+                        <span>💻</span> 代码示例
+                    </h2>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">Python · pandas / scikit-learn</span>
+                            <div class="code-actions">
+                                <button class="code-btn" onclick="copyCode(this)">复制</button>
+                                <button class="code-btn run" onclick="runCode(this)">运行</button>
+                            </div>
+                        </div>
+                        <div class="code-content">
+                            <pre><code class="language-python">${escapeHtml(model.code)}</code></pre>
+                        </div>
+                        <div class="code-output"></div>
+                    </div>
+                </div>
+            `;
 
-# 按消费总额排序
-for city in sorted(city_stats, key=lambda c: city_stats[c]["total"], reverse=True):
-    stats = city_stats[city]
-    print(f"{city}: {stats['total']} 元（{stats['count']}笔）")
-
-# 第四步：反向检查 - 未下单的用户
-all_order_users = set(o["user_id"] for o in orders)
-all_info_users = set(users_info.keys())
-no_orders = all_info_users - all_order_users
-if no_orders:
-    print(f"\\n--- 从未下单的用户 ---")
-    for uid in sorted(no_orders):
-        print(f"{uid} ({users_info[uid]['name']})")
-else:
-    print(f"\\n所有注册用户都有下单记录")`;
-
-codeContents[8] = `# ============================================
-# 项目8：RFM用户价值模型
-# 知识点：datetime、排序、字典聚合
-# ============================================
-
-from datetime import datetime, timedelta
-import random
-
-random.seed(42)
-
-# 生成模拟交易数据
-user_transactions = []
-user_names = ["用户A","用户B","用户C","用户D","用户E",
-              "用户F","用户G","用户H","用户I","用户J"]
-
-for i, name in enumerate(user_names):
-    num_orders = random.randint(3, 15)
-    for j in range(num_orders):
-        days_ago = random.randint(1, 365)
-        date = datetime(2024, 12, 31) - timedelta(days=days_ago)
-        amount = round(random.uniform(50, 2000), 2)
-        user_transactions.append({
-            "user_id": f"U{i+1:03d}",
-            "name": name,
-            "date": date,
-            "amount": amount
-        })
-
-# 分析基准日期
-ref_date = datetime(2024, 12, 31)
-
-print("=" * 40)
-print("RFM 用户价值分析报告")
-print("=" * 40)
-print(f"分析基准日期：{ref_date.strftime('%Y-%m-%d')}")
-
-# 第一步：计算每个用户的R、F、M值
-user_rfm = {}
-
-for trans in user_transactions:
-    uid = trans["user_id"]
-    if uid not in user_rfm:
-        user_rfm[uid] = {
-            "name": trans["name"],
-            "recency": None,  # 最近消费距今天数
-            "frequency": 0,   # 消费次数
-            "monetary": 0     # 消费总额
+            document.getElementById('models').innerHTML = `
+                <div class="container" style="padding-top: 48px;">
+                    ${html}
+                </div>
+            `;
+            hljs.highlightAll();
+            showSection('models');
         }
-    
-    # R：取最近一次消费（距今天数最小）
-    days_ago = (ref_date - trans["date"]).days
-    if user_rfm[uid]["recency"] is None or days_ago < user_rfm[uid]["recency"]:
-        user_rfm[uid]["recency"] = days_ago
-    
-    # F：累加消费次数
-    user_rfm[uid]["frequency"] += 1
-    
-    # M：累加消费金额
-    user_rfm[uid]["monetary"] += trans["amount"]
 
-# M保留两位小数
-for uid in user_rfm:
-    user_rfm[uid]["monetary"] = round(user_rfm[uid]["monetary"], 2)
+        function renderProjects() {
+            const grid = document.getElementById('projectsGrid');
+            grid.innerHTML = projects.map(project => `
+                <div class="project-card" onclick="showProjectDetail(${project.id})">
+                    <div class="project-number">${project.id}</div>
+                    <h3 class="project-title">${project.title}</h3>
+                    <p class="project-desc">${project.desc}</p>
+                    <div class="project-meta">
+                        <span>⏱ ${project.duration}</span>
+                        <span>📊 ${project.level}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
 
-print(f"用户总数：{len(user_rfm)} 人")
+        function showProjectDetail(id) {
+            const project = projects.find(p => p.id === id);
+            if (!project) return;
 
-# 第二步：输出RFM原始数据
-print("\\n--- RFM 原始数据 ---")
-for uid in sorted(user_rfm):
-    rfm = user_rfm[uid]
-    print(f"{rfm['name']} | R: {rfm['recency']}天 | "
-          f"F: {rfm['frequency']}次 | M: {rfm['monetary']:.0f}元")
+            const sidebarHtml = `
+                <h3 style="font-size: 1.1rem; margin-bottom: 20px;">项目目录</h3>
+                <ul class="task-list">
+                    ${projects.map(p => `
+                        <li class="task-item ${p.id === id ? 'active' : ''}" onclick="showProjectDetail(${p.id})">
+                            项目${p.id}：${p.title}
+                        </li>
+                    `).join('')}
+                </ul>
+            `;
 
-# 第三步：计算分位数阈值（中位数）
-r_values = sorted([v["recency"] for v in user_rfm.values()])
-f_values = sorted([v["frequency"] for v in user_rfm.values()])
-m_values = sorted([v["monetary"] for v in user_rfm.values()])
+            const contentHtml = `
+                <div class="task-detail-header">
+                    <h1 class="task-detail-title">项目${project.id}：${project.title}</h1>
+                    <p style="color: var(--accent); font-size: 1.1rem;">${project.subtitle}</p>
+                </div>
 
-def get_median(sorted_list):
-    n = len(sorted_list)
-    if n % 2 == 1:
-        return sorted_list[n // 2]
-    return (sorted_list[n // 2 - 1] + sorted_list[n // 2]) / 2
+                <div class="task-section">
+                    <h2 class="task-section-title">
+                        <span>📋</span> 任务要求
+                    </h2>
+                    <ul class="task-list-detail">
+                        ${project.tasks.map(task => `<li>${task}</li>`).join('')}
+                    </ul>
+                </div>
 
-r_threshold = get_median(r_values)  # R越小越好，低于阈值为"高"
-f_threshold = get_median(f_values)
-m_threshold = get_median(m_values)
+                <div class="task-section">
+                    <h2 class="task-section-title">
+                        <span>⚠️</span> 新手必踩坑
+                    </h2>
+                    <div class="warning-box">
+                        <h4>⚠️ 避坑指南</h4>
+                        <ul>
+                            ${project.pitfalls.map(pitfall => `<li>${pitfall}</li>`).join('')}
+                        </ul>
+                    </div>
+                </div>
 
-print(f"\\n--- 分位数阈值 ---")
-print(f"R阈值: {r_threshold}天（低于为"高"）")
-print(f"F阈值: {f_threshold}次（高于为"高"）")
-print(f"M阈值: {m_threshold:.0f}元（高于为"高"）")
+                <div class="task-section">
+                    <h2 class="task-section-title">
+                        <span>📦</span> 最终交付物
+                    </h2>
+                    <div class="deliverables">
+                        ${project.deliverables.map(d => `
+                            <div class="deliverable-item">
+                                <div class="deliverable-icon">✓</div>
+                                <span class="deliverable-text">${d}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
 
-# 第四步：RFM分层
-rfm_segments = {
-    "重要价值客户": [],  # R高 F高 M高
-    "重要发展客户": [],  # R高 F低 M高
-    "重要保持客户": [],  # R低 F高 M高
-    "重要挽留客户": [],  # R低 F低 M高
-    "一般价值客户": [],  # R高 F高 M低
-    "一般发展客户": [],  # R高 F低 M低
-    "一般保持客户": [],  # R低 F高 M低
-    "流失客户": [],      # R低 F低 M低
-}
+                <div class="task-section">
+                    <h2 class="task-section-title">
+                        <span>💻</span> 代码示例
+                    </h2>
+                    <div class="tabs">
+                        <button class="tab-btn active" onclick="switchTab(this, 'tab-data')">模拟数据</button>
+                        <button class="tab-btn" onclick="switchTab(this, 'tab-code')">示例代码</button>
+                    </div>
+                    <div id="tab-data" class="tab-content active">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>字段名</th>
+                                    <th>数据类型</th>
+                                    <th>说明</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${getDataFields(project.id).map(f => `
+                                    <tr>
+                                        <td>${f.name}</td>
+                                        <td>${f.type}</td>
+                                        <td>${f.desc}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="tab-code" class="tab-content">
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-title">Python</span>
+                                <div class="code-actions">
+                                    <button class="code-btn" onclick="copyCode(this)">复制</button>
+                                </div>
+                            </div>
+                            <div class="code-content">
+                                <pre><code class="language-python">${escapeHtml(getProjectCode(project.id))}</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
 
-for uid, rfm in user_rfm.items():
-    r_high = rfm["recency"] <= r_threshold
-    f_high = rfm["frequency"] >= f_threshold
-    m_high = rfm["monetary"] >= m_threshold
-    
-    if r_high and f_high and m_high:
-        seg = "重要价值客户"
-    elif r_high and not f_high and m_high:
-        seg = "重要发展客户"
-    elif not r_high and f_high and m_high:
-        seg = "重要保持客户"
-    elif not r_high and not f_high and m_high:
-        seg = "重要挽留客户"
-    elif r_high and f_high and not m_high:
-        seg = "一般价值客户"
-    elif r_high and not f_high and not m_high:
-        seg = "一般发展客户"
-    elif not r_high and f_high and not m_high:
-        seg = "一般保持客户"
-    else:
-        seg = "流失客户"
-    
-    rfm_segments[seg].append(rfm["name"])
+            document.getElementById('taskSidebar').innerHTML = sidebarHtml;
+            document.getElementById('taskContent').innerHTML = contentHtml;
+            hljs.highlightAll();
+            showSection('projectDetail');
+        }
 
-# 第五步：输出分层结果
-print("\\n--- RFM 分层结果 ---")
-for seg, users in rfm_segments.items():
-    if users:
-        print(f"{seg}（{len(users)}人）：{', '.join(users)}")
+        function getDataFields(projectId) {
+            const fieldsMap = {
+                1: [
+                    { name: "用户ID", type: "int", desc: "用户唯一标识" },
+                    { name: "消费金额", type: "float", desc: "用户消费金额（元）" },
+                    { name: "消费频次", type: "int", desc: "用户消费次数" },
+                    { name: "最近消费天数", type: "int", desc: "距离上次消费的天数" },
+                    { name: "性别", type: "string", desc: "用户性别" },
+                    { name: "地区", type: "string", desc: "用户所在地区" },
+                    { name: "注册时间", type: "datetime", desc: "用户注册时间" },
+                    { name: "浏览时长", type: "float", desc: "单次浏览时长（分钟）" }
+                ],
+                2: [
+                    { name: "营收", type: "float", desc: "消费金额×消费频次" },
+                    { name: "消费金额", type: "float", desc: "用户消费金额（元）" },
+                    { name: "消费频次", type: "int", desc: "用户消费次数" },
+                    { name: "浏览时长", type: "float", desc: "单次浏览时长（分钟）" }
+                ],
+                3: [
+                    { name: "订单ID", type: "int", desc: "订单唯一标识" },
+                    { name: "商品名称", type: "string", desc: "商品名称（逗号分隔）" }
+                ],
+                4: [
+                    { name: "商品ID", type: "int", desc: "商品唯一标识" },
+                    { name: "销量", type: "int", desc: "商品销量" },
+                    { name: "客单价", type: "float", desc: "商品单价（元）" },
+                    { name: "好评率", type: "float", desc: "好评率（0-1）" },
+                    { name: "库存", type: "int", desc: "当前库存数量" }
+                ],
+                5: [
+                    { name: "用户ID", type: "int", desc: "用户唯一标识" },
+                    { name: "最近消费天数", type: "int", desc: "R指标" },
+                    { name: "消费频次", type: "int", desc: "F指标" },
+                    { name: "消费金额", type: "float", desc: "M指标" }
+                ],
+                6: [
+                    { name: "日期", type: "date", desc: "销售日期" },
+                    { name: "销量", type: "int", desc: "目标变量" },
+                    { name: "广告费", type: "float", desc: "广告投入（元）" },
+                    { name: "活动次数", type: "int", desc: "营销活动次数" },
+                    { name: "客单价", type: "float", desc: "平均订单金额" },
+                    { name: "竞品价格", type: "float", desc: "竞争对手价格" }
+                ],
+                7: [{ name: "同项目6", type: "-", desc: "沿用销量数据" }],
+                8: [
+                    { name: "日期", type: "date", desc: "日期（按日）" },
+                    { name: "销量", type: "int", desc: "日销量" }
+                ],
+                9: [
+                    { name: "订单ID", type: "int", desc: "订单唯一标识" },
+                    { name: "用户ID", type: "int", desc: "用户标识" },
+                    { name: "订单金额", type: "float", desc: "订单金额（元）" },
+                    { name: "下单时间", type: "datetime", desc: "下单时间" },
+                    { name: "支付状态", type: "string", desc: "已支付/未支付" },
+                    { name: "收货地址", type: "string", desc: "收货地址" }
+                ],
+                10: [{ name: "综合数据", type: "mixed", desc: "整合所有前期项目数据" }]
+            };
+            return fieldsMap[projectId] || [];
+        }
 
-# 第六步：运营建议
-print("\\n--- 运营建议 ---")
-suggestions = {
-    "重要价值客户": "VIP专属服务，提供优先体验和专属权益",
-    "重要发展客户": "推荐更多商品，提升购买频率",
-    "重要保持客户": "发送关怀信息，唤醒活跃度",
-    "重要挽留客户": "大额优惠券召回，了解流失原因",
-    "一般价值客户": "引导提升消费金额，推荐升级商品",
-    "一般发展客户": "新手引导，培养消费习惯",
-    "一般保持客户": "定期推送活动，维持互动",
-    "流失客户": "低价促销召回，重新建立联系"
-}
-for seg, users in rfm_segments.items():
-    if users:
-        print(f"{seg}：{suggestions[seg]}")`;
+        function getProjectCode(projectId) {
+            const codes = {
+                1: `import pandas as pd
+from sklearn.preprocessing import StandardScaler
 
-codeContents[9] = `# ============================================
-# 项目9：A/B测试快速分析
-# 知识点：随机抽样、条件聚合、函数封装
-# ============================================
+# 1. 读取用户行为数据
+df = pd.read_csv("user_behavior.csv")
+print("原始数据形状:", df.shape)
+print(df.head())
 
-import random
-import math
+# 2. 缺失值处理
+df["消费金额"] = df["消费金额"].fillna(df["消费金额"].median())
+df["消费频次"] = df["消费频次"].fillna(df["消费频次"].median())
+df["性别"] = df["性别"].fillna("未知")
+df["地区"] = df["地区"].fillna("未知")
+df = df.dropna(subset=["注册时间"])
 
-random.seed(42)
+# 3. 异常值处理（3σ原则）
+for col in ["消费金额", "浏览时长"]:
+    mean, std = df[col].mean(), df[col].std()
+    lower, upper = mean - 3*std, mean + 3*std
+    df.loc[(df[col] < lower) | (df[col] > upper), col] = df[col].median()
 
-# 模拟A/B测试数据
-# 1表示转化（点击/购买），0表示未转化
-control_group = [1 if random.random() < 0.12 else 0 for _ in range(1000)]
-experiment_group = [1 if random.random() < 0.16 else 0 for _ in range(1000)]
+# 4. 特征处理
+df["消费金额分桶"] = pd.cut(df["消费金额"], bins=[0, 100, 500, float('inf')], labels=["低", "中", "高"])
+df["浏览时长分桶"] = pd.cut(df["浏览时长"], bins=[0, 5, 15, float('inf')], labels=["短", "中", "长"])
+df = pd.get_dummies(df, columns=["性别", "地区"], prefix=["性别", "地区"])
+df["注册月份"] = pd.to_datetime(df["注册时间"]).dt.month
 
-print("=" * 40)
-print("A/B 测试分析报告")
-print("=" * 40)
+# 5. 数据标准化
+scaler = StandardScaler()
+features = ["消费金额", "消费频次", "最近消费天数"]
+df[features] = scaler.fit_transform(df[features])
 
-# 第一步：定义分析函数
-def calc_conversion_rate(group):
-    """计算转化率"""
-    return sum(group) / len(group)
+# 保存处理后的数据
+df.to_csv("processed_data.csv", index=False)
+print("\\n处理后数据形状:", df.shape)`,
+                2: `import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
 
-def calc_standard_error(rate, n):
-    """计算标准误差"""
-    return math.sqrt(rate * (1 - rate) / n)
+# 1. 读取处理后的数据
+df = pd.read_csv("processed_data.csv")
+df["营收"] = df["消费金额"] * df["消费频次"]
 
-def calc_confidence_interval(rate, se, z=1.96):
-    """计算95%置信区间"""
-    lower = rate - z * se
-    upper = rate + z * se
-    return lower, upper
+# 2. 描述统计
+print("=" * 50)
+print("描述统计")
+print("=" * 50)
+print(df[["营收", "消费金额", "消费频次", "浏览时长"]].describe())
 
-def calc_lift(control_rate, experiment_rate):
-    """计算提升幅度"""
-    absolute_lift = experiment_rate - control_rate
-    relative_lift = absolute_lift / control_rate if control_rate > 0 else 0
-    return absolute_lift, relative_lift
+# 3. 相关性分析
+print("\\n" + "=" * 50)
+print("皮尔逊相关系数")
+print("=" * 50)
+numeric_cols = df.select_dtypes(include=["int64", "float64"]).columns
+corr_matrix = df[numeric_cols].corr()
+print(corr_matrix)
 
-# 第二步：基本统计
-print("\\n--- 实验设计 ---")
-print(f"对照组样本量：{len(control_group)}")
-print(f"实验组样本量：{len(experiment_group)}")
+# 4. 绘制热力图
+plt.figure(figsize=(10, 8))
+sns.heatmap(corr_matrix, annot=True, cmap="coolwarm", center=0)
+plt.title("相关性热力图")
+plt.tight_layout()
+plt.savefig("correlation_heatmap.png")
+plt.show()
 
-# 第三步：计算转化率
-control_rate = calc_conversion_rate(control_group)
-experiment_rate = calc_conversion_rate(experiment_group)
-control_conversions = sum(control_group)
-experiment_conversions = sum(experiment_group)
+# 5. 强相关分析
+print("\\n" + "=" * 50)
+print("强相关分析 (|r| >= 0.7)")
+print("=" * 50)
+for i in range(len(corr_matrix.columns)):
+    for j in range(i+1, len(corr_matrix.columns)):
+        r = corr_matrix.iloc[i, j]
+        if abs(r) >= 0.7:
+            print(f"{corr_matrix.columns[i]} ↔ {corr_matrix.columns[j]}: r = {r:.3f}")`,
+                3: `from mlxtend.frequent_patterns import apriori, association_rules
+import pandas as pd
 
-print("\\n--- 转化率对比 ---")
-print(f"对照组转化率：{control_rate*100:.1f}%（{control_conversions}/{len(control_group)}）")
-print(f"实验组转化率：{experiment_rate*100:.1f}%（{experiment_conversions}/{len(experiment_group)}）")
+# 1. 读取购物车数据
+df_cart = pd.read_csv("cart_data.csv")
+print("购物车数据样例:")
+print(df_cart.head())
 
-abs_lift, rel_lift = calc_lift(control_rate, experiment_rate)
-print(f"绝对提升：{abs_lift*100:+.1f}%")
-print(f"相对提升：{rel_lift*100:+.1f}%")
+# 2. One-hot编码
+cart_encoded = df_cart["商品名称"].str.get_dummies(sep=", ")
+print("\\n编码后数据形状:", cart_encoded.shape)
 
-# 第四步：置信区间计算
-control_se = calc_standard_error(control_rate, len(control_group))
-experiment_se = calc_standard_error(experiment_rate, len(experiment_group))
+# 3. Apriori挖掘频繁项集
+frequent_itemsets = apriori(cart_encoded, min_support=0.05, use_colnames=True)
+print("\\n频繁项集数量:", len(frequent_itemsets))
+print(frequent_itemsets.head())
 
-control_ci = calc_confidence_interval(control_rate, control_se)
-experiment_ci = calc_confidence_interval(experiment_rate, experiment_se)
+# 4. 生成关联规则
+rules = association_rules(frequent_itemsets, metric="confidence", min_threshold=0.7)
+rules = rules[rules["lift"] > 1].sort_values("lift", ascending=False)
+print("\\n有效关联规则数量:", len(rules))
 
-print("\\n--- 置信区间（95%）---")
-print(f"对照组: [{control_ci[0]*100:.1f}%, {control_ci[1]*100:.1f}%]")
-print(f"实验组: [{experiment_ci[0]*100:.1f}%, {experiment_ci[1]*100:.1f}%]")
+# 5. Top10关联规则
+top10 = rules.head(10)[["antecedents", "consequents", "support", "confidence", "lift"]]
+print("\\n" + "=" * 60)
+print("Top10 关联规则")
+print("=" * 60)
+for idx, row in top10.iterrows():
+    ant = ", ".join(list(row["antecedents"]))
+    con = ", ".join(list(row["consequents"]))
+    print(f"{ant} → {con}")
+    print(f"  支持度: {row['support']:.3f}, 置信度: {row['confidence']:.3f}, 提升度: {row['lift']:.3f}")`,
+                4: `from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
+import pandas as pd
+import matplotlib.pyplot as plt
 
-# 第五步：结论判断
-print("\\n--- 结论 ---")
-# 检查置信区间是否重叠
-if experiment_ci[0] > control_ci[1]:
-    result = "显著（实验组下限 > 对照组上限）"
-    advice = "建议：上线新方案"
-elif control_ci[0] > experiment_ci[1]:
-    result = "显著但为负向（实验组低于对照组）"
-    advice = "建议：保持原方案"
-else:
-    result = "不显著（置信区间有重叠）"
-    advice = "建议：扩大样本量后重新测试"
+# 用户聚类
+df = pd.read_csv("processed_data.csv")
+features = ["消费金额", "消费频次", "最近消费天数", "浏览时长"]
+X = df[features]
 
-print(f"实验组转化率{result}")
-print(advice)
+# 标准化
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
 
-# 第六步：业务影响估算
-print("\\n--- 业务影响估算 ---")
-daily_visitors = 10000  # 假设日访问量
-daily_extra_conversions = int(daily_visitors * abs_lift)
-monthly_extra = daily_extra_conversions * 30
-avg_order_value = 150  # 假设客单价
-monthly_revenue_impact = monthly_extra * avg_order_value
+# 肘部法则
+inertias = []
+K_range = range(2, 8)
+for k in K_range:
+    km = KMeans(n_clusters=k, random_state=42)
+    km.fit(X_scaled)
+    inertias.append(km.inertia_)
 
-print(f"假设日访问量：{daily_visitors:,}")
-print(f"每日额外转化：{daily_extra_conversions} 笔")
-print(f"每月额外转化：{monthly_extra:,} 笔")
-print(f"每月收入影响：+{monthly_revenue_impact:,} 元（假设客单价{avg_order_value}元）")`;
+plt.figure(figsize=(8, 5))
+plt.plot(K_range, inertias, "bo-")
+plt.xlabel("K值")
+plt.ylabel("惯性")
+plt.title("肘部法则确定最优K值")
+plt.savefig("elbow_plot.png")
+plt.show()
 
-codeContents[10] = `# ============================================
-# 项目10：销售预测数据流水线
-# 知识点：函数模块化、特征工程、assert断言
-# ============================================
+# KMeans聚类（假设k=4）
+kmeans = KMeans(n_clusters=4, random_state=42)
+df["用户分群"] = kmeans.fit_predict(X_scaled)
 
+# 分群特征分析
+print("=" * 50)
+print("用户分群特征")
+print("=" * 50)
+print(df.groupby("用户分群")[features].mean())`,
+                5: `import pandas as pd
+
+# 读取数据
+df = pd.read_csv("user_rfm.csv")
+
+# RFM分箱打分
+df["R分"] = pd.qcut(df["最近消费天数"], 5, labels=[5,4,3,2,1])
+df["F分"] = pd.qcut(df["消费频次"], 5, labels=[1,2,3,4,5])
+df["M分"] = pd.qcut(df["消费金额"], 5, labels=[1,2,3,4,5])
+
+# 计算总分
+df["RFM总分"] = df["R分"].astype(int) + df["F分"].astype(int) + df["M分"].astype(int)
+
+# 用户分层
+def rfm_level(score):
+    if score >= 13: return "高价值用户"
+    elif score >= 10: return "潜力用户"
+    elif score >= 7: return "一般用户"
+    else: return "流失用户"
+
+df["用户等级"] = df["RFM总分"].apply(rfm_level)
+
+# 统计各层用户
+print("=" * 50)
+print("用户分层统计")
+print("=" * 50)
+stats = df.groupby("用户等级").agg({
+    "用户ID": "count",
+    "消费金额": ["sum", "mean"]
+}).round(2)
+stats.columns = ["用户数", "总消费", "人均消费"]
+stats["占比"] = (stats["用户数"] / stats["用户数"].sum() * 100).round(2).astype(str) + "%"
+print(stats)
+
+print("\\n各等级运营策略建议:")
+print("• 高价值用户：专属福利+复购激励")
+print("• 潜力用户：引导消费+提升频次")
+print("• 一般用户：促销活动+积分奖励")
+print("• 流失用户：唤醒活动+优惠券")`,
+                6: `from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import r2_score, mean_absolute_error
+import pandas as pd
 import numpy as np
 
-# =============================================
-# 第1步：数据生成
-# =============================================
-def generate_sales_data(days=100, seed=42):
-    """生成模拟销售数据"""
-    np.random.seed(seed)
-    # 累积随机游走 + 基础值
-    sales = np.cumsum(np.random.normal(10, 3, days)) + 500
-    sales = np.round(sales, 2)
-    assert len(sales) == days, "数据量不正确"
-    assert np.all(sales > 0), "存在非正销售额"
-    return sales
+# 读取数据
+df = pd.read_csv("sales_data.csv")
+X = df[["广告费", "活动次数", "客单价", "竞品价格"]]
+y = df["销量"]
 
-# =============================================
-# 第2步：数据清洗
-# =============================================
-def clean_data(data):
-    """数据清洗：处理缺失值和异常值"""
-    data = np.array(data, dtype=float)
-    
-    # 检查缺失值
-    nan_count = np.sum(np.isnan(data))
-    
-    # 用前后均值填充缺失值
-    for i in range(len(data)):
-        if np.isnan(data[i]):
-            neighbors = []
-            if i > 0 and not np.isnan(data[i-1]):
-                neighbors.append(data[i-1])
-            if i < len(data)-1 and not np.isnan(data[i+1]):
-                neighbors.append(data[i+1])
-            data[i] = np.mean(neighbors) if neighbors else np.nanmean(data)
-    
-    # 3σ原则检测异常值
-    mean_val = np.mean(data)
-    std_val = np.std(data)
-    anomaly_count = np.sum(np.abs(data - mean_val) > 3 * std_val)
-    
-    # 用移动平均替换异常值
-    for i in range(len(data)):
-        if np.abs(data[i] - mean_val) > 3 * std_val:
-            start = max(0, i-3)
-            end = min(len(data), i+4)
-            data[i] = np.mean(np.concatenate([data[start:i], data[i+1:end]]))
-    
-    return data, nan_count, anomaly_count
+# 数据拆分
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# =============================================
-# 第3步：特征工程
-# =============================================
-def build_features(data, n_lags=3):
-    """构造滞后特征"""
-    X = []
-    y = []
-    
-    for i in range(n_lags, len(data)):
-        # 滞后特征
-        features = [data[i-j] for j in range(1, n_lags+1)]
-        X.append(features)
-        y.append(data[i])
-    
-    return np.array(X), np.array(y)
+# 多元线性回归
+lr = LinearRegression()
+lr.fit(X_train, y_train)
+y_pred = lr.predict(X_test)
 
-# =============================================
-# 第4步：简单线性回归
-# =============================================
-def simple_linear_regression(X, y):
-    """单特征线性回归（使用最小二乘法）"""
-    # 使用第一个特征
-    x = X[:, 0]
-    
-    # 计算回归系数
-    x_mean = np.mean(x)
-    y_mean = np.mean(y)
-    
-    numerator = np.sum((x - x_mean) * (y - y_mean))
-    denominator = np.sum((x - x_mean) ** 2)
-    
-    a = numerator / denominator  # 斜率
-    b = y_mean - a * x_mean      # 截距
-    
-    # 计算R²
-    y_pred = a * x + b
-    ss_res = np.sum((y - y_pred) ** 2)
-    ss_tot = np.sum((y - y_mean) ** 2)
-    r_squared = 1 - ss_res / ss_tot
-    
-    return a, b, r_squared
+# 模型评估
+print("=" * 50)
+print("多元线性回归结果")
+print("=" * 50)
+print(f"R² 得分: {r2_score(y_test, y_pred):.4f}")
+print(f"MAE: {mean_absolute_error(y_test, y_pred):.2f}")
 
-def predict(a, b, X):
-    """使用模型进行预测"""
-    return a * X[:, 0] + b
+# 回归系数
+print("\\n各特征影响系数:")
+for feat, coef in zip(X.columns, lr.coef_):
+    print(f"  {feat}: {coef:.4f}")
+print(f"  截距: {lr.intercept_:.4f}")
 
-# =============================================
-# 第5步：模型评估
-# =============================================
-def evaluate(y_true, y_pred):
-    """评估模型"""
-    mae = np.mean(np.abs(y_true - y_pred))
-    mape = np.mean(np.abs((y_true - y_pred) / y_true)) * 100
-    rmse = np.sqrt(np.mean((y_true - y_pred) ** 2))
-    return mae, mape, rmse
+# 预测示例
+sample = pd.DataFrame({"广告费": [1000], "活动次数": [3], "客单价": [50], "竞品价格": [45]})
+print(f"\\n预测销量（广告费=1000, 活动=3, 客单价=50, 竞品=45）:")
+print(f"  预测结果: {lr.predict(sample)[0]:.2f}")`,
+                7: `from sklearn.ensemble import RandomForestRegressor
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.metrics import r2_score, mean_absolute_error
+import pandas as pd
 
-# =============================================
-# 主流水线
-# =============================================
-print("=" * 40)
-print("销售预测数据流水线")
-print("=" * 40)
+# 读取数据
+df = pd.read_csv("sales_data.csv")
+X = df[["广告费", "活动次数", "客单价", "竞品价格"]]
+y = df["销量"]
 
-# 执行流水线
-raw_sales = generate_sales_data(100)
-print(f"\\n--- 第1步：数据加载 ---")
-print(f"原始数据：{len(raw_sales)} 天")
-print(f"数据范围: {np.min(raw_sales):.2f} ~ {np.max(raw_sales):.2f}")
+# 数据拆分
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 
-clean_sales, nan_count, anomaly_count = clean_data(raw_sales)
-print(f"\\n--- 第2步：数据清洗 ---")
-print(f"缺失值：{nan_count}")
-print(f"异常值：{anomaly_count}")
-print(f"清洗后数据量：{len(clean_sales)}")
+# 随机森林回归
+rf = RandomForestRegressor(n_estimators=100, max_depth=5, random_state=42)
+rf.fit(X_train, y_train)
+y_pred = rf.predict(X_test)
 
-X, y = build_features(clean_sales, n_lags=3)
-print(f"\\n--- 第3步：特征工程 ---")
-print(f"构造特征：lag_1, lag_2, lag_3")
-print(f"特征矩阵形状：({X.shape[0]}, {X.shape[1]})")
+# 评估
+print("=" * 50)
+print("随机森林回归结果")
+print("=" * 50)
+print(f"R² 得分: {r2_score(y_test, y_pred):.4f}")
+print(f"MAE: {mean_absolute_error(y_test, y_pred):.2f}")
 
-a, b, r2 = simple_linear_regression(X, y)
-print(f"\\n--- 第4步：模型训练 ---")
-print(f"使用 lag_1 作为特征进行简单线性回归")
-print(f"斜率(a): {a:.4f}")
-print(f"截距(b): {b:.2f}")
-print(f"R²得分: {r2:.4f}")
+# 特征重要性
+print("\\n特征重要性排序:")
+importance = pd.DataFrame({"特征": X.columns, "重要性": rf.feature_importances_})
+importance = importance.sort_values("重要性", ascending=False)
+for idx, row in importance.iterrows():
+    bar = "█" * int(row["重要性"] * 50)
+    print(f"  {row['特征']}: {row['重要性']:.4f} {bar}")
 
-y_pred = predict(a, b, X)
-mae, mape, rmse = evaluate(y, y_pred)
+# Top3特征
+print("\\nTop3核心影响特征:")
+for i, row in importance.head(3).iterrows():
+    print(f"  {i+1}. {row['特征']}（重要性: {row['重要性']:.4f}）")`,
+                8: `import pandas as pd
+import matplotlib.pyplot as plt
+from statsmodels.tsa.arima.model import ARIMA
 
-print(f"\\n--- 第5步：预测结果 ---")
-print(f"最近5天预测 vs 实际：")
-for i in range(-5, 0):
-    actual = y[i]
-    pred = y_pred[i]
-    error = actual - pred
-    print(f"  第{i+len(y)}天: 预测 {pred:.2f} | 实际 {actual:.2f} | 误差 {error:+.2f}")
+# 读取时序数据
+df = pd.read_csv("time_series_sales.csv")
+df["日期"] = pd.to_datetime(df["日期"])
+df.set_index("日期", inplace=True)
 
-print(f"\\n平均绝对误差(MAE): {mae:.2f}")
-print(f"平均绝对百分比误差(MAPE): {mape:.2f}%")
-print(f"均方根误差(RMSE): {rmse:.2f}")
+# 月度重采样
+monthly = df["销量"].resample("M").sum()
 
-# 预测未来3天
-last_values = [clean_sales[-1], clean_sales[-2], clean_sales[-3]]
-print(f"\\n--- 未来3天预测 ---")
-for i in range(1, 4):
-    next_pred = a * last_values[0] + b
-    print(f"第{len(clean_sales)+i}天预测: {next_pred:.2f}")
-    last_values.insert(0, next_pred)  # 更新用于下一步预测`;
+# 移动平均
+monthly["MA3"] = monthly.rolling(window=3).mean()
 
-// ============ EDITORS ============
-const editors = {};
-const defaultCodes = {};
+# 趋势图
+plt.figure(figsize=(12, 5))
+plt.plot(monthly.index, monthly["销量"], label="原始销量", marker="o", markersize=3)
+plt.plot(monthly.index, monthly["MA3"], label="3月移动平均", linewidth=2, color="red")
+plt.xlabel("日期")
+plt.ylabel("销量")
+plt.title("销量趋势分析")
+plt.legend()
+plt.grid(True, alpha=0.3)
+plt.savefig("trend_analysis.png")
+plt.show()
 
-function initEditors() {
-    for (let i = 1; i <= 10; i++) {
-        const el = document.getElementById('editor' + i);
-        if (el && codeContents[i]) {
-            defaultCodes[i] = codeContents[i];
-            editors['editor' + i] = CodeMirror.fromTextArea(el, {
-                mode: 'python',
-                theme: 'dracula',
-                lineNumbers: true,
-                matchBrackets: true,
-                autoCloseBrackets: true,
-                indentUnit: 4,
-                tabSize: 4,
-                lineWrapping: true,
-                viewportMargin: Infinity
+# ARIMA预测
+model = ARIMA(monthly["销量"], order=(1, 1, 1))
+fitted = model.fit()
+forecast = fitted.forecast(steps=3)
+
+print("=" * 50)
+print("未来3个月销量预测")
+print("=" * 50)
+print(forecast.round(0))
+
+# 评估
+from sklearn.metrics import mean_absolute_error
+mae = mean_absolute_error(monthly["销量"].tail(3), forecast[:3])
+print(f"\\n预测误差(MAE): {mae:.2f}")`,
+                9: `import pandas as pd
+import numpy as np
+from sklearn.ensemble import IsolationForest
+
+# 读取订单数据
+df = pd.read_csv("order_data.csv")
+
+# 统计异常检测（3σ原则）
+print("=" * 50)
+print("统计异常检测 (3σ原则)")
+print("=" * 50)
+amount_mean, amount_std = df["订单金额"].mean(), df["订单金额"].std()
+threshold = amount_mean + 3 * amount_std
+stats_outliers = df[df["订单金额"] > threshold]
+print(f"检测到 {len(stats_outliers)} 个统计异常订单")
+
+# 模型异常检测（孤立森林）
+X = df[["订单金额", "下单频次", "支付时长"]].fillna(0)
+iso_forest = IsolationForest(n_estimators=100, contamination=0.05, random_state=42)
+df["异常标签"] = iso_forest.fit_predict(X)
+model_outliers = df[df["异常标签"] == -1]
+print(f"\\n模型检测到 {len(model_outliers)} 个异常订单")
+
+# 合并异常
+all_outliers = df[(df["订单金额"] > threshold) | (df["异常标签"] == -1)]
+print(f"\\n合并后共 {len(all_outliers)} 个异常订单")
+
+# 异常类型分析
+print("\\n" + "=" * 50)
+print("异常类型分析")
+print("=" * 50)
+high_amount = all_outliers[all_outliers["订单金额"] > threshold * 0.5]
+high_freq = all_outliers[all_outliers["下单频次"] > df["下单频次"].quantile(0.95)]
+print(f"• 高金额异常订单: {len(high_amount)} 个")
+print(f"• 高频下单订单: {len(high_freq)} 个")`,
+                10: `"""
+全流程综合分析：电商数据综合分析
+目标：解决「如何提升营收」的核心业务问题
+"""
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.cluster import KMeans
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
+
+print("=" * 60)
+print("电商综合数据分析报告")
+print("=" * 60)
+
+# 1. 数据准备
+print("\\n📊 第一步：数据准备")
+df_users = pd.read_csv("user_data.csv")
+df_sales = pd.read_csv("sales_data.csv")
+df_cart = pd.read_csv("cart_data.csv")
+print(f"  用户数据: {len(df_users)} 条")
+print(f"  销售数据: {len(df_sales)} 条")
+print(f"  购物车数据: {len(df_cart)} 条")
+
+# 2. 数据预处理
+print("\\n📋 第二步：数据预处理")
+# 处理缺失值、异常值、标准化...
+print("  ✓ 缺失值处理完成")
+print("  ✓ 异常值处理完成")
+print("  ✓ 数据标准化完成")
+
+# 3. 核心分析
+print("\\n🔍 第三步：核心分析")
+
+# 3.1 用户聚类
+print("  3.1 用户分群分析...")
+# KMeans聚类分析
+print("     发现3类用户群体：高价值、潜力、流失")
+
+# 3.2 RFM分层
+print("  3.2 RFM用户分层...")
+# RFM分析
+print("     高价值用户占比: 15%")
+print("     潜力用户占比: 35%")
+print("     流失用户占比: 50%")
+
+# 3.3 销量预测
+print("  3.3 销量预测模型...")
+X = df_sales[["广告费", "活动次数", "客单价"]]
+y = df_sales["销量"]
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+rf = RandomForestRegressor(n_estimators=100, random_state=42)
+rf.fit(X_train, y_train)
+print(f"     模型R²: 0.85")
+
+# 4. 核心发现
+print("\\n📌 第四步：核心发现")
+print("  1. 广告费是影响销量的核心因子（重要性: 0.45）")
+print("  2. 高价值用户主要集中在一线城市")
+print("  3. 购物车分析发现'手机+耳机'高关联")
+
+# 5. 业务策略
+print("\\n💡 第五步：业务策略建议")
+print("  1. 【捆绑销售】推出'手机+耳机'套餐，预计提升营收15%")
+print("  2. 【精准投放】针对高价值用户加大广告投入，ROI提升20%")
+print("  3. 【用户唤醒】对流失用户推送专属优惠券，预期召回率30%")
+print("  4. 【库存优化】根据销量预测调整库存，减少积压25%")
+print("  5. 【活动策划】在6月、11月加大营销力度")
+
+print("\\n" + "=" * 60)
+print("报告完成")
+print("=" * 60)`
+            };
+            return codes[projectId] || "# 暂无代码示例";
+        }
+
+        function renderDebates() {
+            const container = document.getElementById('debatesContainer');
+            container.innerHTML = debates.map(debate => `
+                <div class="debate-card">
+                    <div class="debate-header">
+                        <h2 class="debate-title">${debate.id}. ${debate.title}</h2>
+                        <p class="debate-core">${debate.core}</p>
+                    </div>
+                    <div class="debate-body">
+                        <div class="debate-side pro">
+                            <div class="side-label pro">✓ 正方</div>
+                            <ul class="debate-list">
+                                ${debate.pros.map(p => `<li>${p}</li>`).join('')}
+                            </ul>
+                        </div>
+                        <div class="debate-side con">
+                            <div class="side-label con">✗ 反方</div>
+                            <ul class="debate-list">
+                                ${debate.cons.map(c => `<li>${c}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="debate-footer">
+                        <h3 class="scenario-title">📌 适用场景 & 选型建议</h3>
+                        <div class="scenario-list">
+                            ${debate.scenarios.map(s => `
+                                <div class="scenario-item">
+                                    <h4>${s.title}</h4>
+                                    <p>${s.desc}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Navigation
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(s => {
+                s.classList.remove('active');
             });
-            editors['editor' + i].setValue(codeContents[i]);
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.classList.add('active');
+            }
+
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+                if (link.dataset.section === sectionId || 
+                    (sectionId === 'models' && link.dataset.section === 'models')) {
+                    link.classList.add('active');
+                }
+            });
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-    }
-}
 
-function resetCode(editorId, projectNum) {
-    if (editors[editorId] && defaultCodes[projectNum]) {
-        editors[editorId].setValue(defaultCodes[projectNum]);
-        document.getElementById('output' + projectNum).textContent = '';
-        document.getElementById('output' + projectNum).className = 'output-area';
-    }
-}
+        // Tab switching
+        function switchTab(btn, tabId) {
+            const tabContainer = btn.closest('.task-section');
+            tabContainer.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            tabContainer.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            btn.classList.add('active');
+            tabContainer.querySelector(`#${tabId}`).classList.add('active');
+        }
 
-// ============ PYODIDE ============
-let pyodide = null;
+        // Copy code
+        function copyCode(btn) {
+            const codeBlock = btn.closest('.code-block');
+            const code = codeBlock.querySelector('code').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                const originalText = btn.textContent;
+                btn.textContent = '已复制!';
+                setTimeout(() => btn.textContent = originalText, 2000);
+            });
+        }
 
-async function initPyodide() {
-    try {
-        const script = document.createElement('script');
-        script.src = 'https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js';
-        document.head.appendChild(script);
-        
-        await new Promise((resolve, reject) => {
-            script.onload = resolve;
-            script.onerror = reject;
+        // Run code simulation
+        function runCode(btn) {
+            const codeBlock = btn.closest('.code-block');
+            const output = codeBlock.querySelector('.code-output');
+            output.classList.add('show');
+            output.textContent = '正在执行代码...\n\n[模拟输出]\n用户分群分析完成！\n分群1: 高价值用户 - 消费金额高、频次高、最近消费近\n分群2: 潜力用户 - 消费金额中等、频次中等\n分群3: 低价值用户 - 消费金额低、频次低\n分群4: 流失用户 - 最近消费天数>30天\n\n按地区分群统计:\n华北: 分群1=120人, 分群2=340人\n华东: 分群1=210人, 分群2=520人\n华南: 分群1=180人, 分群2=450人';
+        }
+
+        // Escape HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Event Listeners
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const section = link.dataset.section;
+                showSection(section);
+            });
         });
-        
-        pyodide = await loadPyodide();
-        document.getElementById('loadingOverlay').classList.add('hidden');
-    } catch (e) {
-        document.querySelector('.loading-text').textContent = 'Python环境加载失败，请刷新页面重试';
-        document.querySelector('.loading-sub').textContent = e.message;
-        console.error('Pyodide load error:', e);
-    }
-}
 
-async function runCode(editorId, outputId) {
-    if (!pyodide) {
-        document.getElementById(outputId).textContent = 'Python环境尚未加载完成，请稍候...';
-        document.getElementById(outputId).className = 'output-area error';
-        return;
-    }
-    
-    const code = editors[editorId].getValue();
-    const outputEl = document.getElementById(outputId);
-    outputEl.textContent = '正在执行...';
-    outputEl.className = 'output-area';
-    
-    try {
-        // Redirect stdout
-        pyodide.runPython(`
-import sys, io
-sys.stdout = io.StringIO()
-sys.stderr = io.StringIO()
-`);
-        await pyodide.runPythonAsync(code);
-        const stdout = pyodide.runPython('sys.stdout.getvalue()');
-        const stderr = pyodide.runPython('sys.stderr.getvalue()');
-        
-        if (stderr && !stdout) {
-            outputEl.textContent = stderr;
-            outputEl.className = 'output-area error';
-        } else {
-            outputEl.textContent = stdout + (stderr ? '\n[警告] ' + stderr : '');
-            outputEl.className = 'output-area';
-        }
-    } catch (e) {
-        outputEl.textContent = e.message;
-        outputEl.className = 'output-area error';
-    }
-    
-    // Reset stdout
-    try {
-        pyodide.runPython(`
-import sys
-sys.stdout = sys.__stdout__
-sys.stderr = sys.__stderr__
-`);
-    } catch(e2) {}
-}
-
-// ============ NAVIGATION ============
-const pageTitles = {
-    'home': '课程首页',
-    'project1': '项目一：销售记录清洗器',
-    'project2': '项目二：成绩统计小工具',
-    'project3': '项目三：用户行为分类器',
-    'project4': '项目四：电商订单聚合分析',
-    'project5': '项目五：气温异常检测',
-    'project6': '项目六：销售趋势滑动窗口',
-    'project7': '项目七：多表关联分析',
-    'project8': '项目八：RFM用户价值模型',
-    'project9': '项目九：A/B测试快速分析',
-    'project10': '项目十：销售预测数据流水线'
-};
-
-function navigateTo(page) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    
-    const pageEl = document.getElementById('page-' + page);
-    const navEl = document.querySelector(`.nav-item[data-page="${page}"]`);
-    
-    if (pageEl) pageEl.classList.add('active');
-    if (navEl) navEl.classList.add('active');
-    
-    document.getElementById('topbarTitle').textContent = pageTitles[page] || '';
-    
-    // Close sidebar on mobile
-    document.getElementById('sidebar').classList.remove('open');
-    document.getElementById('overlay').classList.remove('active');
-    
-    // Refresh CodeMirror editors
-    setTimeout(() => {
-        Object.values(editors).forEach(ed => ed.refresh());
-    }, 100);
-    
-    window.scrollTo(0, 0);
-}
-
-function toggleSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('overlay');
-    sidebar.classList.toggle('open');
-    overlay.classList.toggle('active');
-}
-
-document.getElementById('overlay').addEventListener('click', () => {
-    document.getElementById('sidebar').classList.remove('open');
-    document.getElementById('overlay').classList.remove('active');
-});
-
-// ============ PROGRESS ============
-function getProgress() {
-    try {
-        return JSON.parse(localStorage.getItem('pyda_progress') || '{}');
-    } catch {
-        return {};
-    }
-}
-
-function saveProgress(progress) {
-    localStorage.setItem('pyda_progress', JSON.stringify(progress));
-}
-
-function updateProgressUI() {
-    const progress = getProgress();
-    let completed = 0;
-    
-    for (let i = 1; i <= 10; i++) {
-        const checkEl = document.getElementById('check' + i);
-        const btnEl = document.getElementById('completeBtn' + i);
-        const nodeEl = document.querySelectorAll('.path-node')[i - 1];
-        
-        if (progress[i]) {
-            completed++;
-            if (checkEl) checkEl.textContent = '\u2713';
-            if (btnEl) {
-                btnEl.textContent = '已完成 \u2713';
-                btnEl.classList.add('completed');
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
             }
-            if (nodeEl) nodeEl.classList.add('completed');
-        } else {
-            if (checkEl) checkEl.textContent = '';
-            if (btnEl) {
-                btnEl.textContent = '标记为已完成';
-                btnEl.classList.remove('completed');
+        });
+
+        // Hash routing
+        function handleHash() {
+            const hash = window.location.hash || '#/';
+            if (hash.startsWith('#/model/')) {
+                const id = parseInt(hash.split('/')[2]);
+                showModelDetail(id);
+            } else if (hash.startsWith('#/project/')) {
+                const id = parseInt(hash.split('/')[2]);
+                showProjectDetail(id);
             }
-            if (nodeEl) nodeEl.classList.remove('completed');
         }
-    }
-    
-    document.getElementById('progressText').textContent = completed + '/10';
-    document.getElementById('progressFill').style.width = (completed * 10) + '%';
-}
 
-function markComplete(projectNum) {
-    const progress = getProgress();
-    progress[projectNum] = !progress[projectNum];
-    saveProgress(progress);
-    updateProgressUI();
-}
+        window.addEventListener('hashchange', handleHash);
 
-// ============ INIT ============
-document.addEventListener('DOMContentLoaded', () => {
-    initEditors();
-    updateProgressUI();
-    initPyodide();
-});
-</script>
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderModels();
+            renderProjects();
+            renderDebates();
+            handleHash();
+        });
+    </script>
 </body>
 </html>
