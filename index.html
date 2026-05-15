@@ -109,6 +109,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Hira
 .btn-outline{background:transparent;border:1px solid var(--border);color:var(--text)}
 .btn-outline:hover{background:var(--bg)}
 .btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.template-btn{padding:16px;background:var(--bg);border:2px solid var(--border);border-radius:8px;text-align:left;color:var(--text);cursor:pointer;transition:var(--transition)}
+.template-btn:hover{border-color:var(--primary);background:#EEF2FF;transform:translateY(-2px)}
+.template-btn.active{border-color:var(--primary);background:#EEF2FF}
 .output-area{background:#1a1a2e;border-radius:8px;padding:16px;margin-top:12px;font-family:'Fira Code',Consolas,monospace;font-size:13px;color:#e2e8f0;white-space:pre-wrap;max-height:400px;overflow-y:auto;min-height:60px;line-height:1.6}
 .output-area:empty::before{content:'点击"运行代码"查看输出结果...';color:#64748b;font-style:italic}
 .output-area.error{border:1px solid #EF4444}
@@ -173,6 +176,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Hira
 <div class="nav-section-title">导航</div>
 <div class="nav-item active" data-page="home" onclick="navigateTo('home')">
 <span class="nav-icon">&#127968;</span> 课程首页
+</div>
+<div class="nav-item" data-page="practice" onclick="navigateTo('practice')">
+<span class="nav-icon">&#9998;</span> 自由练习
 </div>
 </nav>
 <nav class="nav-section">
@@ -266,6 +272,92 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Hira
 <li><strong>完成挑战</strong> — 尝试进阶挑战，巩固所学知识</li>
 <li><strong>标记完成</strong> — 完成学习后点击底部按钮标记进度</li>
 </ol>
+</div>
+</div>
+
+<!-- FREE PRACTICE PAGE -->
+<div class="page" id="page-practice">
+<div class="hero">
+<h2>代码自由练习区</h2>
+<p>不受项目限制，自由编写和运行Python代码。选择预设模板或从零开始练习。</p>
+</div>
+
+<div class="section">
+<h3><span class="icon icon-code">&#9998;</span> 代码模板</h3>
+<p style="color: var(--text-light); margin-bottom: 16px;">选择一个模板快速开始：</p>
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px;">
+<button class="template-btn" onclick="loadTemplate('pandas')">
+<div style="font-weight: 600;">Pandas 数据处理</div>
+<div style="font-size: 12px; opacity: 0.7;">数据读取、清洗、统计分析</div>
+</button>
+<button class="template-btn" onclick="loadTemplate('visualization')">
+<div style="font-weight: 600;">Matplotlib 可视化</div>
+<div style="font-size: 12px; opacity: 0.7;">折线图、柱状图、散点图</div>
+</button>
+<button class="template-btn" onclick="loadTemplate('statistics')">
+<div style="font-weight: 600;">统计计算</div>
+<div style="font-size: 12px; opacity: 0.7;">均值、中位数、标准差</div>
+</button>
+<button class="template-btn" onclick="loadTemplate('algorithm')">
+<div style="font-weight: 600;">基础算法</div>
+<div style="font-size: 12px; opacity: 0.7;">排序、查找、递归</div>
+</button>
+<button class="template-btn" onclick="loadTemplate('string')">
+<div style="font-weight: 600;">字符串处理</div>
+<div style="font-size: 12px; opacity: 0.7;">正则、替换、分割</div>
+</button>
+<button class="template-btn" onclick="loadTemplate('empty')">
+<div style="font-weight: 600;">空白编辑器</div>
+<div style="font-size: 12px; opacity: 0.7;">从零开始编写</div>
+</button>
+</div>
+</div>
+
+<div class="section">
+<h3><span class="icon icon-code">&#128187;</span> 代码编辑器</h3>
+<div class="editor-container" id="practiceEditor"></div>
+<div class="editor-actions">
+<button class="btn btn-success" onclick="runPracticeCode()">
+▶ 运行代码
+</button>
+<button class="btn btn-outline" onclick="clearPracticeCode()">
+🗑️ 清空输出
+</button>
+<button class="btn btn-outline" onclick="downloadCode()">
+💾 下载代码
+</button>
+</div>
+<div class="output-area" id="practiceOutput"></div>
+</div>
+
+<div class="section">
+<h3><span class="icon icon-resource">&#128218;</span> 常用操作参考</h3>
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;">
+<div class="concept-box">
+<h4>读取数据</h4>
+<p><code>import pandas as pd</code><br>
+<code>df = pd.read_csv("data.csv")</code><br>
+<code>df.head()</code> - 查看前5行</p>
+</div>
+<div class="concept-box">
+<h4>数据统计</h4>
+<p><code>df.describe()</code> - 描述统计<br>
+<code>df['列名'].mean()</code> - 求均值<br>
+<code>df['列名'].value_counts()</code> - 计数</p>
+</div>
+<div class="concept-box">
+<h4>数据筛选</h4>
+<p><code>df[df['列'] > 100]</code><br>
+<code>df.sort_values('列')</code><br>
+<code>df.dropna()</code> - 删除空值</p>
+</div>
+<div class="concept-box">
+<h4>可视化</h4>
+<p><code>import matplotlib.pyplot as plt</code><br>
+<code>plt.plot(x, y)</code><br>
+<code>plt.show()</code></p>
+</div>
+</div>
 </div>
 </div>
 
@@ -2493,6 +2585,7 @@ sys.stderr = sys.__stderr__
 // ============ NAVIGATION ============
 const pageTitles = {
     'home': '课程首页',
+    'practice': '自由练习',
     'project1': '项目一：销售记录清洗器',
     'project2': '项目二：成绩统计小工具',
     'project3': '项目三：用户行为分类器',
@@ -2504,6 +2597,257 @@ const pageTitles = {
     'project9': '项目九：A/B测试快速分析',
     'project10': '项目十：销售预测数据流水线'
 };
+
+const practiceTemplates = {
+    'pandas': `# Pandas 数据处理示例
+import pandas as pd
+import numpy as np
+
+# 创建示例数据
+data = {
+    '姓名': ['张三', '李四', '王五', '赵六'],
+    '语文': [85, 92, 78, 95],
+    '数学': [92, 88, 95, 87],
+    '英语': [78, 95, 82, 90]
+}
+df = pd.DataFrame(data)
+
+# 添加总分列
+df['总分'] = df['语文'] + df['数学'] + df['英语']
+
+print("=" * 40)
+print("学生成绩统计")
+print("=" * 40)
+print(df)
+
+print("\\n" + "=" * 40)
+print("基本统计")
+print("=" * 40)
+print(df.describe())`,
+
+    'visualization': `# Matplotlib 可视化示例
+import matplotlib.pyplot as plt
+
+# 设置中文字体
+plt.rcParams['font.sans-serif'] = ['SimHei', 'Arial Unicode MS']
+plt.rcParams['axes.unicode_minus'] = False
+
+# 准备数据
+months = ['1月', '2月', '3月', '4月', '5月', '6月']
+sales = [120, 145, 132, 168, 175, 190]
+
+# 创建图表
+fig, ax = plt.subplots(figsize=(10, 6))
+ax.plot(months, sales, marker='o', linewidth=2, markersize=8, color='#4F46E5')
+
+# 添加数据标签
+for i, v in enumerate(sales):
+    ax.text(i, v + 3, str(v), ha='center', fontsize=10)
+
+ax.set_title('2024年月度销售趋势', fontsize=16, pad=20)
+ax.set_xlabel('月份', fontsize=12)
+ax.set_ylabel('销售额（万元）', fontsize=12)
+ax.grid(True, linestyle='--', alpha=0.7)
+
+plt.tight_layout()
+plt.show()
+print("图表已生成！")`,
+
+    'statistics': `# 统计计算示例
+import statistics
+
+# 示例数据
+scores = [85, 92, 78, 95, 88, 76, 92, 89, 94, 81]
+
+print("=" * 40)
+print("成绩统计分析")
+print("=" * 40)
+print(f"数据: {scores}")
+print(f"样本数量: {len(scores)}")
+print(f"总和: {sum(scores)}")
+print(f"均值: {statistics.mean(scores):.2f}")
+print(f"中位数: {statistics.median(scores):.2f}")
+print(f"众数: {statistics.mode(scores)}")
+print(f"标准差: {statistics.stdev(scores):.2f}")
+print(f"方差: {statistics.variance(scores):.2f}")
+print(f"最小值: {min(scores)}")
+print(f"最大值: {max(scores)}")`,
+
+    'algorithm': `# 基础算法示例
+
+# 快速排序
+def quicksort(arr):
+    if len(arr) <= 1:
+        return arr
+    pivot = arr[len(arr) // 2]
+    left = [x for x in arr if x < pivot]
+    middle = [x for x in arr if x == pivot]
+    right = [x for x in arr if x > pivot]
+    return quicksort(left) + middle + quicksort(right)
+
+# 二分查找
+def binary_search(arr, target):
+    left, right = 0, len(arr) - 1
+    while left <= right:
+        mid = (left + right) // 2
+        if arr[mid] == target:
+            return mid
+        elif arr[mid] < target:
+            left = mid + 1
+        else:
+            right = mid - 1
+    return -1
+
+# 测试
+numbers = [64, 34, 25, 12, 22, 11, 90]
+print("=" * 40)
+print("排序算法")
+print("=" * 40)
+print(f"原始数组: {numbers}")
+print(f"排序后: {quicksort(numbers)}")
+
+print("\\n" + "=" * 40)
+print("查找算法")
+print("=" * 40)
+sorted_nums = quicksort(numbers)
+index = binary_search(sorted_nums, 25)
+print(f"在已排序数组中查找25: 索引 {index}")`,
+
+    'string': `# 字符串处理示例
+import re
+
+text = """
+Python数据分析课程
+联系邮箱: student@example.com
+电话: 138-0013-8000
+价格: ¥1999元
+"""
+
+print("=" * 40)
+print("字符串处理")
+print("=" * 40)
+
+# 基本操作
+words = text.split()
+print(f"分词结果: {words}")
+
+# 查找所有邮箱
+emails = re.findall(r'\\w+@\\w+\\.\\w+', text)
+print(f"提取邮箱: {emails}")
+
+# 查找所有电话
+phones = re.findall(r'\\d{3}-\\d{4}-\\d{4}', text)
+print(f"提取电话: {phones}")
+
+# 替换操作
+cleaned = re.sub(r'¥(\\d+)元', r'$\\1', text)
+print(f"价格转换: {cleaned.strip()}")
+
+# 统计词频
+sample = "python python java c++ python java python"
+words = sample.split()
+word_count = {}
+for word in words:
+    word_count[word] = word_count.get(word, 0) + 1
+print(f"词频统计: {word_count}")`,
+
+    'empty': `# 在这里编写你的Python代码
+print("开始编程吧！")
+
+# 尝试一些基本操作:
+# - 变量赋值
+# - 数学运算
+# - 列表操作
+# - 条件判断
+# - 循环语句`,
+
+    'default': `# Python 数据分析自由练习
+# 在下方开始编写代码...
+
+print("Hello, Python!")
+print("欢迎来到自由练习区！")
+
+# 可以尝试:
+# 1. 打印各种数据类型
+# 2. 进行数学计算
+# 3. 操作列表和字典
+# 4. 编写函数
+
+a = 10
+b = 20
+print(f"a + b = {a + b}")`
+};
+
+let practiceEditor = null;
+
+function loadTemplate(templateName) {
+    const template = practiceTemplates[templateName] || practiceTemplates['empty'];
+    if (practiceEditor) {
+        practiceEditor.setValue(template);
+    }
+    
+    // Update active state
+    document.querySelectorAll('.template-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.target.closest('.template-btn').classList.add('active');
+}
+
+function initPracticeEditor() {
+    const container = document.getElementById('practiceEditor');
+    if (!container || practiceEditor) return;
+    
+    practiceEditor = CodeMirror(container, {
+        mode: 'python',
+        theme: 'dracula',
+        lineNumbers: true,
+        indentUnit: 4,
+        tabSize: 4,
+        indentWithTabs: false,
+        matchBrackets: true,
+        autoCloseBrackets: true,
+        extraKeys: {
+            "Ctrl-Enter": runPracticeCode,
+            "Cmd-Enter": runPracticeCode
+        }
+    });
+    
+    practiceEditor.setValue(practiceTemplates['default']);
+}
+
+function runPracticeCode() {
+    const code = practiceEditor ? practiceEditor.getValue() : '';
+    const outputEl = document.getElementById('practiceOutput');
+    
+    outputEl.innerHTML = '<span style="color: #64748b;">正在执行代码...</span>';
+    
+    pyodide.runPythonAsync(code)
+        .then(result => {
+            outputEl.innerHTML = result || '<span style="color: #64748b;">代码执行完成（无输出）</span>';
+        })
+        .catch(err => {
+            outputEl.innerHTML = '<span class="error-text">错误: ' + err.message + '</span>';
+            outputEl.classList.add('error');
+            setTimeout(() => outputEl.classList.remove('error'), 3000);
+        });
+}
+
+function clearPracticeCode() {
+    const outputEl = document.getElementById('practiceOutput');
+    outputEl.innerHTML = '';
+    outputEl.classList.remove('error');
+}
+
+function downloadCode() {
+    const code = practiceEditor ? practiceEditor.getValue() : '';
+    const blob = new Blob([code], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'practice_code.py';
+    a.click();
+    URL.revokeObjectURL(url);
+}
 
 function navigateTo(page) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -2524,6 +2868,9 @@ function navigateTo(page) {
     // Refresh CodeMirror editors
     setTimeout(() => {
         Object.values(editors).forEach(ed => ed.refresh());
+        if (page === 'practice') {
+            initPracticeEditor();
+        }
     }, 100);
     
     window.scrollTo(0, 0);
