@@ -2816,20 +2816,67 @@ function initPracticeEditor() {
 }
 
 function runPracticeCode() {
+    if (!pyodide) {
+        document.getElementById('practiceOutput').innerHTML = '<span class="error-text">❌ Python环境尚未加载完成，请稍候...</span>';
+        document.getElementById('practiceOutput').classList.add('error');
+        return;
+    }
+    
     const code = practiceEditor ? practiceEditor.getValue() : '';
     const outputEl = document.getElementById('practiceOutput');
     
     outputEl.innerHTML = '<span style="color: #64748b;">正在执行代码...</span>';
+    outputEl.classList.remove('error');
     
-    pyodide.runPythonAsync(code)
-        .then(result => {
-            outputEl.innerHTML = result || '<span style="color: #64748b;">代码执行完成（无输出）</span>';
-        })
-        .catch(err => {
-            outputEl.innerHTML = '<span class="error-text">错误: ' + err.message + '</span>';
+    try {
+        // Redirect stdout to capture print output
+        pyodide.runPython(`
+import sys, io
+sys.stdout = io.StringIO()
+sys.stderr = io.StringIO()
+`);
+        
+        pyodide.runPythonAsync(code).then(() => {
+            const stdout = pyodide.runPython('sys.stdout.getvalue()');
+            const stderr = pyodide.runPython('sys.stderr.getvalue()');
+            
+            if (stderr && !stdout) {
+                outputEl.innerHTML = '<span class="error-text">❌ 错误：\n\n' + stderr + '</span>';
+                outputEl.classList.add('error');
+            } else if (stderr) {
+                outputEl.innerHTML = '<span style="color: #22c55e;">✅ 执行完成（部分输出）：\n\n' + stdout + '\n\n⚠️ 警告：\n' + stderr + '</span>';
+                outputEl.classList.remove('error');
+            } else if (stdout) {
+                outputEl.innerHTML = '<span style="color: #22c55e;">✅ 执行成功</span>\n\n' + stdout;
+                outputEl.classList.remove('error');
+            } else {
+                outputEl.innerHTML = '<span style="color: #64748b;">✅ 代码执行完成（无输出）</span>';
+                outputEl.classList.remove('error');
+            }
+            
+            // Reset stdout
+            pyodide.runPython(`
+import sys
+sys.stdout = sys.__stdout__
+sys.stderr = sys.__stderr__
+`);
+        }).catch(err => {
+            outputEl.innerHTML = '<span class="error-text">❌ 运行失败：\n\n' + err.message + '</span>';
             outputEl.classList.add('error');
-            setTimeout(() => outputEl.classList.remove('error'), 3000);
+            
+            // Reset stdout
+            try {
+                pyodide.runPython(`
+import sys
+sys.stdout = sys.__stdout__
+sys.stderr = sys.__stderr__
+`);
+            } catch(e2) {}
         });
+    } catch (err) {
+        outputEl.innerHTML = '<span class="error-text">❌ 执行出错：\n\n' + err.message + '</span>';
+        outputEl.classList.add('error');
+    }
 }
 
 function clearPracticeCode() {
